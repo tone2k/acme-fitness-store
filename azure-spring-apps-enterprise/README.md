@@ -1522,7 +1522,7 @@ Make several requests to the URL for `/products` within a five second period to 
 
 ### Monitor your applications using Application Live View
 
-[Application Live View for VMware Tanzu](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.2/tap/GUID-app-live-view-about-app-live-view.html) is a lightweight insights and troubleshooting tool that helps app developers and app operators look inside running apps.
+[Application Live View for VMware Tanzu](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/app-live-view-about-app-live-view.html) is a lightweight insights and troubleshooting tool that helps app developers and app operators look inside running apps.
 
 Application Live View only supports Spring Boot applications.
 
