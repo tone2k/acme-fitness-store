@@ -152,16 +152,16 @@ az term accept --publisher vmware-inc --product azure-spring-cloud-vmware-tanzu-
 Create an instance of Azure Spring Apps Enterpise
 
 ```shell
-az spring create --name ${SPRING_APPS_SERVICE} \ 
-    --resource-group ${RESOURCE_GROUP} \ 
-    --location ${REGION} \ 
-    --sku Enterprise \ 
-    --enable-application-configuration-service \ 
-    --enable-service-registry \ 
-    --enable-gateway \ 
-    --enable-api-portal \ 
-    --enable-alv \ 
-    --enable-app-acc \ 
+az spring create --name ${SPRING_APPS_SERVICE} \
+    --resource-group ${RESOURCE_GROUP} \
+    --location ${REGION} \
+    --sku Enterprise \
+    --enable-application-configuration-service \
+    --enable-service-registry \
+    --enable-gateway \
+    --enable-api-portal \
+    --enable-alv \
+    --enable-app-acc \
     --build-pool-size S2 
 ```
 
@@ -177,10 +177,10 @@ Create log analytics workspace
 (Note if the following fails, please create from portal)
 
 ```shell
-az monitor log-analytics workspace create \ 
-  --workspace-name ${LOG_ANALYTICS_WORKSPACE} \ 
-  --location ${REGION} \ 
-  --resource-group ${RESOURCE_GROUP} 
+az monitor log-analytics workspace create \
+    --workspace-name ${LOG_ANALYTICS_WORKSPACE} \
+    --location ${REGION} \
+    --resource-group ${RESOURCE_GROUP} 
 ```
 
 Create from portal
@@ -199,8 +199,8 @@ Create from portal
 
 Retrieve resource id for the workspace
 ```shell
-export LOG_ANALYTICS_RESOURCE_ID=$(az monitor log-analytics workspace show \ 
-    --resource-group ${RESOURCE_GROUP} \ 
+export LOG_ANALYTICS_RESOURCE_ID=$(az monitor log-analytics workspace show \
+    --resource-group ${RESOURCE_GROUP} \
     --workspace-name ${LOG_ANALYTICS_WORKSPACE} | jq -r '.id') 
 ```
 
@@ -209,7 +209,7 @@ Verify log analytics resource id is set
 echo $LOG_ANALYTICS_RESOURCE_ID 
 
 export SPRING_APPS_RESOURCE_ID=$(az spring show \
-    --name ${SPRING_APPS_SERVICE} \ 
+    --name ${SPRING_APPS_SERVICE} \
     --resource-group ${RESOURCE_GROUP} | jq -r '.id') 
 ```
 
@@ -231,42 +231,48 @@ Configure diagnostics settings
 az monitor diagnostic-settings create --name "send-logs-and-metrics-to-log-analytics" \
     --resource ${SPRING_APPS_RESOURCE_ID} \
     --workspace ${LOG_ANALYTICS_RESOURCE_ID} \
-    --logs '[
-         {
-           "category": "ApplicationConsole",
-           "enabled": true,
-           "retentionPolicy": {
-             "enabled": false,
-             "days": 0
-           }
-         },
-         {
-            "category": "SystemLogs",
-            "enabled": true,
-            "retentionPolicy": {
-             "enabled": false,
-             "days": 0
-            }
-          },
-         {
-            "category": "IngressLogs",
-            "enabled": true,
-            "retentionPolicy": {
+    --logs '[ 
+      {
+          "category": "ApplicationConsole",
+          "enabled": true,
+          "retentionPolicy":
+          {
               "enabled": false,
               "days": 0
-             }
-           }
-       ]' \
-       --metrics '[
-         {
-           "category": "AllMetrics",
-           "enabled": true,
-           "retentionPolicy": {
-             "enabled": false,
-             "days": 0
-           }
-         }
-       ]'
+          }
+      },
+      {
+          "category": "SystemLogs",
+          "enabled": true,
+          "retentionPolicy":
+          {
+              "enabled": false,
+              "days": 0
+          }
+      },
+      {
+          "category": "IngressLogs",
+          "enabled": true,
+          "retentionPolicy":
+          {
+              "enabled": false,
+              "days": 0
+          }
+      }
+    ]' \
+    --metrics '[ 
+      {
+          "category": "AllMetrics",
+          "enabled": true,
+          "retentionPolicy":
+          {
+              "enabled": false,
+              "days": 0
+          }
+      }
+    ]'
+
+
  export MSYS_NO_PATHCONV=0
 ```
 
