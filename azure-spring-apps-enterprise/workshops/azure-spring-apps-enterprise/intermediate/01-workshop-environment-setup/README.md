@@ -21,6 +21,69 @@ Github Codespaces can be leveraged to provide a development environment for runn
     az --version
     ```
 
+    #### Update Environment Variables
+    ```shell
+    cd acme-fitness-store/azure-spring-apps-enterprise
+    cp ./scripts/setup-env-variables-template.sh ./scripts/setup-env-variables.sh
+    code ./scripts/setup-env-variables.sh # Use the editor of your choice
+    ```
+
+    ```shell
+    export SUBSCRIPTION=CHANGEME               # replace it with your subscription-id (quote is not required)
+    export RESOURCE_GROUP=CHANGEME             # choose a unique name if the moderator doesn't provide it
+    export SPRING_APPS_SERVICE=CHANGEME        # choose a unique name if the moderator doesn't provide it
+    export LOG_ANALYTICS_WORKSPACE=CHANGEME    # choose a unique name if the moderator doesn't provide it
+    export REGION=CHANGEME                     # The region where you are running this workshop
+    ```
+
+    - To get the Subscription ID, go to Azure portal, in search bar type subscriptions. The results should display your subscription and its id.
+    - RESOURCE_GROUP name will be provided by your workshop moderator
+    - SPRING_APPS_SERVICE name will be provided by your workshop moderator
+
+    This env file comes with default values that were provided as part of arm template. It is recommended to leave the values as-is for the purpose of this workshop. If for any reason you updated these default values in the arm template, those values need to be entereted in here.
+
+    Now, set the environment:
+
+    ```shell
+    source ./scripts/setup-env-variables.sh
+    ``` 
+
+    Verify environment variables are set 
+    ```shell
+    echo $SUBSCRIPTION
+    echo $RESOURCE_GROUP 
+    echo $SPRING_APPS_SERVICE 
+    echo $REGION 
+    echo $CART_SERVICE_APP 
+    echo $IDENTITY_SERVICE_APP 
+    echo $ORDER_SERVICE_APP 
+    echo $PAYMENT_SERVICE_APP 
+    echo $CATALOG_SERVICE_APP 
+    echo $FRONTEND_APP 
+    ```
+
+    > If you exit your Codespaces and reconnect in or get logged out of Cloud Shell, you need to re-run the command `source ./scripts/setup-env-variables.sh` to setup the environment.
+
+    #### Login to Azure and set subscription
+
+    ```shell
+    az login --use-device-code # Only for Codespaces and Git Bash
+    az account list -o table
+    az account set --subscription ${SUBSCRIPTION}
+    ```
+
+    Set your default resource group name and cluster name using the following commands:
+
+    ```shell
+    az configure --defaults \
+        group=${RESOURCE_GROUP} \
+        spring=${SPRING_APPS_SERVICE}
+    ```
+    Verify defaults
+    ```shell
+    az configure --list-defaults 
+    ```
+
 ## Cloud Shell
 
 Login to Azure Portal and open Cloud Shell bash prompt
@@ -57,7 +120,7 @@ Execute the following command to clone the repo for the lab (cloud shell/git bas
 git clone https://github.com/Azure-Samples/acme-fitness-store.git
 ```
 
-### Install the Azure CLI Spring Extension
+### Install the Azure CLI Spring Extension (Git Bash and Cloud Shell)
 
 Install the Azure Spring Apps extension for the Azure CLI using the following command
 
@@ -71,7 +134,7 @@ If the extension is already installed, update it with the following command
 az extension update --name spring
 ```
 
-Update Environment Variables
+### Update Environment Variables
 ```shell
 cd acme-fitness-store/azure-spring-apps-enterprise
 cp ./scripts/setup-env-variables-template.sh ./scripts/setup-env-variables.sh
@@ -114,7 +177,7 @@ echo $FRONTEND_APP
 
 > If you exit your Codespaces and reconnect in or get logged out of Cloud Shell, you need to re-run the command `source ./scripts/setup-env-variables.sh` to setup the environment.
 
-Login to Azure and set subscription
+### Login to Azure and set subscription
 
 ```shell
 az login --use-device-code # Only for Codespaces and Git Bash
