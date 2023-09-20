@@ -1843,8 +1843,8 @@ The `cleanup` workflow can be manually run to delete all resources created by th
 1. Update the values in `azure-spring-apps-enterprise/scripts/setup-ai-env-variables.sh`, e.g.
     * for Endpoint and API KEY - check under Azure Portal OpenAI instances in `Keys and Endpoint` section
     ![A screenshot of the Azure Portal OpenAI instance.](./media/openai-azure-ai-services-api-key.png)    
-    * for `AZURE_OPENAI_CHATDEPLOYMENTID` use previously defined model, e.g. `gpt-35-turbo-16k`
-    * for `AZURE_OPENAI_EMBEDDINGDEPLOYMENTID` use previously defined model, e.g. `text-embedding-ada-002`
+    * for `SPRING_AI_AZURE_OPENAI_MODEL` use previously defined model, e.g. `gpt-35-turbo-16k`
+    * for `SPRING_AI_AZURE_OPENAI_EMBEDDINGMODEL` use previously defined model, e.g. `text-embedding-ada-002`
     * for `AI_APP` use default name, e.g. `assist-service`
     
 > Note: You can get the endpoint by querying the `cognitiveservices` from Azure CLI, e.g.
@@ -1895,10 +1895,10 @@ cd apps/acme-assist
         --source-path apps/acme-assist \
         --build-env BP_JVM_VERSION=17 \
         --env \
-            SPRING_AI_AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT} \
-            SPRING_AI_AZURE_OPENAI_APIKEY=${AZURE_OPENAI_APIKEY} \
-            SPRING_AI_AZURE_OPENAI_MODEL=${AZURE_OPENAI_CHATDEPLOYMENTID} \
-            SPRING_AI_AZURE_OPENAI_EMBEDDINGMODEL=${AZURE_OPENAI_CHATDEPLOYMENTID}
+            SPRING_AI_AZURE_OPENAI_ENDPOINT=${SPRING_AI_AZURE_OPENAI_ENDPOINT} \
+            SPRING_AI_AZURE_OPENAI_APIKEY=${SPRING_AI_AZURE_OPENAI_APIKEY} \
+            SPRING_AI_AZURE_OPENAI_MODEL=${SPRING_AI_AZURE_OPENAI_MODEL} \
+            SPRING_AI_AZURE_OPENAI_EMBEDDINGMODEL=${SPRING_AI_AZURE_OPENAI_EMBEDDINGMODEL}
     ```
 
 1. Test the `acme-fitness` application in the browser again. Go to `ASK TO FITASSIST` and converse with the assistant, e.g.
