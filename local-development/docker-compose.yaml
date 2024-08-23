@@ -1,0 +1,96 @@
+version: '3.7'
+services:
+
+  discovery:
+    container_name: discovery-server
+    image: steeltoeoss/eureka-server
+    ports:
+      - "8761:8761"
+
+  config:
+    container_name: config-server
+    image: steeltoeoss/config-server
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./config:/config
+    environment:
+      SPRING_PROFILES_ACTIVE: native
+      SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: "file:///config"
+
+  gateway-auth:
+    container_name: gateway-and-auth-servers
+    image: eclipse-temurin:21
+    ports:
+      - "8090:8090"
+      - "9000:9000"
+    volumes:
+      - ./spring-enterprise:/app
+    working_dir: /app
+    command: [ "bash", "./run.sh" ]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  
+  assist-postgres:
+    container_name: assist-postgres-db
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: acme-assist
+    ports:
+      - "5433:5432"
+  
+  catalog-postgres:
+    container_name: catalog-postgres-db
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: acme-catalog
+    ports:
+      - "5434:5432"
+  
+  order-postgres:
+    container_name: order-postgres-db
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: acme-order
+    ports:
+      - "5432:5432"
+
+  cart:
+    build:
+      context: ../apps/acme-cart
+      dockerfile: Dockerfile
+    container_name: cart-server
+    image: acme-cart:latest
+    hostname: cart
+    restart: always
+    ports:
+      - '8085:5000'
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    environment:
+      - REDIS_HOST=reddb
+      - REDIS_PORT=6379
+      - AUTH_MODE=0
+  
+  cart-redis:
+    container_name: cart-redis-db
+    image: bitnami/redis:latest
+    hostname: reddb
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    ports:
+      - '6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes

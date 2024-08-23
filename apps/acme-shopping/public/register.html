@@ -149,9 +149,7 @@
               <h4>Pages</h4>
               <ul>
                 <li><a href="text.html">About us</a></li>
-                <li><a href="text-left.html">Terms and conditions</a></li>
-                <li><a href="faq.html">FAQ</a></li>
-                <li><a href="contact.html">Contact us</a></li>
+                  <li><a href="contact.html">Contact us</a></li>
               </ul>
               <hr>
               <h4>User section</h4>
@@ -229,6 +227,7 @@
     <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
     <script src="vendor/owl.carousel/owl.carousel.min.js"></script>
     <!-- main script-->
+
     <script src="js/front.js"> </script>
     <script>
       $(document).ready(function() {
@@ -247,7 +246,7 @@
         // Use this logic to GET stuff and dynamically display
         $.ajax({
 
-          url: "/products",
+          url: `/products`,
           type: "GET",
           success: function(data, textStatus, jqXHR) {
 

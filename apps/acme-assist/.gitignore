@@ -1,6 +1,9 @@
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
+build/
+.gradle
+!gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -34,3 +37,4 @@ out/
 
 ### VS Code ###
 .vscode/
+/src/test/resources/requests/http-client.private.env.json

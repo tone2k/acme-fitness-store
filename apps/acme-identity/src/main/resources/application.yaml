@@ -5,9 +5,11 @@ management:
         include: info,health
 
 spring:
+  application:
+    name: acme-identity
   config:
     activate:
-      on-profile: tap
+      on-profile: default
   security:
     oauth2:
       resourceserver:

@@ -1,18 +1,12 @@
-﻿using acme_order.Models;
+﻿using AcmeOrder.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace acme_order.Db
+namespace AcmeOrder.Db;
+
+public abstract class OrderContext(IConfiguration configuration) : DbContext
 {
-    public abstract class OrderContext : DbContext
-    {
-        protected readonly IConfiguration Configuration;
+    protected readonly IConfiguration Configuration = configuration;
 
-        protected OrderContext(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public virtual DbSet<Order> Orders { get; set; }
-    }
+    public virtual DbSet<Order> Orders { get; set; }
 }

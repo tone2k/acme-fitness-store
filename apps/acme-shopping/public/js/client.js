@@ -4,7 +4,7 @@ function getUserInfo(handleUserInfo) {
     console.log('Requesting user details from backend');
 
     $.ajax({
-        url: "/userinfo",
+        url: `/userinfo`,
         type: 'GET',
         success: function (json) {
             if (json) {
@@ -33,7 +33,7 @@ function deleteItem(itemid, userid) {
     }
 
     $.ajax({
-        url: "/cart/item/modify/" + userid,
+        url: `/cart/item/modify/${userid}`,
         type: "POST",
         data: JSON.stringify(vals),
         success: function(data, textStatus, jqXHR) {
@@ -62,7 +62,7 @@ function updateCart(itemid, quantity, userid) {
 
     $.ajax({
 
-        url: "/cart/item/modify/" + userid,
+        url: `/cart/item/modify/${userid}`,
         type: "POST",
         data: JSON.stringify(vals),
         success: function(data, textStatus, jqXHR) {
@@ -87,7 +87,7 @@ function getCartTotal(userid) {
     var cartTotal = 0
     $.ajax({
 
-        url: "/cart/total/" + userid,
+        url: `/cart/total/${userid}`,
         type: "GET",
         async: false,
         success: function(body, textStatus, jqXHR) {
@@ -121,7 +121,7 @@ function getImageUrl(productId, setUrl) {
 
     var imageurl = ''
     $.ajax({
-        url: "/products/" + productId,
+        url: `/products/${productId}`,
         type: 'GET',
         async: false,
         success: function (body, textStatus, jqXHR) {
@@ -142,4 +142,32 @@ function getImageUrl(productId, setUrl) {
     });
 
     return imageurl
+}
+
+// Get the total items for a users cart
+
+function getCartItems(userid) {
+    var cartItems = null;
+    
+    $.ajax({
+        url: `/cart/items/${userid}`,
+        type: "GET",
+        async: false, 
+        success: function(body, textStatus, jqXHR) {
+            if (jqXHR.status === 200) {
+                cartItems = body.cart;
+            } else if (jqXHR.status === 204) {
+                console.log(`No items found in cart for user ${userid}`);
+                cartItems = [];
+            } else {
+                console.log(`Unexpected status code: ${jqXHR.status}`);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Error retrieving cart items: ' + errorThrown);
+            cartItems = [];
+        }
+    });
+    
+    return cartItems;
 }

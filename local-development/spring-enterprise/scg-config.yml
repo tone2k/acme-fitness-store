@@ -1,0 +1,59 @@
+---
+# Referenced - https://docs.vmware.com/en/VMware-Spring-Cloud-Gateway-for-Kubernetes/2.2/scg-k8s/GUID-operator-installation-jar.html
+# ####################################################
+# application.yaml
+#
+# Provides default settings, along with configuration for optional features
+# which can be activated using Spring Boot profiles.
+#
+# Available profiles:
+# - prometheus            exposure of metrics in Prometheus endpoint
+# - redis                 storage of session and rate limiting data in Redis
+# - response-cache-local  HTTP request caching
+# - sso                   OIDC configuration
+# - tls-server            TLS server termination configuration
+# - wavefront             publication of metrics and tracing information to Wavefront
+# - zipkin                publication of tracing information to Zipkin
+#
+# Activating the prometheus or wavefront profiles will turn on metrics features
+# Activating the wavefront or zipkin profiles will turn on tracing features
+# ####################################################
+server:
+  port: 8090
+management:
+  wavefront:
+    metrics:
+      export:
+        enabled: false
+  endpoint:
+    gateway:
+      enabled: false # Toggles the Gateway Actuator on or off
+  tracing:
+    enabled: false
+spring:
+  application:
+    name: spring-cloud-gateway-for-kubernetes # application name
+
+
+---
+# SSO configuration
+spring:
+  config:
+    activate:
+      on-profile: sso #This is referenced from run.sh
+  security: #Obtained from Local Spring Authorization
+    oauth2:
+      client:
+        provider:
+          sso:
+            issuer-uri: http://localhost:9000
+        registration:
+          sso:
+            client-id: default-client-id
+            client-secret: default-client-secret
+            scope:
+              - openid
+              - email
+              - profile
+sso:
+  roles-attribute-name: roles # Roles attribute name used to extract user roles for Roles filter

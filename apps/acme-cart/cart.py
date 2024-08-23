@@ -14,12 +14,8 @@ from flask import request
 from flask_httpauth import HTTPTokenAuth
 from sentry_sdk.integrations.flask import FlaskIntegration
 from flask import Flask
-from opencensus.ext.azure.trace_exporter import AzureExporter
-from opencensus.ext.flask.flask_middleware import FlaskMiddleware
-from opencensus.trace.samplers import ProbabilitySampler
 from lib.tracing import init_tracer
 from redis_conn import redis_connection
-from azure_vault import vault_secret
 
 # sentry_sdk.init("https://c0f58a327f2c4cd8b29e8cd0a606f0e9@sentry.io/1722363")
 
@@ -48,7 +44,7 @@ auth_url = environ['AUTH_URL'] if environ.get('AUTH_URL') not in (None, '') else
 
 auth_mode = int(environ['AUTH_MODE']) if environ.get('AUTH_MODE') not in (None, '') else 1
 
-instrumentation_key = vault_secret('ApplicationInsights--ConnectionString')
+instrumentation_key = None
 if instrumentation_key is None and environ.get('INSTRUMENTATION_KEY') not in (None, ''):
     instrumentation_key = environ['INSTRUMENTATION_KEY']
 
@@ -69,13 +65,14 @@ def set_cloud_role(envelope):
     envelope.tags['ai.cloud.role'] = 'cart-service'
 
 
-if instrumentation_key not in (None, ''):
-    middleware = FlaskMiddleware(
-        app,
-        exporter=AzureExporter(connection_string=instrumentation_key),
-        sampler=ProbabilitySampler(rate=1.0),
-    )
-    middleware.exporter.add_telemetry_processor(set_cloud_role)
+### Azure / Prometheus / ETC
+# if instrumentation_key not in (None, ''):
+#     middleware = FlaskMiddleware(
+#         app,
+#         exporter=AzureExporter(connection_string=instrumentation_key),
+#         sampler=ProbabilitySampler(rate=1.0),
+#     )
+#     middleware.exporter.add_telemetry_processor(set_cloud_role)
 
 app.debug = True
 auth = HTTPTokenAuth('Bearer')

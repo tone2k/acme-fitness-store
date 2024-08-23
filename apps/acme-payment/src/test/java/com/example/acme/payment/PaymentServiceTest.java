@@ -25,7 +25,7 @@ class PaymentServiceTest {
 
 		PaymentResponse response = paymentService.processPayment(paymentRequest);
 
-		assertThat(response.getSuccess()).isTrue();
+		assertThat(response.isSuccess()).isTrue();
 		assertThat(response.getAmount()).isEqualTo(paymentRequest.getTotal());
 		assertThat(response.getTransactionID()).isNotBlank();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -38,7 +38,7 @@ class PaymentServiceTest {
 
 		PaymentResponse response = paymentService.processPayment(paymentRequest);
 
-		assertThat(response.getSuccess()).isFalse();
+		assertThat(response.isSuccess()).isFalse();
 		assertThat(response.getAmount()).isEqualTo("0");
 		assertThat(response.getTransactionID()).isEqualTo("-1");
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -54,7 +54,7 @@ class PaymentServiceTest {
 
 		PaymentResponse response = paymentService.processPayment(paymentRequest);
 
-		assertThat(response.getSuccess()).isFalse();
+		assertThat(response.isSuccess()).isFalse();
 		assertThat(response.getAmount()).isEqualTo("0");
 		assertThat(response.getTransactionID()).isEqualTo("-1");
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -72,7 +72,7 @@ class PaymentServiceTest {
 
 		PaymentResponse response = paymentService.processPayment(paymentRequest);
 
-		assertThat(response.getSuccess()).isFalse();
+		assertThat(response.isSuccess()).isFalse();
 		assertThat(response.getAmount()).isEqualTo("0");
 		assertThat(response.getTransactionID()).isEqualTo("-2");
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -90,7 +90,7 @@ class PaymentServiceTest {
 
 		PaymentResponse response = paymentService.processPayment(paymentRequest);
 
-		assertThat(response.getSuccess()).isFalse();
+		assertThat(response.isSuccess()).isFalse();
 		assertThat(response.getAmount()).isEqualTo("0");
 		assertThat(response.getTransactionID()).isEqualTo("-3");
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());

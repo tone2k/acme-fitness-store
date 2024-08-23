@@ -1,0 +1,16 @@
+{ "routes": [
+  {
+    "token-relay": true,
+    "predicates": [
+      "Path=/pay",
+      "Method=POST"
+    ],
+    "filters": [
+      "StripPrefix=0"
+    ],
+    "tags": [
+      "pay"
+    ]
+  }
+]
+}

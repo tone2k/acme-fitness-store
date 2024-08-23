@@ -2,8 +2,10 @@ __pycache__
 .DS_Store
 .env*.secret
 .idea
+.metadata
 custom-filters
-
+*.iml
+*.jar
 
 azure-spring-apps-enterprise/scripts/setup-env-variables.sh
 azure-spring-apps-enterprise/scripts/setup-db-env-variables.sh
@@ -57,3 +59,7 @@ hello-world/
 
 # vsCode
 .vscode
+
+# Cypress
+**/cypress/downloads
+**/cypress/screenshots

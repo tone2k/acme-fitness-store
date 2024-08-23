@@ -1,0 +1,8 @@
+---
+applications:
+- name: acme-shopping
+  memory: 1G
+  path: .
+  buildpack: nodejs_buildpack
+  routes:
+    - route: acme-shopping.apps.internal

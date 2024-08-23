@@ -76,7 +76,7 @@
         <div class="row">
           <div id="basket" class="col-lg-9">
             <div class="box">
-              <form method="get" action="checkout1.html">
+              <form method="get" action="./checkout1.html">
                 <div class="table-responsive">
                   <table class="table">
                     <thead>
@@ -179,6 +179,7 @@
   <script src="vendor/jquery.cookie/jquery.cookie.js"></script>
   <script src="vendor/owl.carousel/owl.carousel.min.js"></script>
   <!-- main script-->
+
   <script src="js/front.js"></script>
   <script src="js/client.js"></script>
   <script src="js/jwt-decode.min.js"></script>
@@ -197,7 +198,7 @@
 
       $.ajax({
 
-        url: "/cart/items/" + userid,
+        url: `/cart/items/${userid}`,
         type: "GET",
         success: function (body, textStatus, jqXHR) {
           console.log("status cart is " + jqXHR.status)

@@ -1,14 +1,11 @@
-using System;
+namespace AcmeOrder.Configuration;
 
-namespace acme_order.Configuration
+public class AcmeServiceSettings : IAcmeServiceSettings
 {
-    public class AcmeServiceSettings : IAcmeServiceSettings
-    {
-        public string AuthUrl { get; set; }
-    }
-    
-    public interface IAcmeServiceSettings
-    {
-        public string AuthUrl { get; set; }
-    }
+    public string AuthUrl { get; set; }
+}
+
+public interface IAcmeServiceSettings
+{
+    public string AuthUrl { get; set; }
 }

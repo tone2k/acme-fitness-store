@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: acme-catalog
   datasource:
     url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
   jpa:
@@ -8,7 +10,7 @@ spring:
     encoding: UTF-8
 eureka:
   client:
-    enabled: false
+    enabled: true
 management:
   endpoints:
     web:

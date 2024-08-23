@@ -1,10 +1,23 @@
-spring:
-  ai:
-    azure:
-      openai:
-        model: gpt-35-turbo-16k
+
 management:
   endpoints:
     web:
       exposure:
         include: info,health
+spring:
+  ai:
+    vectorstore:
+      pgvector: 
+        initialize-schema: true
+        remove-existing-vector-store-table: true
+  application:
+    name: acme-assist
+  cloud:
+    config:
+      enabled: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

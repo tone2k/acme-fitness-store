@@ -1,19 +1,19 @@
 package com.example.acme.assist;
 
-import com.azure.ai.openai.models.ChatRole;
-import com.example.acme.assist.model.AcmeChatRequest;
+import com.example.acme.assist.model.AcmeChatMessage;
 import com.example.acme.assist.model.Product;
 import io.micrometer.common.util.StringUtils;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.ai.client.AiClient;
-import org.springframework.ai.client.AiResponse;
-import org.springframework.ai.client.Generation;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.MessageType;
+import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.prompt.Prompt;
-import org.springframework.ai.prompt.SystemPromptTemplate;
-import org.springframework.ai.prompt.messages.ChatMessage;
-import org.springframework.ai.prompt.messages.Message;
-import org.springframework.ai.vectorstore.impl.SimplePersistentVectorStore;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -28,26 +28,27 @@ import java.util.stream.Collectors;
 public class ChatService {
 
     @Autowired
-    private SimplePersistentVectorStore store;
+    private VectorStore store;
 
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
-    private AiClient aiClient;
+    private ChatClient chatClient;
 
     @Value("classpath:/prompts/chatWithoutProductId.st")
     private Resource chatWithoutProductIdResource;
 
     @Value("classpath:/prompts/chatWithProductId.st")
     private Resource chatWithProductIdResource;
+
     /**
      * Chat with the OpenAI API. Use the product details as the context.
      *
      * @param chatRequestMessages the chat messages
      * @return the chat response
      */
-    public List<String> chat(List<AcmeChatRequest.Message> chatRequestMessages, String productId) {
+    public List<String> chat(List<AcmeChatMessage> chatRequestMessages, String productId) {
 
         validateMessage(chatRequestMessages);
 
@@ -61,12 +62,15 @@ public class ChatService {
         }
     }
 
-    private List<String> chatWithProductId(Product product, List<AcmeChatRequest.Message> chatRequestMessages) {
+    private List<String> chatWithProductId(Product product, List<AcmeChatMessage> chatRequestMessages) {
         // We have a specific Product
         String question = chatRequestMessages.get(chatRequestMessages.size() - 1).getContent();
 
         // step 1. Query for documents that are related to the question from the vector store
-        List<Document> candidateDocuments = this.store.similaritySearch(question, 5, 0.4);
+        SearchRequest request = SearchRequest.query(question).
+                withTopK(5).
+                withSimilarityThreshold(0.4);
+        List<Document> candidateDocuments = this.store.similaritySearch(request);
 
         // step 2. Create a SystemMessage that contains the product information in addition to related documents.
         List<Message> messages = new ArrayList<>();
@@ -84,18 +88,22 @@ public class ChatService {
      * @param acmeChatRequestMessages the chat messages, including previous messages sent by the client
      * @return the chat response
      */
-    protected List<String> chatWithoutProductId(List<AcmeChatRequest.Message> acmeChatRequestMessages) {
+    protected List<String> chatWithoutProductId(List<AcmeChatMessage> acmeChatRequestMessages) {
 
         String question = acmeChatRequestMessages.get(acmeChatRequestMessages.size() - 1).getContent();
 
         // step 1. Query for documents that are related to the question from the vector store
-        List<Document> relatedDocuments = store.similaritySearch(question, 5, 0.4);
+        SearchRequest request = SearchRequest.query(question).
+                withTopK(5).
+                withSimilarityThreshold(0.4);
+        List<Document> relatedDocuments = store.similaritySearch(request);
+
 
         // step 2. Create the system message with the related documents;
         List<Message> messages = new ArrayList<>();
         SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(this.chatWithoutProductIdResource);
         String relatedDocsAsString = relatedDocuments.stream()
-                .map(entry -> String.format("Product Name: %s\nText: %s\n", entry.getMetadata().get("name"), entry.getText()))
+                .map(entry -> String.format("Product Name: %s\nText: %s\n", entry.getMetadata().get("name"), entry.getContent()))
                 .collect(Collectors.joining("\n"));
         Message systemMessage = systemPromptTemplate.createMessage(Map.of("context", relatedDocsAsString));
         messages.add(systemMessage);
@@ -104,16 +112,16 @@ public class ChatService {
         return addUserMessagesAndSendToAI(acmeChatRequestMessages, messages);
     }
 
-    private List<String> addUserMessagesAndSendToAI(List<AcmeChatRequest.Message> acmeChatRequestMessages, List<Message> messages) {
+    private List<String> addUserMessagesAndSendToAI(List<AcmeChatMessage> acmeChatRequestMessages, List<Message> messages) {
         // Convert to acme messages types to Spring AI message types
-        for (AcmeChatRequest.Message acmeChatRequestMessage : acmeChatRequestMessages) {
+        for (AcmeChatMessage acmeChatRequestMessage : acmeChatRequestMessages) {
             String role = acmeChatRequestMessage.getRole().toString().toUpperCase();
-            messages.add(new ChatMessage(role, acmeChatRequestMessage.getContent()));
+            messages.add(new UserMessage(acmeChatRequestMessage.getContent()));
         }
 
         // Call to OpenAI chat API
         Prompt prompt = new Prompt(messages);
-        AiResponse aiResponse = this.aiClient.generate(prompt);
+        ChatResponse aiResponse = this.chatClient.prompt(prompt).call().chatResponse();
 
         // Process the result and return to client
         List<String> response = processResult(aiResponse);
@@ -123,38 +131,38 @@ public class ChatService {
 
     public Message getProductDetailMessage(Product product, List<Document> documents) {
         String additionalContext = documents.stream()
-                .map(entry -> String.format("Product Name: %s\nText: %s\n", entry.getMetadata().get("name"), entry.getText()))
+                .map(entry -> String.format("Product Name: %s\nText: %s\n", entry.getMetadata().get("name"), entry.getContent()))
                 .collect(Collectors.joining("\n"));
-        Map map = Map.of(
+        Map<String,Object> map = Map.of(
                 "name", product.getName(),
                 "tags", String.join(",", product.getTags()),
                 "shortDescription", product.getShortDescription(),
                 "fullDescription", product.getDescription(),
                 "additionalContext", additionalContext);
         SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(this.chatWithProductIdResource);
-        return systemPromptTemplate.create(map).getMessages().get(0);
+        return systemPromptTemplate.create(map).getInstructions().get(0);
     }
 
-    private List<String> processResult(AiResponse aiResponse) {
-        List<String> response = aiResponse.getGenerations().stream()
-                .map(Generation::getText)
+    private List<String> processResult(ChatResponse aiResponse) {
+        List<String> response = aiResponse.getResults().stream()
+                .map(result -> result.getOutput().getContent())
                 .filter(text -> !StringUtils.isEmpty(text))
                 .map(this::filterMessage)
                 .collect(Collectors.toList());
         return response;
     }
 
-    private static void validateMessage(List<AcmeChatRequest.Message> messages) {
-        if (messages == null || messages.isEmpty()) {
+    private static void validateMessage(List<AcmeChatMessage> acmeChatMessages) {
+        if (acmeChatMessages == null || acmeChatMessages.isEmpty()) {
             throw new IllegalArgumentException("message shouldn't be empty.");
         }
 
-        if (messages.get(0).getRole() != ChatRole.USER) {
+        if (acmeChatMessages.get(0).getRole() != MessageType.USER) {
             throw new IllegalArgumentException("The first message should be in user role.");
         }
 
-        var lastUserMessage = messages.get(messages.size() - 1);
-        if (lastUserMessage.getRole() != ChatRole.USER) {
+        var lastUserMessage = acmeChatMessages.get(acmeChatMessages.size() - 1);
+        if (lastUserMessage.getRole() != MessageType.USER) {
             throw new IllegalArgumentException("The last message should be in user role.");
         }
     }

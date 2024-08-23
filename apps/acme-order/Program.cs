@@ -1,34 +1,25 @@
 using System;
-using System.ComponentModel;
-using acme_order.Auth;
-using acme_order.Configuration;
-using acme_order.Db;
-using acme_order.Services;
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
-using Microsoft.ApplicationInsights.Extensibility;
+using AcmeOrder.Auth;
+using AcmeOrder.Configuration;
+using AcmeOrder.Db;
+using AcmeOrder.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Npgsql;
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Eureka;
+using Steeltoe.Extensions.Configuration.CloudFoundry;
 using Steeltoe.Management.Endpoint;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.AddCloudFoundryConfiguration();
 var services = builder.Services;
 var configuration = builder.Configuration;
 builder.AddAllActuators();
-var keyVaultUri = configuration["ConnectionStrings:KeyVaultUri"];
-if (!string.IsNullOrEmpty(keyVaultUri))
-{
-    var secretClient = new SecretClient(
-        new Uri(keyVaultUri),
-        new DefaultAzureCredential());
-    configuration.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
-}
-
+builder.AddServiceDiscovery(c => c.UseEureka());
 
 services.Configure<AcmeServiceSettings>(configuration.GetSection(nameof(AcmeServiceSettings)));
 
@@ -38,33 +29,28 @@ services.AddSingleton<IAcmeServiceSettings>(sp =>
 switch (configuration["DatabaseProvider"])
 {
     case "Sqlite":
-        services.AddDbContext<OrderContext, SqliteOrderContext>(ServiceLifetime.Singleton);
+        services.AddDbContext<OrderContext, SqliteOrderContext>();
         break;
 
     case "Postgres":
-        services.AddDbContext<OrderContext, PostgresOrderContext>(ServiceLifetime.Singleton);
+        NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
+        services.AddDbContext<OrderContext, PostgresOrderContext>();
         break;
 }
 
-services.AddSingleton<OrderService>();
+services.AddHttpClient<OrderService>(c => c.BaseAddress = new Uri("https://acme-payment"))
+    .AddServiceDiscovery();
 services.AddControllers();
 services.AddScoped<AuthorizeResource>();
-
-services.AddApplicationInsightsTelemetry();
-services.AddSingleton<ITelemetryInitializer, CloudRoleNameTelemetryInitializer>();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<OrderContext>();
+    var db = scope.ServiceProvider.GetRequiredService<PostgresOrderContext>();
     db.Database.Migrate();
 }
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
 
-app.UseHttpsRedirection();
+app.UseDeveloperExceptionPage();
 app.UseRouting();
-app.UseEndpoints(endpoints => endpoints.MapControllers());
+app.MapControllers();
 await app.RunAsync();

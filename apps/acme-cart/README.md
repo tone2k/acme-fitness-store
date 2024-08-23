@@ -3,7 +3,7 @@
 
 > A cart service, because what is a shop without a cart to put stuff in?
 
-The Cart service is part of the [ACME Fitness Shop](https://github.com/vmwarecloudadvocacy/acme_fitness_demo). The goal of this specific service is to keep track of carts and items in the different carts.
+The goal of this specific service is to keep track of carts and items in the different carts.
 
 ## Prerequisites
 
@@ -52,7 +52,7 @@ The acme-cart image is based on the official Python image.
 To run the acme-cart and the redis dependency for local test, use the `docker-compose` file: 
 
 ```bash
-# Run the Redis container
+# Run the acme-cart image and Redis container
 docker-compose up
 ```
 
@@ -66,7 +66,7 @@ Get total amount in users cart
 
 ```bash
 curl --request GET \
-  --url http://localhost:5000/cart/total/dan
+  --url http://localhost:8085/cart/total/dan
 ```
 
 ```json
@@ -82,7 +82,7 @@ Update an item in the cart of a user
 
 ```bash
 curl --request POST \
-  --url http://localhost:5000/cart/item/modify/dan \
+  --url http://localhost:8085/cart/item/modify/dan \
   --header 'content-type: application/json' \
   --data '{"itemid":"sfsdsda3343", "quantity":2}'
 ```
@@ -107,7 +107,7 @@ Modify the contents of a cart
 
 ```bash
 curl --request POST \
-  --url http://localhost:5000/cart/modify/dan \
+  --url http://localhost:8085/cart/modify/dan \
   --header 'content-type: application/json' \
   --data '{
   "cart": [
@@ -161,7 +161,7 @@ Add item to cart
 
 ```bash
 curl --request POST \
-  --url http://localhost:5000/cart/item/add/shri \
+  --url http://localhost:8085/cart/item/add/shri \
   --header 'content-type: application/json' \
   --data '{"itemid":"xyz", "quantity":3}'
 ```
@@ -186,7 +186,7 @@ Get the total number of items in a cart
 
 ```bash
 curl --request GET \
-  --url http://localhost:5000/cart/items/total/shri
+  --url http://localhost:8085/cart/items/total/shri
 ```
 
 ```json
@@ -202,7 +202,7 @@ Clear all items from the cart
 
 ```bash
 curl --request GET \
-  --url http://localhost:5000/cart/clear/dan
+  --url http://localhost:8085/cart/clear/dan
 ```
 
 ```text
@@ -215,7 +215,7 @@ Get all items in a cart
 
 ```bash
 curl --request GET \
-  --url http://localhost:5000/cart/items/dan
+  --url http://localhost:8085/cart/items/dan
 ```
 
 ```json
@@ -246,7 +246,7 @@ Get all the carts
 
 ```bash
 curl --request GET \
-  --url http://localhost:5000/cart/all
+  --url http://localhost:8085/cart/all
 ```
 
 ```json
@@ -275,12 +275,6 @@ curl --request GET \
 }
 ```
 
-## Contributing
-
-[Pull requests](https://github.com/vmwarecloudadvocacy/order/pulls) are welcome. For major changes, please open [an issue](https://github.com/vmwarecloudadvocacy/order/issues) first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
 ## License
 
-See the [LICENSE](./LICENSE) file in the repository
+See the [LICENSE](../../LICENSE) file in the repository

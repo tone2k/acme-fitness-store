@@ -1,6 +1,9 @@
+spring:
+  application:
+    name: acme-payment
 eureka:
   client:
-    enabled: false
+    enabled: true
 management:
   endpoints:
     web:

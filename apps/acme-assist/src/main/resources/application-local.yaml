@@ -1,0 +1,31 @@
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health
+spring:
+  ai:
+    openai:
+      chat:
+        options:
+          model: gpt-3.5-turbo
+      api-key: ${OPENAI_API_KEY}
+    vectorstore:
+      pgvector: 
+        initialize-schema: true
+        remove-existing-vector-store-table: true
+  application:
+    name: acme-assist
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: root
+    password: rootpassword
+    url: jdbc:postgresql://localhost:5433/acme-assist

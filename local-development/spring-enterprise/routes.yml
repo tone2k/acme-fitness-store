@@ -1,0 +1,216 @@
+# ####################################################
+# routes.yaml
+# ####################################################
+spring:
+  cloud:
+    gateway:
+      routes:
+        # ####################################################
+        # acme-assist
+        # ####################################################
+        - uri: http://host.docker.internal:8081
+          predicates:
+            - Path=/ai/*
+            - Method=POST
+          filters:
+            - StripPrefix=0
+          tags:
+            - assist-service
+        - uri: http://host.docker.internal:8081
+          predicates:
+            - Path=/ai/admin/*
+            - Method=GET
+          filters:
+            - StripPrefix=0
+          tags:
+            - assist-service
+
+        # ####################################################
+        # acme-cart
+        # ####################################################
+        - uri: http://host.docker.internal:8085
+          predicates:
+            - Path=/cart/item/add/{userId}
+            - Method=POST
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - cart
+        - uri: http://host.docker.internal:8085
+          predicates:
+            - Path=/cart/item/modify/{userId}
+            - Method=POST
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - cart
+        - uri: http://host.docker.internal:8085
+          predicates:
+            - Path=/cart/items/{userId}
+            - Method=GET
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - cart
+        - uri: http://host.docker.internal:8085
+          predicates:
+            - Path=/cart/clear/{userId}
+            - Method=GET
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - cart
+        - uri: http://host.docker.internal:8085
+          predicates:
+            - Path=/cart/total/{userId}
+            - Method=GET
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - cart
+
+        # ####################################################
+        # acme-catalog
+        # ####################################################
+        - title: products-route
+          description: /products endpoint
+          uri: http://host.docker.internal:8082
+          predicates:
+           - Path=/products
+           - Method=GET
+          filters:
+           - StripPrefix=0
+           - RateLimit=5,5s
+          tags:
+           - catalog
+        - title: products-id-route
+          description: /products/id endpoint
+          uri: http://host.docker.internal:8082
+          predicates:
+           - Path=/products/{id}
+           - Method=GET
+          filters:
+           - StripPrefix=0
+          tags:
+           - catalog
+        - title: catalogliveness-route
+          description: /products/id endpoint
+          uri: http://host.docker.internal:8082
+          predicates:
+           - Path=/catalogliveness
+           - Method=GET
+          filters:
+           - StripPrefix=0
+           - SetPath=/actuator/health/liveness
+          tags:
+           - catalog
+        - title: catalogliveness-route
+          description: /products/id endpoint
+          uri: http://host.docker.internal:8082
+          predicates:
+           - Path=/static/images/{id}
+           - Method=GET
+          filters:
+           - StripPrefix=0
+          tags:
+           - catalog
+
+        # ####################################################
+        # acme-identity
+        # ####################################################
+        - order: 0
+          ssoEnabled: true
+          uri: http://host.docker.internal:8083
+          predicates:
+            - Path=/acme-login
+            - Method=GET
+          filters:
+            - SsoLogin
+            - RedirectTo=302, /
+          tags:
+            - sso
+        - uri: http://host.docker.internal:8083
+          predicates:
+            - Path=/userinfo
+            - Method=GET
+          filters:
+            - RedirectTo=302, /whoami
+            - SetResponseHeader=Cache-Control, no-store
+            - TokenRelay
+          tags:
+            - users
+        - uri: no://op
+          predicates:
+            - Path=/verify-token
+            - Method=POST
+          tags:
+            - users
+        - uri: http://host.docker.internal:8083
+          predicates:
+            - Path=/whoami
+            - Method=GET
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - users
+
+        # ####################################################
+        # acme-order
+        # ####################################################
+        - uri: http://host.docker.internal:8086
+          title: Create an order.
+          description: Creates an order for the user.
+          predicates:
+            - Path=/order/add/{userId}
+            - Method=POST
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - order
+        - uri: http://host.docker.internal:8086
+          title: Retrieve User's Orders.
+          description: Lookup all orders for the given user
+          predicates:
+            - Path=/order/{userId}
+            - Method=GET
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - order
+
+        # ####################################################
+        # acme-payment
+        # ####################################################
+        - uri: http://host.docker.internal:8084
+          description: /pay endpoint
+          predicates:
+            - Path=/pay
+            - Method=POST
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - payment
+
+        # ####################################################
+        # acme-shopping (frontend)
+        # ####################################################
+        - order: 999
+          uri: http://host.docker.internal:8080
+          predicates:
+            - Path=/**
+            - Method=GET
+          filters:
+            - StripPrefix=0
+            - TokenRelay
+          tags:
+            - users
+

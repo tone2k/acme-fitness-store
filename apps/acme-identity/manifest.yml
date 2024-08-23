@@ -1,0 +1,25 @@
+---
+applications:
+- name: acme-identity
+  memory: 1G
+  path: build/libs/acme-identity-0.0.1-SNAPSHOT.jar
+  buildpack: java_buildpack_offline
+  services:
+    - acme-config
+    - acme-registry
+    - name: acme-sso
+      parameters:
+        grant_types: ["authorization_code"]
+        scopes: ["openid"]
+        authorities: ["openid"]
+        redirect_uris: ["https://acme-fitness.apps.tas.vmtanzu.com"]
+        auto_approved_scopes: ["openid"]
+        identity_providers: ["uaa"]
+        launch_url: "https://acme-fitness.apps.tas.vmtanzu.com"
+        show_on_home_page: false
+  routes:
+    - route: acme-identity.apps.internal
+  env:
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+    SPRING_PROFILES_ACTIVE: http2,cloud
+    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 21.+ } }'

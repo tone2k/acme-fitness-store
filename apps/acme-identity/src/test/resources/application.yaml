@@ -4,3 +4,6 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: "http://example.com"
+  cloud:
+    config:
+      enabled: false

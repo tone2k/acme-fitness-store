@@ -1,0 +1,12 @@
+---
+applications:
+- name: acme-cart
+  memory: 1G
+  buildpack: python_buildpack
+  services:
+    - acme-redis
+  routes:
+    - route: acme-cart.apps.internal
+  env:
+    AUTH_URL: "https://acme-fitness.apps.tas.vmtanzu.com"
+    CART_PORT: 8080

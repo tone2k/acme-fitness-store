@@ -23,6 +23,7 @@ nupkg/
 
 # Rider
 .idea
+*.iml
 
 # User-specific files
 *.suo
@@ -50,3 +51,4 @@ msbuild.wrn
 .vs/
 
 publish/
+/http-client.private.env.json

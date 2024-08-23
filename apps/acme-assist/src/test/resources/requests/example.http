@@ -1,0 +1,91 @@
+### GET request to example server
+
+
+POST {{assist-base-url}}/ai/hello
+Content-Type: application/json
+
+{
+  "page": "foobar page",
+  "userId": "foobar userId",
+  "conversationId": "foobar conversationId"
+}
+
+###
+POST {{assist-base-url}}/ai/question
+Content-Type: application/json
+
+{
+  "page": "foobar page",
+  "userId": "foobar userId",
+  "messages": [
+    {
+      "role": "USER",
+      "content": "How long will it take to get the bike delivered to me?"
+    }
+  ]
+}
+
+####
+POST {{assist-base-url}}/ai/question
+Content-Type: application/json
+
+{
+  "page": "foobar page",
+  "productId": "foobar userId",
+  "messages": [
+    {
+      "role": "USER",
+      "content": "tell me more about Stealth R1X Pro"
+    }
+  ]
+}
+
+
+####
+POST {{assist-base-url}}/ai/question
+Content-Type: application/json
+
+{
+  "page": "foobar page",
+  "productId": "foobar userId",
+  "messages": [
+    {
+      "role": "USER",
+      "content": "I'm new to ebikes, and I'm looking for one that suits my daily commute in the city. I want something comfortable and reliable."
+    }
+  ]
+}
+
+####
+POST {{assist-base-url}}/ai/question
+Content-Type: application/json
+
+{
+  "page": "foobar page",
+  "productId": "d82e62b3-63e4-4496-ae2a-2af01a08cb39",
+  "messages": [
+    {
+      "role": "USER",
+      "content": "what is the price of Stealth R1X Pro cost"
+    }
+  ]
+}
+
+####
+POST {{assist-base-url}}/ai/question
+Content-Type: application/json
+
+{
+  "page": "foobar page",
+  "productId": "d82e62b3-63e4-4496-ae2a-2af01a08cb39",
+  "messages": [
+    {
+      "role": "USER",
+      "content": "what are accessories that pair well with Stealth R1X Pro"
+    }
+  ]
+}
+
+
+###
+POST {{assist-base-url}}/ai/admin/load-vector-json

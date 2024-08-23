@@ -1,18 +1,11 @@
 <div class="container"><a href="index.html" class="navbar-brand home"><img src="img/logo.png" alt="ACME Fitness logo"
             class="d-none d-md-inline-block"><img src="img/logo-small.png" alt="ACME Fitness logo"
             class="d-md-none"><span class="sr-only">ACME Fitness - go to homepage</span></a>
-    <div class="currency-area .d-sm-none .d-md-block">
-        <select id="currency" class="form-control btn-outline-secondary mr-1">
-            <option value="USD" selected="USD">USD</option>
-            <option value="GBP">GBP</option>
-            <option value="YEN">YEN</option>
-        </select>
-    </div>
     <div class="navbar-buttons d-lg-none">
         <button type="button" data-toggle="modal" data-target="#login-modal" class="btn btn-outline-secondary mr-1">
             <span class="sr-only">User login</span><i class="fa fa-users"></i></button>
         <!---<button class="btn btn-outline-secondary search mr-1"><span class="sr-only">Toggle search</span><i class="fa fa-search">               </i></button>-->
-        <a href="cart.html" class="btn btn-outline-primary mr-1"><i class="fa fa-shopping-cart"></i><span
+        <a href="./cart.html" class="btn btn-outline-primary mr-1"><i class="fa fa-shopping-cart"></i><span
                 id="totalItems" class="d-none d-sm-inline"></span></a>
         <button type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation"
             aria-expanded="false" aria-label="Toggle navigation" class="btn btn-outline-primary"><i
@@ -34,8 +27,9 @@
             <button type="button" data-toggle="modal" data-target="#login-modal" class="btn btn-outline-secondary mr-1">
                 <span class="sr-only">User login</span><i class="fa fa-users"></i></button>
             <!--<button class="btn btn-outline-secondary search mr-1"><span class="sr-only">Toggle search</span><i class="fa fa-search">  </i></button>-->
-            <a href="cart.html" class="btn btn-outline-primary"><i class="fa fa-shopping-cart"></i><span
-                    id="totalItemsMd" class="hidden-sm">0 items <span class="hidden-md">in cart </span></span></a>
+            <a id="cart-button" href="./cart.html" class="btn btn-outline-primary"><i
+                    class="fa fa-shopping-cart"></i><span id="totalItemsMd" class="hidden-sm">0 items <span
+                        class="hidden-md">in cart </span></span></a>
             <button type="button" class="btn btn-primary" id="aiChatAskBtn"><i class="fa fa-lightbulb-o"></i>Ask
                 FitAssist</button>
         </div>
@@ -65,6 +59,7 @@
 <!-- /#aiChat-->
 <!-- *** AI CHAT END ***-->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <script src="js/openai.js"></script>
 <script src="js/client.js"></script>
 <script src="js/jwt-decode.min.js"></script>
