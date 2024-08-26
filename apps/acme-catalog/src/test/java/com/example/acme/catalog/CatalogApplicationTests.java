@@ -50,6 +50,8 @@ class CatalogApplicationTests {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
+
+
     @BeforeEach
     void before() {
         org.testcontainers.Testcontainers.exposeHostPorts(this.serverPort);
@@ -82,6 +84,8 @@ class CatalogApplicationTests {
 
     @Test
     void findProductById() {
+
+
         given()
                 .get("/products/cdc8abf3-51cc-4d73-8bee-8ce876a550e5")
                 .then()
@@ -89,6 +93,8 @@ class CatalogApplicationTests {
                 .body("data.name", equalTo("E-Adrenaline 8.0 EX1"));
         checkMetric("getProduct");
     }
+
+
 
     private void checkMetric(String method) {
         var query = String.format("store_products_seconds_count{method=\"%s\"}", method);

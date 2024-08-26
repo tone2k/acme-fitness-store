@@ -24,16 +24,16 @@ interface AcmeAppBarProps {
     handleLogout: () => void;
 }
 
-export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps) {
+export default function AcmeAppBar({handleLogin}: AcmeAppBarProps) {
     const navigate = useNavigate();
     const [chatOpen, setIsChatOpen] = useState(false);
-    const {productId} = useParams<{
-        productId?: string
+    useParams<{
+        productId?: string;
     }>();
 
-    const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
+    const {data: userInfo} = useGetUserInfo();
 
-    const {data: cartData, isLoading: isCartLoading} = useGetCart(userInfo?.userId || '', userInfo);
+    const {data: cartData} = useGetCart(userInfo?.userId || '', userInfo);
 
 
     const itemsInCart = cartData?.cart?.reduce((total, item) => total + item.quantity, 0) || 0;
@@ -88,7 +88,7 @@ export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps)
                     </Stack>
                 </Container>
             </AppBar>
-            <ChatModal open={chatOpen} onClose={handleChatClose} cartData={cartData}/>
+            <ChatModal open={chatOpen} onClose={handleChatClose} cartData={cartData} productId={null}/>
         </>
     );
 }

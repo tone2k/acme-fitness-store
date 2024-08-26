@@ -22,12 +22,12 @@ export default function PaymentMethod() {
     });
 
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | { value: unknown }>) => {
+    const handleChange = (event) => {
         const {name, value} = event.target as HTMLInputElement;
         setPaymentData((prevData) => ({...prevData, [name]: value}));
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event) => {
         navigate('/review', {state: {cartItems, total, addressData, deliveryMethod, paymentData}});
     };
 

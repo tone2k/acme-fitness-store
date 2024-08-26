@@ -4,12 +4,12 @@ import {Link as RouterLink} from "react-router-dom";
 import React from "react";
 
 export default function Catalog() {
-    const {data, error, isLoading} = useGetProducts();
+    const getProductsResponse = useGetProducts();
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error fetching data</div>;
+    if (getProductsResponse['response'].isLoading) return <div>Loading...</div>;
+    if (getProductsResponse['response'].error) return <div>Error fetching data</div>;
 
-    if (!data || !data.data || !Array.isArray(data.data)) {
+    if (!getProductsResponse['response'].data || !getProductsResponse['response'].data.data || !Array.isArray(getProductsResponse['response'].data.data)) {
         return <div>No products available</div>;
     }
 
@@ -26,7 +26,7 @@ export default function Catalog() {
                 <h5>Best in Class Products to keep you fit</h5>
 
                 <Grid container spacing={3} sx={{width: "75%"}}>
-                    {data.data.map((item, index) => (
+                    {getProductsResponse['response'].data.data.map((item, index) => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                             <Card key={index}>
                                 <CardActionArea sx={{height: "300px", p: "20px"}} component={RouterLink}

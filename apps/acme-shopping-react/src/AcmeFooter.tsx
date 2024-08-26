@@ -1,5 +1,4 @@
-import React from 'react';
-import {Divider, Link, Stack, TextField, Typography} from "@mui/material";
+import {Divider, Stack, TextField, Typography} from "@mui/material";
 import Payment from './assets/payment.png';
 import Button from "@mui/material/Button";
 import {Link as RouterLink} from "react-router-dom";
@@ -34,7 +33,7 @@ export default function AcmeFooter({handleLogin}: AcmeFooterProps) {
                     <Divider sx={{width: "100%"}}/>
                     <Typography>User section</Typography>
                     <Typography>
-                        <Button onClick={handleLogin} color='secondary' underline="none">
+                        <Button onClick={handleLogin} color='secondary'>
                             Login
                         </Button>
                     </Typography>

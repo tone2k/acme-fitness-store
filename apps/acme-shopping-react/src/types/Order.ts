@@ -15,9 +15,10 @@ type CardInfo = {
 };
 
 export type CartItem = {
-    id: string;
+    itemid: string;
+    name: string;
     description: string;
-    price: number;
+    price: string;
     quantity: number;
 };
 
@@ -33,7 +34,7 @@ export type Order = {
     lastname: string;
     email: string;
     total: string;
-    delivery: Record<string, any>;
+    delivery: {};
     address: Address;
     cart: CartItem[];
     card: CardInfo;

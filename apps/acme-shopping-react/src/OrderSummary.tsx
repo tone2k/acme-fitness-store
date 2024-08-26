@@ -1,7 +1,7 @@
 import React from 'react';
 import {useGetCart} from './hooks/cartHooks.ts';
 import {Box, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography} from "@mui/material";
-import {UserInfo} from "./api/userClient.ts";
+import {UserInfo} from "./types/User.ts";
 
 interface OrderSummaryProps {
     userInfo?: UserInfo;

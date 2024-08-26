@@ -5,7 +5,7 @@ import { useGetProducts } from './hooks/catalogHooks';
 import { Link } from "react-router-dom";
 
 export default function CatalogCarousel() {
-    const { data, isLoading, error } = useGetProducts();
+    const getProductsResponse = useGetProducts();
 
     const settings = {
         dots: true,
@@ -15,19 +15,19 @@ export default function CatalogCarousel() {
         slidesToScroll: 1,
     };
 
-    if (isLoading) {
+    if (getProductsResponse['response'].isLoading) {
         return <div>Loading...</div>;
     }
 
-    if (error) {
+    if (getProductsResponse['response'].error) {
         return <div>Error: Failed to load products</div>;
     }
 
-    if (!data || data.length === 0) {
+    if (!getProductsResponse['response'].data || getProductsResponse['response'].data.length === 0) {
         return <div>No products available</div>;
     }
 
-    const products = data.data.slice(0, 15); 
+    const products = getProductsResponse['response'].data.data.slice(0, 15); 
 
     return (
         <Container sx={{ py: "10px" }}>

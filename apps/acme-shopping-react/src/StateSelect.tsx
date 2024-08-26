@@ -56,7 +56,7 @@ const states = [
 
 interface StateSelectProps {
     value: string;
-    onChange: (event: React.ChangeEvent<{ value: unknown }>) => void;
+    onChange: (event) => void;
 }
 
 export default function StateSelect({ value, onChange }: StateSelectProps){

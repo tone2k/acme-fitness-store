@@ -27,7 +27,7 @@ export default function DeliveryMethod() {
         setDeliveryMethod(value);
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event) => {
         navigate('/payment', {state: {cartItems, total, addressData, deliveryMethod}});
     };
 

@@ -36,7 +36,7 @@ export default function OrderReview() {
 
     const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
     const {data: cartData, isLoading: isCartLoading, error} = useGetCart(userInfo?.userId, userInfo);
-    const { mutate: createOrder, isLoading: isCreatingOrder } = useCreateOrder(userInfo?.userId);
+    const { mutate: createOrder } = useCreateOrder(userInfo?.userId);
     const { mutate: clearCart } = useClearCart(userInfo?.userId);  // Use the new hook
 
 
@@ -65,19 +65,19 @@ export default function OrderReview() {
     return (
         <Container sx={{ mt: 8 }}>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
-                <Link underline="none" color="inherit" href="/" style={{ color: 'black' }}>
+                <Link color="inherit" to="/" style={{ color: 'black' }}>
                     Home
                 </Link>
-                <Link underline="none" color="inherit" href="/cart" style={{ color: 'black' }}>
+                <Link color="inherit" to="/cart" style={{ color: 'black' }}>
                     Cart
                 </Link>
-                <Link underline="none" color="inherit" href="/checkout" style={{ color: 'black' }}>
+                <Link color="inherit" to="/checkout" style={{ color: 'black' }}>
                     Address
                 </Link>
-                <Link underline="none" color="inherit" href="/delivery" style={{ color: 'black' }}>
+                <Link color="inherit" to="/delivery" style={{ color: 'black' }}>
                     Delivery
                 </Link>
-                <Link underline="none" color="inherit" href="/payment" style={{ color: 'black' }}>
+                <Link color="inherit" to="/payment" style={{ color: 'black' }}>
                     Payment
                 </Link>
                 <Typography color="text.primary">Review</Typography>

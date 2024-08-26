@@ -1,4 +1,4 @@
-import {CartItem} from "../types/Order.ts";
+import {CartItem, Order} from "../types/Order.ts";
 
 export default function constructOrder(
     cartItems: CartItem[],
@@ -7,11 +7,12 @@ export default function constructOrder(
     deliveryMethod: string,
     paymentData: any,
     userId: string
-) {
+) : Order {
 
-    const cart = cartItems.map(item => ({
-        id: item.itemid,
-        description: item.name,
+    const carts: CartItem[] = cartItems.map(item => ({
+        itemid: item.itemid,
+        description: item.description,
+        name: item.name,
         quantity: item.quantity,
         price: item.price.toString(),
     }));
@@ -37,7 +38,7 @@ export default function constructOrder(
 
     const order = {
         userId: userId,
-        cart: cart,
+        cart: carts,
         total: total.toString(),
         address: address,
         delivery: deliveryMethod,
@@ -76,7 +77,8 @@ export function getCurrentProductInView() {
 }
 
 export const summarizeCart = (cartItems) => {
-    if (cartItems.length === 0) {
+    console.log(cartItems);
+    if (!cartItems) {
         return "Nothing. The cart is empty.";
     }
 

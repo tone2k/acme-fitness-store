@@ -24,7 +24,7 @@ export default function Checkout() {
         email: '',
     });
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | { value: unknown }>) => {
+    const handleChange = (event) => {
         const {name, value} = event.target as HTMLInputElement;
         setFormData((prevData) => ({...prevData, [name]: value}));
     };
