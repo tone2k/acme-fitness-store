@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
+import {ChangeEvent, useState} from 'react';
 import {Container, Grid, Box, Typography, Breadcrumbs, Link} from '@mui/material';
 import {useLocation, useNavigate} from 'react-router-dom';
 import AddressForm from "./AddressForm.tsx";
 import OrderSummary from "./OrderSummary.tsx";
 import {useGetUserInfo} from './hooks/userHooks';
+import {AddressData} from "./types/Address.ts";
 
 export default function Checkout() {
-    const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
+    const {data: userInfo} = useGetUserInfo();
     const navigate = useNavigate();
     const {state} = useLocation();
     const {cartItems = [], total = 0} = state || {};
 
-    const [addressData, setFormData] = useState({
+    const [addressData, setAddressData] = useState<AddressData>({
         firstname: '',
         lastname: '',
         company: '',
@@ -24,12 +25,11 @@ export default function Checkout() {
         email: '',
     });
 
-    const handleChange = (event) => {
-        const {name, value} = event.target as HTMLInputElement;
-        setFormData((prevData) => ({...prevData, [name]: value}));
+    const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+        setAddressData((prevData) => ({...prevData, [target.name]: target.value}));
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = () => {
         navigate("/delivery", {state: {cartItems, total, addressData}});
     };
 

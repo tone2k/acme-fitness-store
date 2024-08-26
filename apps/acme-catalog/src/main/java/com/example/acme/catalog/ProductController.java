@@ -24,6 +24,7 @@ public class ProductController {
 
 	@GetMapping("/products")
 	public GetProductsResponse getProducts() {
+		// TODO: refactor this to remove the `data` attribute
 		return new GetProductsResponse(productService.getProducts().stream()
 													 .map(ProductResponse::new)
 													 .collect(Collectors.toList()));

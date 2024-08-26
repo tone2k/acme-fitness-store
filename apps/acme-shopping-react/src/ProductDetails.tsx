@@ -10,9 +10,7 @@ import {useGetUserInfo} from "./hooks/userHooks";
 import {CartItemData} from "./types/Cart.ts";
 
 export default function ProductDetails() {
-    const {productId} = useParams() as {
-        productId: string
-    };
+    const {productId} = useParams<{ productId: string}>()
 
     const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
     const {data, error, isLoading} = useGetProduct(productId);
@@ -25,8 +23,9 @@ export default function ProductDetails() {
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error fetching data</div>;
+    if (!data) return <div>No product data...</div>;
 
-    const product = data.data;
+    const product = data.data
 
     const handleAddToCart = () => {
         const cartItem: CartItemData = {

@@ -1,13 +1,20 @@
 import {CartItem, Order} from "../types/Order.ts";
+import {AddressData} from "../types/Address.ts";
 
 export default function constructOrder(
     cartItems: CartItem[],
     total: number,
-    addressData: any,
+    addressData: AddressData,
     deliveryMethod: string,
-    paymentData: any,
+    paymentData: {
+        cardType: string;
+        cardNumber: string;
+        ccv: string;
+        expMonth: string;
+        expYear: string;
+    },
     userId: string
-) : Order {
+): Order {
 
     const carts: CartItem[] = cartItems.map(item => ({
         itemid: item.itemid,
@@ -21,7 +28,7 @@ export default function constructOrder(
     const address = {
         street: addressData.street,
         city: addressData.city,
-        zip: addressData.zipCode,
+        zip: addressData.zip,
         state: addressData.state,
         country: addressData.country,
     };
