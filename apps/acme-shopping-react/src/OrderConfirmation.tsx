@@ -1,17 +1,11 @@
-import React, { useEffect } from 'react';
 import {
     Container,
     Grid,
     Typography,
     Box
 } from '@mui/material';
-import {useLocation} from "react-router-dom";
-import {clearCart} from "./api/cartClient.ts";
 
 export default function OrderConfirmation() {
-    const {state} = useLocation();
-    const {userInfo = [], total = 0} = state || {};
-
     return (
         <Container>
             <Box id="navbar" component="nav" sx={{ mb: 4 }}></Box>

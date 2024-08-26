@@ -1,7 +1,7 @@
 describe('ACME Fitness E2E Test', () => {
 
     beforeEach(() => {
-        cy.visit('http://localhost:8090')
+        cy.visit('/')
         cy.get('[data-cy=login-button]').click();
         cy.get('#username').type("user");
         cy.get('#password').type("password");

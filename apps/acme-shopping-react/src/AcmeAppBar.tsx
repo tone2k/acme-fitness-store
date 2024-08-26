@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Logo from './assets/logo.png';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {Box, Modal, Stack, Typography} from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AssistIcon from '@mui/icons-material/TipsAndUpdates';
@@ -27,10 +27,8 @@ interface AcmeAppBarProps {
 export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps) {
     const navigate = useNavigate();
     const [chatOpen, setIsChatOpen] = useState(false);
+
     const [userModalOpen, setUserModalOpen] = useState(false);
-    useParams<{
-        productId?: string;
-    }>();
 
     const {data: userInfo} = useGetUserInfo();
 

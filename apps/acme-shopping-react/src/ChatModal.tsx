@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
     Dialog,
     DialogActions,
@@ -16,21 +16,23 @@ import {
 import {Close, Refresh, Send} from '@mui/icons-material';
 import {useChatService} from './hooks/useChatService';
 import {createMarkup, summarizeCart} from "./utils/helpers.ts";
+import {CartData} from "./types/Cart.ts";
 
 interface ChatModalProps {
     open: boolean;
     onClose: () => void;
     productId: string | null;
-    cartData: any;
+    cartData: CartData;
 }
 
 export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const [inputMessage, setInputMessage] = useState('');
-    const {chatHistory, suggestedPrompts, sendMessage, refreshChat, isLoading, error} = useChatService();
     const [jiggle, setJiggle] = useState(false);
+
+    const {chatHistory, sendMessage, refreshChat, isLoading, error} = useChatService();
     const closeButtonRef = useRef(null);
 
-    const handleClose = (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
+    const handleClose = (event: object, reason: 'backdropClick' | 'escapeKeyDown') => {
         if (reason !== 'backdropClick') {
             onClose();
         } else {
@@ -38,9 +40,9 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         }
     };
 
-    const handleSend = (message: string) => {
+    const handleSend = async (message: string) => {
         if (message.trim()) {
-            sendMessage(message, summarizeCart(cartData.cart));
+            await sendMessage(message, summarizeCart(cartData.cart));
             setInputMessage('');
         }
     };
@@ -58,7 +60,6 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         }, 500);
     };
 
-    // to appease the screenreaders
     useEffect(() => {
         if (open) {
             document.querySelectorAll('body > *:not(#chat-dialog)').forEach((element) => {
@@ -98,9 +99,9 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
             }}
         >
             <DialogTitle
-                sx={{padding: '8px 16px', margin: 0, '& h3': {margin: 0, fontSize: '1.2rem', lineHeight: 1.2}, '& h6': {margin: '4px 0 0 0', fontSize: '0.8rem', lineHeight: 1, fontWeight: 'heavy', color: 'green'}}}>
-                <h3>Chat with FitAssist</h3>
-                <h6>Powered by SpringAI</h6>
+                sx={{padding: '8px 16px', margin: 0}}>
+                <Typography sx={{margin: 0, fontSize: '1.2rem', lineHeight: 1.2}}>Chat with FitAssist</Typography>
+                <Typography sx={{margin: '4px 0 0 0', fontSize: '0.8rem', lineHeight: 1, fontWeight: 'bold', color: 'green'}}>Powered by SpringAI</Typography>
                 <IconButton
                     data-cy="assist-close"
                     ref={closeButtonRef}
@@ -185,7 +186,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && inputMessage.trim() && !isLoading) {
                             e.preventDefault();
-                            handleSend(inputMessage);
+                            void handleSend(inputMessage);
                         }
                     }}
                 />
@@ -193,7 +194,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     data-cy="assist-send-button"
                     variant="contained"
                     endIcon={<Send/>}
-                    onClick={() => handleSend(inputMessage)}
+                    onClick={() => void handleSend(inputMessage)}
                     disabled={!inputMessage.trim() || isLoading}
                 >
                     Send

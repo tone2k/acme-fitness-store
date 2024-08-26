@@ -34,7 +34,7 @@ export type Order = {
     lastname: string;
     email: string;
     total: string;
-    delivery: {};
+    delivery: string;
     address: Address;
     cart: CartItem[];
     card: CardInfo;

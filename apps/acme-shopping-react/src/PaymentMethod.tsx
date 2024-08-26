@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, ChangeEvent} from 'react';
 import {
     Container, Grid, Box, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button, Breadcrumbs, Link
 } from '@mui/material';
@@ -7,7 +7,7 @@ import OrderSummary from "./OrderSummary.tsx";
 import {useGetUserInfo} from './hooks/userHooks';
 
 export default function PaymentMethod() {
-    const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
+    const {data: userInfo} = useGetUserInfo();
     const navigate = useNavigate();
     const {state} = useLocation();
     const {cartItems = [], total = 0, addressData = {}, deliveryMethod = {}} = state || {};
@@ -22,12 +22,11 @@ export default function PaymentMethod() {
     });
 
 
-    const handleChange = (event) => {
-        const {name, value} = event.target as HTMLInputElement;
-        setPaymentData((prevData) => ({...prevData, [name]: value}));
+    const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+        setPaymentData((prevData) => ({...prevData, [target.name]: target.value}));
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = () => {
         navigate('/review', {state: {cartItems, total, addressData, deliveryMethod, paymentData}});
     };
 

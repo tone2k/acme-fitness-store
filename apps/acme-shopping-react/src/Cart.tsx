@@ -13,23 +13,22 @@ import {useGetProducts} from "./hooks/catalogHooks.ts";
 import {ProductData} from "./types/Catalog.ts";
 
 export default function Cart() {
-    const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
+    const {data: userInfo} = useGetUserInfo();
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         pageSize: 5,
         page: 0,
     });
     const navigate = useNavigate();
 
-    const {data: cartData, isLoading, error} = useGetCart(userInfo.userId, userInfo);
+    const {data: cartData} = useGetCart(userInfo.userId, userInfo);
     const deleteCartItemMutation = useDeleteCartItem(userInfo.userId);
-    const getProductsResponse = useGetProducts();
+    const {data: { data: products }} = useGetProducts();
 
     const cartItems = cartData?.cart ?? [];
     const total = cartItems.reduce((acc, curr) => acc + (curr.quantity * parseFloat(curr.price)), 0);
 
     const getProductImg = (itemId: string) => {
-
-        const product = getProductsResponse['response'].data.data?.find((product: ProductData) => product.id === itemId);
+        const product = products?.find((product: ProductData) => product.id === itemId);
         return product?.imageUrl1 || '/static/images/new_bikes_3.jpg'
     }
 
