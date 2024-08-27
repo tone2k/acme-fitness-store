@@ -102,6 +102,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                 <h3>Chat with FitAssist</h3>
                 <h6>Powered by SpringAI</h6>
                 <IconButton
+                    data-cy="assist-close"
                     ref={closeButtonRef}
                     aria-label="close"
                     onClick={onClose}
@@ -134,6 +135,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                 <List sx={{height: 450, overflow: 'auto'}}>
                     {chatHistory.map((message, index) => (
                         <ListItem
+                            id={"assist-message-" + index}
                             key={index}
                             sx={{
                                 justifyContent: message.role === 'USER' ? 'flex-end' : 'flex-start',
@@ -172,6 +174,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
             </DialogContent>
             <DialogActions sx={{p: 2, justifyContent: 'space-between'}}>
                 <TextField
+                    data-cy="assist-input"
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     placeholder="Type a message..."
@@ -186,6 +189,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     }}
                 />
                 <Button
+                    data-cy="assist-send-button"
                     variant="contained"
                     endIcon={<Send/>}
                     onClick={() => handleSend(inputMessage)}

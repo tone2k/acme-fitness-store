@@ -82,7 +82,7 @@ export default function AcmeAppBar({handleLogin}: AcmeAppBarProps) {
                             >
                                 {itemsInCart} items in Cart
                             </Button>
-                            <Button variant='outlined' color='inherit' onClick={handleChatOpen}
+                            <Button  data-cy="assist-button" variant='outlined' color='inherit' onClick={handleChatOpen}
                                     startIcon={<AssistIcon/>}>Ask FitAssist</Button>
                         </Stack>
                     </Stack>
