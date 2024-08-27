@@ -124,6 +124,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     <Close/>
                 </IconButton>
                 <IconButton
+                    data-cy="assist-clear"
                     aria-label="refresh"
                     onClick={refreshChat}
                     sx={{position: 'absolute', right: 48, top: 8}}
