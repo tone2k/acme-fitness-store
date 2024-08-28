@@ -1,15 +1,18 @@
 # Local Journey Testing
 
-## Run Cypress
+## Run End-to-End Tests
 
-### Command
+1. Start `ACME-Fitness-Store` Application
+2. Run the E2E Tests:
+    ```bash
+    npm run e2e
+    ```
 
-Use this command to start up the Cypress app:
+## Run Headless End-to-End Tests
 
-```bash
-npx cypress open
-```
-
-Be sure to run cypress in Chrome to ensure all functionality works correctly.
-
+1. Start `ACME-Fitness-Store` Application
+2. Run the E2E Tests:
+    ```bash
+    npm run e2e
+    ```
 
