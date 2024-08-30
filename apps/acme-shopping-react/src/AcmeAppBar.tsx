@@ -4,14 +4,14 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Logo from './assets/logo.png';
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import {Stack} from "@mui/material";
+import {Box, Modal, Stack, Typography} from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AssistIcon from '@mui/icons-material/TipsAndUpdates';
 import UserIcon from '@mui/icons-material/AccountCircle';
 import {useGetCart} from './hooks/cartHooks.ts';
 import {useGetUserInfo} from './hooks/userHooks';
-import {useState} from "react";
 import ChatModal from "./ChatModal.tsx";
+import {useState} from "react";
 
 const pages = [
     {name: 'Home', navigateTo: '/'},
@@ -24,9 +24,10 @@ interface AcmeAppBarProps {
     handleLogout: () => void;
 }
 
-export default function AcmeAppBar({handleLogin}: AcmeAppBarProps) {
+export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps) {
     const navigate = useNavigate();
     const [chatOpen, setIsChatOpen] = useState(false);
+    const [userModalOpen, setUserModalOpen] = useState(false);
     useParams<{
         productId?: string;
     }>();
@@ -38,7 +39,7 @@ export default function AcmeAppBar({handleLogin}: AcmeAppBarProps) {
 
     const itemsInCart = cartData?.cart?.reduce((total, item) => total + item.quantity, 0) || 0;
 
-    const handleClick = () => {
+    const handleShoppingCartOpen = () => {
         navigate('/cart');
     }
 
@@ -48,6 +49,17 @@ export default function AcmeAppBar({handleLogin}: AcmeAppBarProps) {
 
     const handleChatClose = () => {
         setIsChatOpen(false);
+    }
+    const handleUserModalClose = () => {
+        setUserModalOpen(false);
+    }
+    const handleLoginClick = () => {
+        console.log(userInfo);
+        if (userInfo && userInfo.userId) {
+            setUserModalOpen(true);
+        } else {
+            handleLogin();
+        }
     }
 
     return (
@@ -70,14 +82,14 @@ export default function AcmeAppBar({handleLogin}: AcmeAppBarProps) {
                             ))}
                         </Stack>
                         <Stack direction='row' alignContent='right' spacing={4}>
-                            <IconButton data-cy="login-button" onClick={handleLogin} color='inherit'>
+                            <IconButton data-cy="login-button" onClick={handleLoginClick} color='inherit'>
                                 <UserIcon/>
                             </IconButton>
                             <Button
                                 data-cy="cart-button"
                                 variant='outlined'
                                 color='inherit'
-                                onClick={handleClick}
+                                onClick={handleShoppingCartOpen}
                                 startIcon={<ShoppingCartIcon/>}
                             >
                                 {itemsInCart} items in Cart
@@ -88,6 +100,24 @@ export default function AcmeAppBar({handleLogin}: AcmeAppBarProps) {
                     </Stack>
                 </Container>
             </AppBar>
+            <Modal
+                open={userModalOpen}
+                onClose={handleUserModalClose}
+                aria-labelledby="user-info-modal"
+                aria-describedby="user-info-and-logout"
+            >
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+                    <Typography id="user-info-modal" variant="h6" component="h2">
+                        User Information
+                    </Typography>
+                    <Typography id="user-info-username" sx={{ mt: 2 }}>
+                        {`Hello, ${userInfo?.userName}`}
+                    </Typography>
+                    <Button id="user-info-logout" onClick={handleLogout} variant="contained" color="primary" sx={{ mt: 2 }}>
+                        Logout
+                    </Button>
+                </Box>
+            </Modal>
             <ChatModal open={chatOpen} onClose={handleChatClose} cartData={cartData} productId={null}/>
         </>
     );

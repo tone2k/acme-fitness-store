@@ -14,7 +14,7 @@ describe('ACME Fitness E2E Test', () => {
         cy.get('[data-cy=assist-input]').type("How long will it take to get the bike delivered to me?");
         cy.get('[data-cy=assist-send-button]').click();
         cy.wait(5000);
-        cy.get('#assist-message-1').should('exist').and('contain.text', 'We offer two shipping options', {matchCase: false})
+        cy.get('#assist-message-1').should('exist').and('contain.text', 'We offer two shipping options')
         cy.get('#assist-message-1').contains('Free standard shipping', {matchCase: false})
         cy.get('#assist-message-1').contains('Premium shipping', {matchCase: false})
     })
