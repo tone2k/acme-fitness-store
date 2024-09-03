@@ -135,10 +135,7 @@ export default function AddressForm({formData, handleChange, handleSubmit}: Addr
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <FormControl fullWidth required>
-                        <InputLabel id="state-label" sx={{color: 'black'}}>
-                            State
-                        </InputLabel>
-                        <StateSelect value={'CA'} onChange={handleChange}/>
+                        <StateSelect value={formData.state} onChange={handleChange}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>

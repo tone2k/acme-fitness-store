@@ -31,17 +31,23 @@ export default function CatalogCarousel() {
     const first15Products = products.slice(0, 15);
 
     return (
-        <Container sx={{ py: "10px" }}>
-        <Slider {...settings}>
-            {first15Products.map((product) => (
-                <div key={product.id}>
-                    <Link to={`/product/${product.id}`} style={{ textDecoration: 'none' }}>
-                        <img src={product.imageUrl1} alt={product.name} style={{ width: "100%" }} />
-                        <p style={{ textAlign: "center", marginTop: "10px", color: 'inherit' }}>{product.name}</p>
-                    </Link>
-                </div>
-            ))}
-        </Slider>
+        <Container sx={{ paddingY: 2}}>
+            <Slider
+                dots={true}
+                infinite={false}
+                speed={500}
+                slidesToShow={3}
+                slidesToScroll={1}
+            >
+                {first15Products.map((product) => (
+                    <div key={product.id}>
+                        <Link to={`/product/${product.id}`} style={{ textDecoration: 'none' }}>
+                            <img src={product.imageUrl1} alt={product.name} style={{ width: "100%" }} />
+                            <p style={{ textAlign: "center", marginTop: "10px", color: 'inherit' }}>{product.name}</p>
+                        </Link>
+                    </div>
+                ))}
+            </Slider>
     </Container>
     );
 }
