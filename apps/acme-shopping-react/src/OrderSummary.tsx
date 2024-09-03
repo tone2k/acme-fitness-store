@@ -1,4 +1,3 @@
-import React from 'react';
 import {useGetCart} from './hooks/cartHooks.ts';
 import {Box, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography} from "@mui/material";
 import {UserInfo} from "./types/User.ts";
@@ -8,11 +7,11 @@ interface OrderSummaryProps {
 }
 
 export default function OrderSummary({ userInfo }: OrderSummaryProps) {
-    if (!userInfo) {
+    const { data: cartData, isLoading, error } = useGetCart(userInfo.userId, userInfo);
+
+    if (userInfo) {
         return <div>Loading...</div>;
     }
-
-    const { data: cartData, isLoading, error } = useGetCart(userInfo.userId, userInfo);
 
     if (isLoading) {
         return <div>Loading cart...</div>;

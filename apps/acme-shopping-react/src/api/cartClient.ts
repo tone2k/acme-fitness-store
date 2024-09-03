@@ -28,6 +28,7 @@ export const modifyCartItem = async (userId: string, itemData: CartItemData): Pr
         }
 
     } catch (error) {
+        console.error('Error modifying cart:', error.message);
         throw error;
     }
 };
@@ -41,7 +42,7 @@ export const clearCart = async (userId: string): Promise<void> => {
         } else {
             console.log('Status:', response.status);
         }
-    } catch (error: any) {
+    } catch (error) {
         console.error('Error from cart service:', error.message);
         throw error;
     }

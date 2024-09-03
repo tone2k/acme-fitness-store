@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
     Dialog,
     DialogActions,
@@ -16,21 +16,23 @@ import {
 import {Close, Refresh, Send} from '@mui/icons-material';
 import {useChatService} from './hooks/useChatService';
 import {createMarkup, summarizeCart} from "./utils/helpers.ts";
+import {CartData} from "./types/Cart.ts";
 
 interface ChatModalProps {
     open: boolean;
     onClose: () => void;
     productId: string | null;
-    cartData: any;
+    cartData: CartData;
 }
 
 export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const [inputMessage, setInputMessage] = useState('');
-    const {chatHistory, suggestedPrompts, sendMessage, refreshChat, isLoading, error} = useChatService();
     const [jiggle, setJiggle] = useState(false);
+
+    const {chatHistory, sendMessage, refreshChat, isLoading, error} = useChatService();
     const closeButtonRef = useRef(null);
 
-    const handleClose = (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
+    const handleClose = (event: object, reason: 'backdropClick' | 'escapeKeyDown') => {
         if (reason !== 'backdropClick') {
             onClose();
         } else {
@@ -40,7 +42,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
 
     const handleSend = (message: string) => {
         if (message.trim()) {
-            sendMessage(message, summarizeCart(cartData.cart));
+            void sendMessage(message, summarizeCart(cartData.cart));
             setInputMessage('');
         }
     };
@@ -58,7 +60,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         }, 500);
     };
 
-    // to appease the screenreaders
+    // to appease the screen readers
     useEffect(() => {
         if (open) {
             document.querySelectorAll('body > *:not(#chat-dialog)').forEach((element) => {

@@ -15,7 +15,7 @@ export default function ProductDetails() {
     };
 
     const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
-    const {data, error, isLoading} = useGetProduct(productId);
+    const {data: product, error, isLoading} = useGetProduct(productId);
 
     const addToCartMutation = useAddToCart(userInfo?.userId || '');
 
@@ -25,8 +25,6 @@ export default function ProductDetails() {
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error fetching data</div>;
-
-    const product = data.data;
 
     const handleAddToCart = () => {
         const cartItem: CartItemData = {
