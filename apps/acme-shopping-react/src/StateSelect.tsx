@@ -61,13 +61,15 @@ interface StateSelectProps {
 export default function StateSelect({ value, onChange }: StateSelectProps){
     return (
         <FormControl fullWidth>
-            <InputLabel id="state-select-label"
-            >State</InputLabel>
+            <InputLabel id="state-select-label">State</InputLabel>
             <Select
                 labelId="state-select-label"
                 id="state-select"
                 value={value}
-                onChange={onChange}
+                onChange={(event) => {
+                    event.target.name = 'state';
+                    onChange(event);
+                }}
                 label="State"
             >
                 {states.map((state) => (

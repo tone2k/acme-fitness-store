@@ -9,7 +9,7 @@ describe('ACME Fitness E2E Test', () => {
     });
 
     it('ask it standard FAQ questions', () => {
-        cy.get('[data-cy=assist-button]').click();
+        cy.get('[data-cy=assist-button]').filter(':visible').click();
         cy.get('[data-cy=assist-clear]').click();
         cy.get('[data-cy=assist-input]').type("How long will it take to get the bike delivered to me?");
         cy.get('[data-cy=assist-send-button]').click();
@@ -23,10 +23,10 @@ describe('ACME Fitness E2E Test', () => {
         cy.get(':nth-child(13) > button').click()
         cy.get('[data-index="2"] > :nth-child(1) > div > a > img').click({force: true})
         cy.get('[data-cy=add-button]').click();
-        cy.get('.css-m69qwo-MuiStack-root > [href="/catalog"]').click()
+        cy.get('[href="/catalog"]').click()
         cy.get(':nth-child(27) > .MuiPaper-root > .MuiButtonBase-root > .MuiStack-root').click()
         cy.get('[data-cy=add-button]').click();
-        cy.get('[data-cy=assist-button]').click();
+        cy.get('[data-cy=assist-button]').filter(':visible').click();
         cy.get('[data-cy=assist-input]').type("Tell me more about this Product.");
         cy.get('[data-cy=assist-send-button]').click();
         cy.wait(10000);
@@ -37,7 +37,7 @@ describe('ACME Fitness E2E Test', () => {
         cy.wait(10000)
         cy.get('#assist-message-4').should('exist').and('contain.text', 'Your current cart total is $')
         cy.get('[data-cy=assist-close]').click();
-        cy.get('[data-cy=cart-button]').click();
+        cy.get('[data-cy=cart-button]').filter(':visible').click();
         cy.get('[data-cy=checkout-button]').click();
         cy.get('#firstname').type("Michael");
         cy.get('#lastname').type("Smith");

@@ -23,6 +23,10 @@ export const theme = createTheme({
         secondary: {
             main: "#999",
             contrastText: "#212529"
+        },
+        inverted: {
+            contrastText: "#fff",
+            main: "#c27baa",
         }
     }
 })

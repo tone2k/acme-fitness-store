@@ -21,7 +21,7 @@ const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
 export default function Home() {
 
     return (
-            <Container sx={{ mt: 8 }}>
+            <Container sx={{ mt: 2 }}>
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
                     <Link underline="hover" color="inherit" href="/">
                         Home

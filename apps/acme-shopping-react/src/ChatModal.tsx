@@ -91,10 +91,9 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     bottom: 16,
                     right: 16,
                     m: 0,
-                    width: 420,
-                    height: 600,
+                    width: {xs: 'vw', sm: 420},
+                    height: {xs: 'vh', sm: 600},
                     pointerEvents: 'auto',
-
                 },
             }}
         >

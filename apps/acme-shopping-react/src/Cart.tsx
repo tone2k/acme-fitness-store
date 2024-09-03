@@ -125,7 +125,7 @@ export default function Cart() {
     }
 
     return (
-        <Container sx={{mt: 8}}>
+        <Container sx={{mt: 2}}>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
                 <Link underline="hover" color="inherit" href="/">
                     Home
