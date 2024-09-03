@@ -1,4 +1,3 @@
-import React from "react";
 import {Divider, Stack, Typography} from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/FavoriteBorder';
 import SellIcon from '@mui/icons-material/Sell';

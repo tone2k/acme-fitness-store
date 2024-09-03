@@ -26,9 +26,9 @@ The sample can be deployed to Azure Spring Apps Enterprise or Tanzu Application 
 
 ## Repo Organization
 
-| Directory                                                        | Purpose |
-| ---------------------------------------------------------------- | ------------- |
-| [apps/](./apps)                                                   | source code for the services  |
+| Directory                                                        | Purpose.                     |
+|------------------------------------------------------------------|------------------------------|
+| [apps/](./apps)                                                  | source code for the services |
 
 ================================================================
 ## Deploy on Tanzu Platform for Cloud Foundry (TPCF aka TAS)

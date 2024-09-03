@@ -28,9 +28,7 @@ export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps)
     const navigate = useNavigate();
     const [chatOpen, setIsChatOpen] = useState(false);
     const [userModalOpen, setUserModalOpen] = useState(false);
-    useParams<{
-        productId?: string;
-    }>();
+    // const {productId} = useParams<{ productId?: string }>();
 
     const {data: userInfo} = useGetUserInfo();
 

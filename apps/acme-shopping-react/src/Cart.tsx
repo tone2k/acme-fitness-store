@@ -13,14 +13,14 @@ import {useGetProducts} from "./hooks/catalogHooks.ts";
 import {ProductData} from "./types/Catalog.ts";
 
 export default function Cart() {
-    const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
+    const {data: userInfo} = useGetUserInfo();
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         pageSize: 5,
         page: 0,
     });
     const navigate = useNavigate();
 
-    const {data: cartData, isLoading, error} = useGetCart(userInfo.userId, userInfo);
+    const {data: cartData} = useGetCart(userInfo.userId, userInfo);
     const deleteCartItemMutation = useDeleteCartItem(userInfo.userId);
     const getProductsResponse = useGetProducts();
 

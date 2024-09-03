@@ -6,6 +6,7 @@ __pycache__
 custom-filters
 *.iml
 *.jar
+.java-version
 
 azure-spring-apps-enterprise/scripts/setup-env-variables.sh
 azure-spring-apps-enterprise/scripts/setup-db-env-variables.sh

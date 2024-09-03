@@ -1,0 +1,12 @@
+{
+  "name": "@acem-fitness-store/e2e",
+  "version": "0.0.1",
+  "description": "Cypress End-to-End Tests for ACME Fitness Store",
+  "scripts": {
+    "e2e": "cypress run",
+    "e2e:open": "cypress open"
+  },
+  "dependencies": {
+    "cypress": "^13.14.0"
+  }
+}

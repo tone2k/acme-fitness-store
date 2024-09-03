@@ -4,7 +4,6 @@ import AcmeAppBar from "./AcmeAppBar.tsx";
 import { Box } from "@mui/material";
 import AcmeFooter from "./AcmeFooter.tsx";
 import ProductDetails from "./ProductDetails.tsx";
-import { useGetUserInfo } from "./hooks/userHooks.ts";
 import Checkout from "./Checkout.tsx";
 import DeliveryMethod from "./DeliveryMethod.tsx";
 import PaymentMethod from "./PaymentMethod.tsx";
@@ -20,8 +19,6 @@ type AppLayoutProps = {
   children: ReactNode
 }
 function AppLayout({ children }: AppLayoutProps) {
-  const { data: userInfo, isLoading, error } = useGetUserInfo();
-
   const handleLogin = () => {
       window.location.href = '/acme-login';
   };
@@ -29,12 +26,6 @@ function AppLayout({ children }: AppLayoutProps) {
   const handleLogout = () => {
     window.location.href = '/scg-logout?redirect=/';
   };
-
-  if (error) {
-    console.error('Error loading user information:', error);
-    return <div>Error loading user information</div>;
-  }
-
 
   return (
     <Box>

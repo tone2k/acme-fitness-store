@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {
     Container,
     Grid,
@@ -15,7 +15,7 @@ import OrderSummary from "./OrderSummary.tsx";
 import {useGetUserInfo} from './hooks/userHooks';
 
 export default function DeliveryMethod() {
-    const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
+    const {data: userInfo} = useGetUserInfo();
 
     const [deliveryMethod, setDeliveryMethod] = useState<string>('standard');
     const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function DeliveryMethod() {
         setDeliveryMethod(value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = () => {
         navigate('/payment', {state: {cartItems, total, addressData, deliveryMethod}});
     };
 

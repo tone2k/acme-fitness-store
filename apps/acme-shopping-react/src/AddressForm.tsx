@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Grid,
     TextField,
@@ -9,20 +8,10 @@ import {
 } from '@mui/material';
 import {Link} from 'react-router-dom';
 import StateSelect from "./StateSelect";
+import {AddressData} from "./types/Address.ts";
 
 interface AddressFormProps {
-    formData: {
-        firstname: string;
-        lastname: string;
-        company: string;
-        street: string;
-        city: string;
-        zip: string;
-        state: string;
-        country: string;
-        phone: string;
-        email: string;
-    };
+    formData: AddressData;
     handleChange: (event: React.ChangeEvent<HTMLInputElement | { value: unknown }>) => void;
     handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }

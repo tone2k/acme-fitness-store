@@ -1,4 +1,3 @@
-import React, {useEffect, useState} from 'react';
 import {
     Container,
     Grid,
@@ -15,38 +14,22 @@ import {
 } from '@mui/material';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {useGetUserInfo} from "./hooks/userHooks";
-import {useClearCart, useGetCart} from "./hooks/cartHooks.ts";
+import {useClearCart} from "./hooks/cartHooks.ts";
 import OrderSummary from "./OrderSummary.tsx";
 import constructOrder from "./utils/helpers.ts";
 import {useCreateOrder} from "./hooks/orderHook.ts";
-import {clearCart} from "./api/cartClient.ts";
-
-interface CartItem {
-    itemid: string;
-    name: string;
-    quantity: number;
-    price: number;
-}
 
 export default function OrderReview() {
     const {state} = useLocation();
     const { cartItems = [], total = 0, addressData = {}, deliveryMethod = {}, paymentData = {} } = state || {};
     const navigate = useNavigate();
 
-
     const {data: userInfo, isLoading: isUserInfoLoading} = useGetUserInfo();
-    const {data: cartData, isLoading: isCartLoading, error} = useGetCart(userInfo?.userId, userInfo);
     const { mutate: createOrder } = useCreateOrder(userInfo?.userId);
     const { mutate: clearCart } = useClearCart(userInfo?.userId);  // Use the new hook
 
-
-
-    if (isUserInfoLoading || isCartLoading) {
+    if (isUserInfoLoading) {
         return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error loading cart data.</div>;
     }
 
     const handleSubmit = () =>{
