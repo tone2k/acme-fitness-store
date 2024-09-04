@@ -40,9 +40,9 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         }
     };
 
-    const handleSend = (message: string) => {
+    const handleSend = async (message: string) => {
         if (message.trim()) {
-            void sendMessage(message, summarizeCart(cartData.cart));
+            await sendMessage(message, summarizeCart(cartData.cart));
             setInputMessage('');
         }
     };
@@ -187,7 +187,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && inputMessage.trim() && !isLoading) {
                             e.preventDefault();
-                            handleSend(inputMessage);
+                            void handleSend(inputMessage);
                         }
                     }}
                 />
@@ -195,7 +195,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     data-cy="assist-send-button"
                     variant="contained"
                     endIcon={<Send/>}
-                    onClick={() => handleSend(inputMessage)}
+                    onClick={() => void handleSend(inputMessage)}
                     disabled={!inputMessage.trim() || isLoading}
                 >
                     Send

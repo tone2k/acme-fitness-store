@@ -6,7 +6,7 @@ export const getProducts = async (): Promise<{ data: ProductData[] }> => {
     return response.data;
 };
 
-export const getProduct = async (productId: string): Promise<ProductData> => {
-    const response = await axios.get<ProductData>(`/products/${productId}`);
+export const getProduct = async (productId: string): Promise<{ data: ProductData}> => {
+    const response = await axios.get<{ data: ProductData}>(`/products/${productId}`);
     return response.data;
 };

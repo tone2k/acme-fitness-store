@@ -10,7 +10,7 @@ export const useGetProducts = () => {
 };
 
 export const useGetProduct = (productId: string) => {
-    return useQuery<ProductData, Error>({
+    return useQuery<{ data: ProductData }, Error>({
         queryKey: ['getProduct', productId],
         queryFn: () => getProduct(productId),
     });

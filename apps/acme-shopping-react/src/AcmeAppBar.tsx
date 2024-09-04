@@ -116,6 +116,7 @@ export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps)
                     </Button>
                 </Box>
             </Modal>
+
             <ChatModal open={chatOpen} onClose={handleChatClose} cartData={cartData} productId={null}/>
         </>
     );

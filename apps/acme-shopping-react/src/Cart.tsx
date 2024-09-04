@@ -22,14 +22,13 @@ export default function Cart() {
 
     const {data: cartData} = useGetCart(userInfo.userId, userInfo);
     const deleteCartItemMutation = useDeleteCartItem(userInfo.userId);
-    const getProductsResponse = useGetProducts();
+    const {data: { data: products }} = useGetProducts();
 
     const cartItems = cartData?.cart ?? [];
     const total = cartItems.reduce((acc, curr) => acc + (curr.quantity * parseFloat(curr.price)), 0);
 
     const getProductImg = (itemId: string) => {
-
-        const product = getProductsResponse['response'].data.data?.find((product: ProductData) => product.id === itemId);
+        const product = products?.find((product: ProductData) => product.id === itemId);
         return product?.imageUrl1 || '/static/images/new_bikes_3.jpg'
     }
 
