@@ -125,10 +125,10 @@ cf start acme-order
 
 #### Shopping Service
 ```bash
-cd ../acme-shopping
+cd ../acme-shopping-react
 cf push --no-start
-cf bind-service acme-shopping acme-gateway -c frontend-routes.json
-cf start acme-shopping
+cf bind-service acme-shopping-react acme-gateway -c frontend-routes.json
+cf start acme-shopping-react
 ```
 =================================================
 
