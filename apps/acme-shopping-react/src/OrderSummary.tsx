@@ -1,15 +1,16 @@
-import {useGetCart} from './hooks/cartHooks.ts';
-import {Box, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography} from "@mui/material";
-import {UserInfo} from "./types/User.ts";
+import { useGetCart } from './hooks/cartHooks.ts';
+import { Box, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { UserInfo } from "./types/User.ts";
 
 interface OrderSummaryProps {
     userInfo?: UserInfo;
 }
 
 export default function OrderSummary({ userInfo }: OrderSummaryProps) {
-    const { data: cartData, isLoading, error } = useGetCart(userInfo.userId, userInfo);
+    
+    const { data: cartData, isLoading, error } = useGetCart(userInfo?.userId, userInfo);
 
-    if (userInfo) {
+    if (!userInfo) {
         return <div>Loading...</div>;
     }
 

@@ -100,9 +100,9 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
             }}
         >
             <DialogTitle
-                sx={{padding: '8px 16px', margin: 0, '& h3': {margin: 0, fontSize: '1.2rem', lineHeight: 1.2}, '& h6': {margin: '4px 0 0 0', fontSize: '0.8rem', lineHeight: 1, fontWeight: 'heavy', color: 'green'}}}>
-                <h3>Chat with FitAssist</h3>
-                <h6>Powered by SpringAI</h6>
+                sx={{padding: '8px 16px', margin: 0}}>
+                <Typography sx={{margin: 0, fontSize: '1.2rem', lineHeight: 1.2}}>Chat with FitAssist</Typography>
+                <Typography sx={{margin: '4px 0 0 0', fontSize: '0.8rem', lineHeight: 1, fontWeight: 'bold', color: 'green'}}>Powered by SpringAI</Typography>
                 <IconButton
                     data-cy="assist-close"
                     ref={closeButtonRef}
