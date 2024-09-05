@@ -127,8 +127,8 @@ cf start acme-order
 ```bash
 cd ../acme-shopping-react
 cf push --no-start
-cf bind-service acme-shopping-react acme-gateway -c frontend-routes.json
-cf start acme-shopping-react
+cf bind-service acme-shopping acme-gateway -c frontend-routes.json
+cf start acme-shopping
 ```
 =================================================
 
