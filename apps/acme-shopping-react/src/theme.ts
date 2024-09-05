@@ -1,6 +1,8 @@
 import {createTheme} from "@mui/material";
 import '@fontsource/montserrat/400.css'
 import '@fontsource/montserrat/500.css'
+import '@fontsource/montserrat/400.css'
+import '@fontsource/montserrat/500.css'
 export const theme = createTheme({
     typography: {
         allVariants: { color: "#c27baa" },
@@ -23,10 +25,6 @@ export const theme = createTheme({
         secondary: {
             main: "#999",
             contrastText: "#212529"
-        },
-        inverted: {
-            contrastText: "#fff",
-            main: "#c27baa",
         }
     }
 })

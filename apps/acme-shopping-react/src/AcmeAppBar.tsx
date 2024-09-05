@@ -108,7 +108,7 @@ export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps)
                                 color='inherit'
                                 sx={{display: {xs: 'flex', sm: 'none'}}}
                             >
-                                <Badge badgeContent={itemsInCart} color='inverted'>
+                                <Badge badgeContent={itemsInCart}>
                                     <ShoppingCartIcon/>
                                 </Badge>
                             </IconButton>
@@ -133,8 +133,8 @@ export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps)
                             </IconButton>
                             <Button
                                 data-cy="assist-button"
-                                variant='contained'
-                                color='inverted'
+                                variant='outlined'
+                                color='inherit'
                                 onClick={handleChatOpen}
                                 startIcon={<AssistIcon/>}
                                 sx={{display: {xs: 'none', sm: 'flex'}}}
