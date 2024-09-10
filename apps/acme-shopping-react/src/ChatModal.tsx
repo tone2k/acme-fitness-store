@@ -17,6 +17,7 @@ import {Close, Refresh, Send} from '@mui/icons-material';
 import {useChatService} from './hooks/useChatService';
 import {createMarkup, summarizeCart} from "./utils/helpers.ts";
 import {CartData} from "./types/Cart.ts";
+import ChatMessage from "./ChatMessage.tsx";
 
 interface ChatModalProps {
     open: boolean;
@@ -135,33 +136,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
             <DialogContent dividers sx={{p: 1}}>
                 <List sx={{height: 450, overflow: 'auto'}}>
                     {chatHistory.map((message, index) => (
-                        <ListItem
-                            id={"assist-message-" + index}
-                            key={index}
-                            sx={{
-                                justifyContent: message.role === 'USER' ? 'flex-end' : 'flex-start',
-                            }}
-                        >
-                            <Paper
-                                elevation={2}
-                                sx={{
-                                    p: 1,
-                                    maxWidth: '70%',
-                                    backgroundColor: message.role === 'USER' ? 'primary.light' : 'grey.200',
-                                    borderRadius: message.role === 'USER' ? '20px 20px 0 20px' : '20px 20px 20px 0',
-                                }}
-                            >
-                                <ListItemText
-                                    primary={<span dangerouslySetInnerHTML={createMarkup(message.content)}/>}
-                                    sx={{
-                                        wordBreak: 'break-word',
-                                        '& .MuiListItemText-primary': {
-                                            color: message.role === 'USER' ? 'primary.contrastText' : 'text.primary',
-                                        }
-                                    }}
-                                />
-                            </Paper>
-                        </ListItem>
+                        <ChatMessage message={message} index={index} createMarkup={createMarkup}/>
                     ))}
                 </List>
                 {isLoading && (<Typography variant="body2"

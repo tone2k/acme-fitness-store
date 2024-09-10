@@ -12,4 +12,9 @@ public class AcmeChatMessage {
 
     private String currentProduct;
 
+    public AcmeChatMessage(MessageType role, String content) {
+        this.role = role;
+        this.content = content;
+        this.currentProduct = null;
+    }
 }

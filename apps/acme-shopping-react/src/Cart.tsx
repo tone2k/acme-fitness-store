@@ -22,7 +22,8 @@ export default function Cart() {
 
     const {data: cartData} = useGetCart(userInfo.userId, userInfo);
     const deleteCartItemMutation = useDeleteCartItem(userInfo.userId);
-    const {data: { data: products }} = useGetProducts();
+    const {data: productsResponse} = useGetProducts();
+    const products = productsResponse?.data ?? [];
 
     const cartItems = cartData?.cart ?? [];
     const total = cartItems.reduce((acc, curr) => acc + (curr.quantity * parseFloat(curr.price)), 0);
@@ -92,10 +93,8 @@ export default function Cart() {
         },
     ];
 
-    function getRowId(row: {
-        itemid: string;
-    }) {
-        return row.itemid;
+    function getRowId(row: CartItemData) {
+        return row.itemid || row.userId;
     }
 
     function removeItemFromCart(item: CartItemData) {
