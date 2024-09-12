@@ -58,10 +58,6 @@ export default function constructOrder(
     return order;
 }
 
-export const createMarkup = (htmlContent: string) => {
-    return {__html: htmlContent};
-};
-
 export const parseMessageContentAndBuildLinks = (message: string) => {
     const itemPattern = /{{([^|]+)\|([^}]+)}}/g;
 

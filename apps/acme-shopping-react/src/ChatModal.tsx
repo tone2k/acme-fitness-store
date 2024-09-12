@@ -15,8 +15,11 @@ import {
 } from '@mui/material';
 import {Close, Refresh, Send} from '@mui/icons-material';
 import {useChatService} from './hooks/useChatService';
-import {createMarkup, summarizeCart} from "./utils/helpers.ts";
+import {summarizeCart} from "./utils/helpers.ts";
 import {CartData} from "./types/Cart.ts";
+import TerrainForm from './components/TerrainForm.tsx';
+import RidingPositionForm from './components/RidingPositionForm.tsx';
+import HeightForm from "./components/HeightForm.tsx";
 
 interface ChatModalProps {
     open: boolean;
@@ -28,8 +31,8 @@ interface ChatModalProps {
 export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const [inputMessage, setInputMessage] = useState('');
     const [jiggle, setJiggle] = useState(false);
-
-    const {chatHistory, sendMessage, refreshChat, isLoading, error} = useChatService();
+    const [isExpanded, setIsExpanded] = useState(false);
+    const {chatHistory, sendMessage, refreshChat, isLoading, error, currentForm, submitForm, isCompletingForm, setIsFormCompleted, isFormCompleted} = useChatService();
     const closeButtonRef = useRef(null);
 
     const handleClose = (event: object, reason: 'backdropClick' | 'escapeKeyDown') => {
@@ -59,6 +62,45 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
             }
         }, 500);
     };
+
+    const renderMessageContent = (message) => {
+        if (message.formType === 'FORM1') {
+            return (
+                <>
+                    {message.content}
+                    <TerrainForm onSubmit={(data) => submitForm('FORM1', data)} />
+                </>
+            );
+        } else if (message.formType === 'FORM2') {
+            return (
+                <>
+                    {message.content}
+                    <RidingPositionForm onSubmit={(data) => submitForm('FORM2', data)} />
+                </>
+            );
+        } else if (message.formType === 'FORM3') {
+            return (
+                <>
+                    {message.content}
+                    <HeightForm onSubmit={(data) => submitForm('FORM3', data)} />
+                </>
+            );
+        } else {
+            return <>{message.content}</>;
+        }
+    };
+
+    useEffect(() => {
+        if(isCompletingForm){
+            setIsExpanded(true);
+        }
+    }, [isCompletingForm]);
+
+    useEffect(() => {
+        if(!open){
+            setIsExpanded(false);
+        }
+    }, [open]);
 
     useEffect(() => {
         if (open) {
@@ -91,9 +133,10 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     bottom: 16,
                     right: 16,
                     m: 0,
-                    width: {xs: 'vw', sm: 420},
-                    height: {xs: 'vh', sm: 600},
+                    width: isExpanded ? {xs: '90vw', sm: '80vw', md: '70vw'} : {xs: '90vw', sm: 420},
+                    height: isExpanded ? {xs: '90vh', sm: '80vh'} : {xs: '90vh', sm: 600},
                     pointerEvents: 'auto',
+                    transition: 'width 0.3s, height 0.3s',
                 },
             }}
         >
@@ -133,7 +176,11 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                 </IconButton>
             </DialogTitle>
             <DialogContent dividers sx={{p: 1}}>
-                <List sx={{height: 450, overflow: 'auto'}}>
+                <List sx={{
+                    height: isExpanded ? 'calc(100% - 64px)' : 450,
+                    overflow: 'auto',
+                    transition: 'height 0.3s',
+                }}>
                     {chatHistory.map((message, index) => (
                         <ListItem
                             id={"assist-message-" + index}
@@ -152,7 +199,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                                 }}
                             >
                                 <ListItemText
-                                    primary={<span dangerouslySetInnerHTML={createMarkup(message.content)}/>}
+                                    primary={renderMessageContent(message)}
                                     sx={{
                                         wordBreak: 'break-word',
                                         '& .MuiListItemText-primary': {
@@ -164,7 +211,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                         </ListItem>
                     ))}
                 </List>
-                {isLoading && (<Typography variant="body2"
+                {isLoading && !isCompletingForm && (<Typography variant="body2"
                                            sx={{position: 'absolute', bottom: 100, left: 16, color: 'text.secondary'}}>FitAssist
                     is currently typing...</Typography>)}
                 {error && (
@@ -188,13 +235,14 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                             void handleSend(inputMessage);
                         }
                     }}
+                    // disabled={currentForm !== null}
                 />
                 <Button
                     data-cy="assist-send-button"
                     variant="contained"
                     endIcon={<Send/>}
                     onClick={() => void handleSend(inputMessage)}
-                    disabled={!inputMessage.trim() || isLoading}
+                    // disabled={!inputMessage.trim() || isLoading || (currentForm !== null && !isFormCompleted)}
                 >
                     Send
                 </Button>

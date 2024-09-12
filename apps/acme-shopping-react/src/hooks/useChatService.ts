@@ -1,10 +1,12 @@
 import {useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import {getCurrentProductInView, parseMessageContentAndBuildLinks} from "../utils/helpers.ts";
+import { FormRecommendationData } from '../types/FormRecommendationData.ts';
 
 interface ChatMessage {
     content: string;
     role: 'USER' | 'ASSISTANT';
+    formType: 'FORM1' | 'FORM2' | 'FORM3' | null;
 }
 
 interface AcmeChatResponse {
@@ -24,6 +26,11 @@ export const useChatService = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([]);
+    const [currentForm, setCurrentForm] = useState<'FORM1' | 'FORM2' | 'FORM3'| null>(null);
+    const [formData, setFormData] = useState<FormRecommendationData>({});
+    const [isCompletingForm, setIsCompletingForm] = useState<boolean>(false);
+    const [isFormCompleted, setIsFormCompleted] = useState<boolean>(false);
+
 
     const loadChatHistory = useCallback(() => {
         const storedHistory = localStorage.getItem(STORAGE_KEY);
@@ -44,7 +51,7 @@ export const useChatService = () => {
             if (response.data) {
                 setSuggestedPrompts(response.data.suggestedPrompts)
                 const initialMessages: ChatMessage[] = [
-                    {content: response.data.greeting, role: 'ASSISTANT'}
+                    {content: response.data.greeting, role: 'ASSISTANT', formType: null}
                 ];
                 setChatHistory(initialMessages);
                 saveChatHistory(initialMessages);
@@ -77,48 +84,62 @@ export const useChatService = () => {
         const newUserMessage: ChatMessage = {
             content: message,
             role: 'USER',
+            formType: null,
         };
 
         const updatedHistory = [...chatHistory, newUserMessage];
         setChatHistory(updatedHistory);
         saveChatHistory(updatedHistory);
 
-
-        try {
-            const refinedHistory = [...updatedHistory]
-            if(updatedHistory[0].role === "ASSISTANT"){
-                refinedHistory.shift();
-            }
-            const payload = {
-                messages: refinedHistory.map(msg => ({
-                    content: msg.content,
-                    role: msg.role
-                }))
+        if (message.toLowerCase() === 'help me find a bike please') {
+            setIsCompletingForm(true)
+            setCurrentForm('FORM1');
+            const form1Message: ChatMessage = {
+                content: 'Select a terrain',
+                role: 'ASSISTANT',
+                formType: 'FORM1',
             };
-            const latestMsg = payload['messages'].pop();
-            payload['messages'].push({content: cartData, role: 'USER'});
-            payload['messages'].push({content: getCurrentProductInView(), role: 'USER'})
-            payload['messages'].push(latestMsg);
+            const newHistory = [...updatedHistory, form1Message];
+            setChatHistory(newHistory);
+            saveChatHistory(newHistory);
+        } else {
+            try {
+                const refinedHistory = [...updatedHistory]
+                if(updatedHistory[0].role === "ASSISTANT"){
+                    refinedHistory.shift();
+                }
+                const payload = {
+                    messages: refinedHistory.map(msg => ({
+                        content: msg.content,
+                        role: msg.role
+                    }))
+                };
+                const latestMsg = payload['messages'].pop();
+                payload['messages'].push({content: cartData, role: 'USER'});
+                payload['messages'].push({content: getCurrentProductInView(), role: 'USER'})
+                payload['messages'].push(latestMsg);
 
-            const response = await axios.post<AcmeChatResponse>('/ai/question', payload);
+                const response = await axios.post<AcmeChatResponse>('/ai/question', payload);
 
-            if (response.data && response.data.messages && response.data.messages.length > 0) {
-                const assistantMessages = response.data.messages.map(content => ({
-                    content: parseMessageContentAndBuildLinks(content),
-                    role: 'ASSISTANT' as const
-                }));
+                if (response.data && response.data.messages && response.data.messages.length > 0) {
+                    const assistantMessages = response.data.messages.map(content => ({
+                        content: parseMessageContentAndBuildLinks(content),
+                        role: 'ASSISTANT' as const,
+                        formType: null
+                    }));
 
-                const newHistory = [...updatedHistory, ...assistantMessages];
-                setChatHistory(newHistory);
-                saveChatHistory(newHistory);
-            } else {
-                console.error('Received an empty or malformed response from API');
+                    const newHistory = [...updatedHistory, ...assistantMessages];
+                    setChatHistory(newHistory);
+                    saveChatHistory(newHistory);
+                } else {
+                    console.error('Received an empty or malformed response from API');
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err : new Error('An error occurred'));
+                console.error('Error in chat service:', err);
+            } finally {
+                setIsLoading(false);
             }
-        } catch (err) {
-            setError(err instanceof Error ? err : new Error('An error occurred'));
-            console.error('Error in chat service:', err);
-        } finally {
-            setIsLoading(false);
         }
     }, [chatHistory, saveChatHistory]);
 
@@ -128,12 +149,56 @@ export const useChatService = () => {
         setSuggestedPrompts([]);
     }, []);
 
+    const submitForm = useCallback((formType: 'FORM1' | 'FORM2' | 'FORM3', data: FormRecommendationData) => {
+        setFormData({ ...formData, ...data });
+
+        if (formType === 'FORM1') {
+            setCurrentForm('FORM2');
+            const form2Message: ChatMessage = {
+                content: 'Select a riding position',
+                role: 'ASSISTANT',
+                formType: 'FORM2',
+            };
+            const newHistory = [...chatHistory, form2Message];
+            setChatHistory(newHistory);
+            saveChatHistory(newHistory);
+        } else if (formType === 'FORM2') {
+            setCurrentForm('FORM3');
+            const form3Message: ChatMessage = {
+                content: 'Excellent! Finally, please fill out this last form:',
+                role: 'ASSISTANT',
+                formType: 'FORM3',
+            };
+            const newHistory = [...chatHistory, form3Message];
+            setChatHistory(newHistory);
+            saveChatHistory(newHistory);
+        } else if (formType === 'FORM3') {
+            setCurrentForm(null);
+            // setIsFormCompleted(true);
+            const finalMessage: ChatMessage = {
+                content: `Based on your preferences: ${JSON.stringify({ ...formData, ...data })}`,
+                role: 'ASSISTANT',
+                formType: null,
+            };
+            console.log(finalMessage);
+            const newHistory = [...chatHistory, finalMessage];
+            setChatHistory(newHistory);
+            saveChatHistory(newHistory);
+            console.log(chatHistory);
+        }
+    }, [chatHistory, formData, saveChatHistory]);
+
     return {
         chatHistory,
         suggestedPrompts,
         sendMessage,
         refreshChat,
         isLoading,
-        error
+        error,
+        currentForm,
+        submitForm,
+        isCompletingForm,
+        isFormCompleted,
+        setIsFormCompleted
     };
 };
