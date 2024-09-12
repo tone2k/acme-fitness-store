@@ -149,8 +149,8 @@ export const useChatService = () => {
         setSuggestedPrompts([]);
     }, []);
 
-    const submitForm = useCallback((formType: 'FORM1' | 'FORM2' | 'FORM3', data: FormRecommendationData) => {
-        setFormData({ ...formData, ...data });
+    const submitForm = useCallback(async (formType: 'FORM1' | 'FORM2' | 'FORM3', data: FormRecommendationData) => {
+        setFormData({...formData, ...data});
 
         if (formType === 'FORM1') {
             setCurrentForm('FORM2');
@@ -176,17 +176,32 @@ export const useChatService = () => {
             setCurrentForm(null);
             // setIsFormCompleted(true);
             const finalMessage: ChatMessage = {
-                content: `Based on your preferences: ${JSON.stringify({ ...formData, ...data })}`,
-                role: 'ASSISTANT',
+                content: `These are the customers preferences for a bike, please make a recommendation: ${JSON.stringify({...formData, ...data})}`,
+                role: 'USER',
                 formType: null,
             };
-            console.log(finalMessage);
-            const newHistory = [...chatHistory, finalMessage];
+
+            delete finalMessage.formType;
+
+            const payload = {
+                messages: [finalMessage]
+            };
+            const response = await axios.post<AcmeChatResponse>('/ai/question', payload);
+            const assistantMessages = response.data.messages.map(content => ({
+                content: parseMessageContentAndBuildLinks(content),
+                role: 'ASSISTANT' as const,
+                formType: null
+            }));
+
+            const newHistory = [...chatHistory, assistantMessages[0]];
             setChatHistory(newHistory);
             saveChatHistory(newHistory);
-            console.log(chatHistory);
+            console.log(chatHistory)
         }
     }, [chatHistory, formData, saveChatHistory]);
+
+
+
 
     return {
         chatHistory,
