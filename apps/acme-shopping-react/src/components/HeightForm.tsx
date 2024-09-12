@@ -1,45 +1,86 @@
-import { useState } from 'react';
-import {Button, Box, Typography, TextField} from '@mui/material';
-import Slider from "react-slick";
+import {useState} from 'react';
+import {Box, Typography, Slider, Button, Paper} from '@mui/material';
 
 interface HeightFormProps {
     onSubmit: (data: { height: string }) => void;
 }
 
-export default function HeightForm({ onSubmit }: HeightFormProps) {
-    const [height, setHeight] = useState('');
+export default function HeightForm({onSubmit}: HeightFormProps) {
+    const [height, setHeight] = useState(170);
 
+    const handleSubmit = () => {
+        onSubmit({height: height.toString()});
+    };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSubmit({ height });
+    const handleSkip = () => {
+        onSubmit({height: ''});
     };
 
     return (
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-            <Typography gutterBottom>Height (cm)</Typography>
-            {/*<Slider*/}
-            {/*    value={height}*/}
-            {/*    onChange={(_, newValue) => setHeight(newValue as string)}*/}
-            {/*    min={90}*/}
-            {/*    max={250}*/}
-            {/*    step={1}*/}
-            {/*    marks*/}
-            {/*    valueLabelDisplay="auto"*/}
-            {/*/>*/}
-            <TextField
-                fullWidth
-                label="Height (in cm)"
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
-                margin="normal"
-                required
-                type="number"
-                size="small"
-            />
-            <Button type="submit" variant="contained" sx={{ mt: 2 }}>
-                Submit
-            </Button>
-        </Box>
+        <>
+            <Typography variant="h6" align="center" gutterBottom sx={{color: '#4B4B4B', fontWeight: 'bold', width: 400}}>
+                How tall are you?
+            </Typography>
+            <Paper elevation={3} sx={{padding: 4, maxWidth: 400, margin: 'auto', borderRadius: 8}}>
+                <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative'}}>
+                    <Box
+                        sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                        <Typography sx={{fontSize: 14, color: '#4B4B4B', mb: 1}}>250cm</Typography>
+                        <Slider
+                            orientation="vertical"
+                            value={height}
+                            onChange={(_, newValue) => setHeight(newValue as number)}
+                            min={90}
+                            max={250}
+                            sx={{
+                                height: 180,
+                                '& .MuiSlider-thumb': {
+                                    width: 20, // Thumb size
+                                    height: 20,
+                                    backgroundColor: '#003B70',
+                                },
+                                '& .MuiSlider-rail': {
+                                    width: 6,
+                                    backgroundColor: '#B3B3B3',
+                                },
+                                '& .MuiSlider-track': {
+                                    width: 6,
+                                    backgroundColor: '#003B70',
+                                },
+                            }}
+                        />
+                        <Typography sx={{fontSize: 14, color: '#4B4B4B', mt: 1}}>90cm</Typography>
+
+                    </Box>
+                    <Typography variant="h4" sx={{ml: 5, color: '#4B4B4B'}}>
+                        {height} cm
+                    </Typography>
+                </Box>
+            </Paper>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', mt: 4}}>
+                <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    sx={{
+                        backgroundColor: '#003B70',
+                        color: 'white',
+                        '&:hover': {backgroundColor: '#005A8D'}
+                    }}
+                >
+                    CONTINUE
+                </Button>
+                <Button
+                    variant="outlined"
+                    onClick={handleSkip}
+                    sx={{
+                        borderColor: '#B3B3B3',
+                        color: '#4B4B4B',
+                        '&:hover': {backgroundColor: '#F5F5F5'}
+                    }}
+                >
+                    SKIP FOR NOW
+                </Button>
+            </Box>
+        </>
     );
-};
+}

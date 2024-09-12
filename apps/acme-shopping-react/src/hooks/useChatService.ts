@@ -181,6 +181,15 @@ export const useChatService = () => {
                 formType: null,
             };
 
+            let newHistory;
+
+            newHistory = [...chatHistory, {
+                content: 'Excellent! Thank you for completing those.',
+                role: 'ASSISTANT',
+            }];
+            setChatHistory(newHistory);
+            saveChatHistory(newHistory);
+
             delete finalMessage.formType;
 
             const payload = {
@@ -193,10 +202,9 @@ export const useChatService = () => {
                 formType: null
             }));
 
-            const newHistory = [...chatHistory, assistantMessages[0]];
+            newHistory = [...newHistory, assistantMessages[0]];
             setChatHistory(newHistory);
             saveChatHistory(newHistory);
-            console.log(chatHistory)
         }
     }, [chatHistory, formData, saveChatHistory]);
 

@@ -11,7 +11,7 @@ export interface FormRecommendationData {
     ridingPosition?: string;
 
     // Form3 fields
-    height?: number;
+    height?: string;
     weight?: string;
     inseam?: string;
 }

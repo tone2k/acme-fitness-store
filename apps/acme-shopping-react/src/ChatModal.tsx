@@ -67,21 +67,18 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         if (message.formType === 'FORM1') {
             return (
                 <>
-                    {message.content}
                     <TerrainForm onSubmit={(data) => submitForm('FORM1', data)} />
                 </>
             );
         } else if (message.formType === 'FORM2') {
             return (
                 <>
-                    {message.content}
                     <RidingPositionForm onSubmit={(data) => submitForm('FORM2', data)} />
                 </>
             );
         } else if (message.formType === 'FORM3') {
             return (
                 <>
-                    {message.content}
                     <HeightForm onSubmit={(data) => submitForm('FORM3', data)} />
                 </>
             );
@@ -133,8 +130,8 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     bottom: 16,
                     right: 16,
                     m: 0,
-                    width: isExpanded ? {xs: '90vw', sm: '80vw', md: '70vw'} : {xs: '90vw', sm: 420},
-                    height: isExpanded ? {xs: '90vh', sm: '80vh'} : {xs: '90vh', sm: 600},
+                    width: isExpanded ? "10000" : {xs: '90vw', sm: 420},
+                    height: isExpanded ?  "7500" : {xs: '90vh', sm: 600},
                     pointerEvents: 'auto',
                     transition: 'width 0.3s, height 0.3s',
                 },
@@ -193,7 +190,6 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                                 elevation={2}
                                 sx={{
                                     p: 1,
-                                    maxWidth: '70%',
                                     backgroundColor: message.role === 'USER' ? 'primary.light' : 'grey.200',
                                     borderRadius: message.role === 'USER' ? '20px 20px 0 20px' : '20px 20px 20px 0',
                                 }}
