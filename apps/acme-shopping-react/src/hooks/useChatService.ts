@@ -1,16 +1,12 @@
-import {useState, useEffect, useCallback} from 'react';
-import axios from 'axios';
-import {getCurrentProductInView, parseMessageContentAndBuildLinks} from "../utils/helpers.ts";
+import { useState, useEffect, useCallback } from 'react';
+import {socket} from '../socket.ts';
+import { getCurrentProductInView, parseMessageContentAndBuildLinks } from "../utils/helpers.ts";
 import { FormRecommendationData } from '../types/FormRecommendationData.ts';
 
 interface ChatMessage {
     content: string;
     role: 'USER' | 'ASSISTANT';
     formType: 'FORM1' | 'FORM2' | 'FORM3' | null;
-}
-
-interface AcmeChatResponse {
-    messages: string[];
 }
 
 interface GreetingResponse {
@@ -26,11 +22,10 @@ export const useChatService = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([]);
-    const [currentForm, setCurrentForm] = useState<'FORM1' | 'FORM2' | 'FORM3'| null>(null);
+    const [currentForm, setCurrentForm] = useState<'FORM1' | 'FORM2' | 'FORM3' | null>(null);
     const [formData, setFormData] = useState<FormRecommendationData>({});
     const [isCompletingForm, setIsCompletingForm] = useState<boolean>(false);
     const [isFormCompleted, setIsFormCompleted] = useState<boolean>(false);
-
 
     const loadChatHistory = useCallback(() => {
         const storedHistory = localStorage.getItem(STORAGE_KEY);
@@ -41,27 +36,38 @@ export const useChatService = () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
     }, []);
 
-    const fetchGreeting = useCallback(async () => {
-        try {
-            const response = await axios.post<GreetingResponse>('/ai/hello', {
-                conversationId: crypto.randomUUID(),
-                page: window.location.pathname
-            });
+    const handleIncomingMessage = useCallback((message: ChatMessage) => {
+        setChatHistory((prevHistory) => {
+            const updatedHistory = [...prevHistory, message];
+            saveChatHistory(updatedHistory);
+            return updatedHistory;
+        });
+    }, [saveChatHistory]);
 
-            if (response.data) {
-                setSuggestedPrompts(response.data.suggestedPrompts)
+    const fetchGreeting = useCallback(() => {
+        return new Promise<void>((resolve, reject) => {
+            socket.emit('hello', { conversationId: crypto.randomUUID(), page: window.location.pathname });
+
+            const onGreeting = (data: GreetingResponse) => {
+                setSuggestedPrompts(data.suggestedPrompts);
                 const initialMessages: ChatMessage[] = [
-                    {content: response.data.greeting, role: 'ASSISTANT', formType: null}
+                    { content: data.greeting, role: 'ASSISTANT', formType: null }
                 ];
                 setChatHistory(initialMessages);
                 saveChatHistory(initialMessages);
-            } else {
-                console.error('No greeting response received');
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err : new Error('An error occurred fetching greeting'));
-            console.error('Error fetching greeting:', err);
-        }
+                resolve();
+            };
+
+            const onError = (err: any) => {
+                const error = err instanceof Error ? err : new Error('An error occurred fetching greeting');
+                setError(error);
+                console.error('Error fetching greeting:', err);
+                reject(error);
+            };
+
+            socket.once('greeting', onGreeting);
+            socket.once('error', onError);
+        });
     }, [saveChatHistory]);
 
     const initializeChatHistory = useCallback(() => {
@@ -74,10 +80,26 @@ export const useChatService = () => {
     }, [loadChatHistory, fetchGreeting]);
 
     useEffect(() => {
-        initializeChatHistory();
-    }, [initializeChatHistory]);
+        socket.connect();
 
-    const sendMessage = useCallback(async (message: string, cartData: string) => {
+        initializeChatHistory();
+
+        socket.on('response', handleIncomingMessage);
+
+        socket.on('error', (err: any) => {
+            const error = err instanceof Error ? err : new Error('An error occurred');
+            setError(error);
+            console.error('Socket error:', err);
+        });
+
+        return () => {
+            socket.off('response', handleIncomingMessage);
+            socket.off('error');
+            socket.disconnect();
+        };
+    }, [handleIncomingMessage, initializeChatHistory]);
+
+    const sendMessage = useCallback((message: string, cartData: string) => {
         setIsLoading(true);
         setError(null);
 
@@ -92,7 +114,7 @@ export const useChatService = () => {
         saveChatHistory(updatedHistory);
 
         if (message.toLowerCase() === 'help me find a bike please') {
-            setIsCompletingForm(true)
+            setIsCompletingForm(true);
             setCurrentForm('FORM1');
             const form1Message: ChatMessage = {
                 content: 'Select a terrain',
@@ -102,29 +124,27 @@ export const useChatService = () => {
             const newHistory = [...updatedHistory, form1Message];
             setChatHistory(newHistory);
             saveChatHistory(newHistory);
+            setIsLoading(false);
         } else {
-            try {
-                const refinedHistory = [...updatedHistory]
-                if(updatedHistory[0].role === "ASSISTANT"){
-                    refinedHistory.shift();
-                }
-                const payload = {
-                    messages: refinedHistory.map(msg => ({
-                        content: msg.content,
-                        role: msg.role
-                    }))
-                };
-                const latestMsg = payload['messages'].pop();
-                payload['messages'].push({content: cartData, role: 'USER'});
-                payload['messages'].push({content: getCurrentProductInView(), role: 'USER'})
-                payload['messages'].push(latestMsg);
+            const refinedHistory = [...updatedHistory];
+            if (refinedHistory[0].role === "ASSISTANT") {
+                refinedHistory.shift();
+            }
 
-                const response = await axios.post<AcmeChatResponse>('/ai/question', payload);
+            const payload = {
+                messages: refinedHistory.map(msg => ({
+                    content: msg.content,
+                    role: msg.role
+                })),
+                cartData: cartData,
+                product: getCurrentProductInView(),
+            };
 
-                if (response.data && response.data.messages && response.data.messages.length > 0) {
-                    const assistantMessages = response.data.messages.map(content => ({
+            socket.emit('question', payload, (response: { messages: string[] }) => {
+                if (response && response.messages && response.messages.length > 0) {
+                    const assistantMessages: ChatMessage[] = response.messages.map(content => ({
                         content: parseMessageContentAndBuildLinks(content),
-                        role: 'ASSISTANT' as const,
+                        role: 'ASSISTANT',
                         formType: null
                     }));
 
@@ -134,12 +154,8 @@ export const useChatService = () => {
                 } else {
                     console.error('Received an empty or malformed response from API');
                 }
-            } catch (err) {
-                setError(err instanceof Error ? err : new Error('An error occurred'));
-                console.error('Error in chat service:', err);
-            } finally {
                 setIsLoading(false);
-            }
+            });
         }
     }, [chatHistory, saveChatHistory]);
 
@@ -147,10 +163,11 @@ export const useChatService = () => {
         localStorage.removeItem(STORAGE_KEY);
         setChatHistory([]);
         setSuggestedPrompts([]);
-    }, []);
+        fetchGreeting().catch((err) => console.error(err));
+    }, [fetchGreeting]);
 
     const submitForm = useCallback(async (formType: 'FORM1' | 'FORM2' | 'FORM3', data: FormRecommendationData) => {
-        setFormData({...formData, ...data});
+        setFormData({ ...formData, ...data });
 
         if (formType === 'FORM1') {
             setCurrentForm('FORM2');
@@ -174,42 +191,39 @@ export const useChatService = () => {
             saveChatHistory(newHistory);
         } else if (formType === 'FORM3') {
             setCurrentForm(null);
-            // setIsFormCompleted(true);
             const finalMessage: ChatMessage = {
-                content: `These are the customers preferences for a bike, please make a recommendation: ${JSON.stringify({...formData, ...data})}`,
+                content: `These are the customers preferences for a bike, please make a recommendation: ${JSON.stringify({ ...formData, ...data })}`,
                 role: 'USER',
                 formType: null,
             };
 
-            let newHistory;
-
-            newHistory = [...chatHistory, {
+            const newHistory = [...chatHistory, {
                 content: 'Excellent! Thank you for completing those.',
                 role: 'ASSISTANT',
-            }];
+            }, finalMessage];
+
             setChatHistory(newHistory);
             saveChatHistory(newHistory);
 
-            delete finalMessage.formType;
+            socket.emit('question', {
+                messages: [finalMessage],
+            }, (response: { messages: string[] }) => {
+                if (response && response.messages && response.messages.length > 0) {
+                    const assistantMessages: ChatMessage[] = response.messages.map(content => ({
+                        content: parseMessageContentAndBuildLinks(content),
+                        role: 'ASSISTANT',
+                        formType: null
+                    }));
 
-            const payload = {
-                messages: [finalMessage]
-            };
-            const response = await axios.post<AcmeChatResponse>('/ai/question', payload);
-            const assistantMessages = response.data.messages.map(content => ({
-                content: parseMessageContentAndBuildLinks(content),
-                role: 'ASSISTANT' as const,
-                formType: null
-            }));
-
-            newHistory = [...newHistory, assistantMessages[0]];
-            setChatHistory(newHistory);
-            saveChatHistory(newHistory);
+                    const updatedHistory = [...newHistory, ...assistantMessages];
+                    setChatHistory(updatedHistory);
+                    saveChatHistory(updatedHistory);
+                } else {
+                    console.error('Received an empty or malformed response from API');
+                }
+            });
         }
     }, [chatHistory, formData, saveChatHistory]);
-
-
-
 
     return {
         chatHistory,
