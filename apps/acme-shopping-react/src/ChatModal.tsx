@@ -23,6 +23,7 @@ import {PromptHeaderStyled} from "./components/styled/PromptHeader.styled.tsx";
 import {CardStyled} from "./components/styled/Card.styled.tsx";
 import {PrimaryButtonStyled} from "./components/styled/PrimaryButton.styled.tsx";
 import HeightForm from "./components/HeightForm.tsx";
+import { useFitAssistSocket } from './hooks/useFitAssistSocket';
 
 
 interface ChatModalProps {
@@ -49,6 +50,21 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         isFormCompleted
     } = useChatService();
     const closeButtonRef = useRef(null);
+    const { isConnected, connect, disconnect } = useFitAssistSocket();
+
+    useEffect(() => {
+        if (open) {
+            connect();
+        } else {
+            disconnect();
+        }
+    }, [open]);
+
+    useEffect(() => {
+        if (isConnected) {
+            console.log('Successfully connected to FitAssist WebSocket');
+        }
+    }, [isConnected]);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 

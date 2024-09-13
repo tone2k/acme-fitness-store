@@ -20,34 +20,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/ai")
 public class FitAssistController {
-
     @Autowired
-    private ChatService chatService;
-
-    @Autowired
-    private SuggestedPromptService suggestedPromptService;
+    private FitAssistChatService fitAssistChatService;
 
     @PostMapping("/question")
     public AcmeChatResponse chatCompletion(@RequestBody AcmeChatRequest request) {
-        List<String> ret = chatService.chat(request.getMessages(), request.getProductId());
-        AcmeChatResponse response = new AcmeChatResponse();
-        response.setMessages(ret);
-        return response;
+       return fitAssistChatService.getChatResponse(request);
     }
 
     @PostMapping("/hello")
     public GreetingResponse greeting(@RequestBody GreetingRequest request) {
-        SuggestedPrompts prompts = suggestedPromptService.getSuggestedPrompts(request.getPage());
-
-        if (prompts == null) {
-            return null;
-        }
-
-        GreetingResponse response = new GreetingResponse();
-        response.setConversationId(request.getConversationId());
-        response.setGreeting(prompts.getGreeting());
-        response.setSuggestedPrompts(prompts.getPrompts());
-        return response;
+      return fitAssistChatService.getGreetingResponse(request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
