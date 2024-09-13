@@ -3,6 +3,7 @@ package com.example.acme.assist;
 import com.example.acme.assist.model.AcmeChatMessage;
 import com.example.acme.assist.model.Product;
 import io.micrometer.common.util.StringUtils;
+import java.util.Set;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.Message;
@@ -12,6 +13,7 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +76,7 @@ public class ChatService {
 
         // step 2. Create a SystemMessage that contains the product information in addition to related documents.
         List<Message> messages = new ArrayList<>();
-        Message productDetailMessage =  getProductDetailMessage(product, candidateDocuments);
+        Message productDetailMessage = getProductDetailMessage(product, candidateDocuments);
         messages.add(productDetailMessage);
 
         // step 3. Send the system message and the user's chat request messages to OpenAI
@@ -120,7 +122,8 @@ public class ChatService {
         }
 
         // Call to OpenAI chat API
-        Prompt prompt = new Prompt(messages);
+        Prompt prompt = new Prompt(messages,
+                OpenAiChatOptions.builder().withFunctions(Set.of("terrainFunction", "displayRecommendation")).build());
         ChatResponse aiResponse = this.chatClient.prompt(prompt).call().chatResponse();
 
         // Process the result and return to client
@@ -133,7 +136,7 @@ public class ChatService {
         String additionalContext = documents.stream()
                 .map(entry -> String.format("Product Name: %s\nText: %s\n", entry.getMetadata().get("name"), entry.getContent()))
                 .collect(Collectors.joining("\n"));
-        Map<String,Object> map = Map.of(
+        Map<String, Object> map = Map.of(
                 "name", product.getName(),
                 "tags", String.join(",", product.getTags()),
                 "shortDescription", product.getShortDescription(),

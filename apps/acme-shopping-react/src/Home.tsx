@@ -42,8 +42,8 @@ export default function Home() {
                 </Typography>
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent='center' alignItems='center' gap={2}>
-                    {info.map((item) => (
-                        <Stack direction='row' alignItems='center' spacing={3} sx={{ width: 1 }}>
+                    {info.map((item, index) => (
+                        <Stack direction='row' key={`about-acme-fitness-info-${index}`} alignItems='center' spacing={3} sx={{ width: 1 }}>
                             {item.image}
                             <Typography sx={{ flexGrow: 1 }}>{item.text}</Typography>
                         </Stack>
