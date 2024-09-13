@@ -11,9 +11,11 @@ import org.springframework.web.util.HtmlUtils;
 public class FitAssistWebSocketController {
 
     @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
+    @SendTo("/greetings")
     public Greeting greeting(HelloMessage message) throws Exception {
+        System.out.println("Hello received.");
         Thread.sleep(1000); // simulated delay
         return Greeting.builder().content("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!").build();
     }
+
 }
