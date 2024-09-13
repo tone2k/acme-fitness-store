@@ -1,15 +1,12 @@
 package com.example.acme.assist.model;
 
-import lombok.Data;
+import java.util.UUID;
 
-import java.util.List;
+public record AcmeChatResponse(String messageType, String messageId, String data) {
 
-@Data
-public class AcmeChatResponse {
-
-    /**
-     * The candidate answers for the chat. Only one is provided for now.
-     */
-    private List<String> messages;
+    public AcmeChatResponse(String messageType, String data) {
+        this(messageType, UUID.randomUUID().toString(), data);
+    }
 
 }
+

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {UserInfo} from "../types/User.ts";
 
-export const getUsernfo = async (): Promise<UserInfo | null> => {
+export const getUserInfo = async (): Promise<UserInfo | null> => {
   try {
 
     const response = await axios.get<UserInfo>('/userinfo', {
