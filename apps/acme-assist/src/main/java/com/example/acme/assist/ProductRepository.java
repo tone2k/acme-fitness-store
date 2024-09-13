@@ -63,6 +63,22 @@ public class ProductRepository {
         }
     }
 
+    public Product getProductByProductName(String productName) {
+        try {
+            String catalogService = getCatalogService();
+            if (catalogService == null)
+                return null;
+
+            ResponseEntity<CatalogProductListResponse> response = this.restTemplate
+                    .getForEntity(catalogService + "/products?name=" + productName, CatalogProductListResponse.class);
+            log.info("Response code from catalog-service: {}", response.getStatusCode());
+            return response.getBody().getData().getFirst();
+        } catch (HttpClientErrorException ex) {
+            log.warn("Can't get the product detail: {}", ex.getMessage());
+            return null;
+        }
+    }
+
     public void refreshProductList() {
         String catalogService = getCatalogServiceUrl();
         if (catalogService == null) 

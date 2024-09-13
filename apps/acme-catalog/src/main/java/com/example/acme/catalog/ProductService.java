@@ -30,6 +30,11 @@ public class ProductService {
 
 	}
 
+	public Product getProductByName(String name) {
+		return productRepository.findByName(name)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find product with name " + name));
+	}
+
 	public Product createProduct(Product product) {
 		return productRepository.save(product);
 	}

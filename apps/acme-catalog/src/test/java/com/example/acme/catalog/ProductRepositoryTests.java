@@ -49,4 +49,15 @@ class ProductRepositoryTests {
         });
     }
 
+    @Test
+    void findByProductName() {
+        var product = this.productRepository.findByName("Velocity X1");
+        assertThat(product).hasValueSatisfying(p -> {
+            assertThat(p.getId()).isEqualTo("b991ca5b-2b7e-4642-a37a-e5c87e67d771");
+            assertThat(p.getImageUrl1()).isEqualTo("/static/images/new_bikes_12.jpg");
+            assertThat(p.getImageUrl2()).isEqualTo("/static/images/new_bikes_12.jpg");
+            assertThat(p.getImageUrl3()).isEqualTo("/static/images/new_bikes_12.jpg");
+        });
+    }
+
 }

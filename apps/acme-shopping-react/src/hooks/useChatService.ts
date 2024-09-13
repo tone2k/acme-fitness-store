@@ -14,11 +14,11 @@ export interface ChatMessage {
   formType?: "FORM1" | "FORM2" | "FORM3" | "RECOMMENDATION" | null;
 }
 
-interface AcmeChatResponse {
+export interface AcmeQuestionResponse { //TODO Revist Export
   messages: string[];
 }
 
-interface GreetingResponse {
+export interface GreetingResponse { //TODO revisit Export
   conversationId: string;
   greeting: string;
   suggestedPrompts: string[];
@@ -143,7 +143,7 @@ export const useChatService = () => {
           });
           payload["messages"].push(latestMsg);
 
-          const response = await axios.post<AcmeChatResponse>(
+          const response = await axios.post<AcmeQuestionResponse>(
             "/ai/question",
             payload
           );

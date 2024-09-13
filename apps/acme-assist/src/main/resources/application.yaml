@@ -6,6 +6,12 @@ management:
         include: info,health
 spring:
   ai:
+    openai:
+      chat:
+        options:
+          functions:
+            - terrainFunction
+            - displayRecommendation
     vectorstore:
       pgvector: 
         initialize-schema: true

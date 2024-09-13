@@ -24,6 +24,13 @@ spring:
             - StripPrefix=0
           tags:
             - assist-service
+        - uri: ws://host.docker.internal:8081
+          predicates:
+            - Path=/websocket/ai/v2/**
+          filters:
+            - StripPrefix=0
+          tags:
+            - assist-service
 
         # ####################################################
         # acme-cart
