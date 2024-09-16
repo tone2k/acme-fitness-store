@@ -5,18 +5,18 @@ const terrainOptions = [
     {
         name: 'Paved paths',
         description: 'Suburban and city roads, or established bike paths',
-        image: '/public/paved.png',
+        image: '/paved.png',
         recommended: true
     },
     {
         name: 'Gravel roads',
         description: 'More agility for gravel trails and roads',
-        image: '/public/gravel.png'
+        image: '/gravel.png'
     },
     {
         name: 'Trails',
         description: 'Added stability for mountain biking, trails, jumps, and off-roading',
-        image: '/public/trail.png'
+        image: '/trail.png'
     }
 ];
 

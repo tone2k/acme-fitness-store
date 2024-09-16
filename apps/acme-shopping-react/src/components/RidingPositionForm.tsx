@@ -5,13 +5,13 @@ const ridingPositions = [
     {
         name: 'Upright and relaxed',
         description: 'Great for comfortable riding on paved roads',
-        image: '/public/upright.png',
+        image: '/upright.png',
         recommended: true
     },
     {
         name: 'Active',
         description: 'Take more control on fun or fitness rides',
-        image: '/public/active.png'
+        image: '/active.png'
     }
 ];
 
