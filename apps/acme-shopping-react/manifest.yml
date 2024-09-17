@@ -1,0 +1,7 @@
+applications:
+- name: acme-shopping
+  memory: 1G
+  path: dist
+  buildpack: staticfile_buildpack
+  routes:
+    - route: acme-shopping.apps.internal
