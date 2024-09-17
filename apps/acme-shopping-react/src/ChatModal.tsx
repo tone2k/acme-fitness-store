@@ -20,6 +20,7 @@ import {CartData} from "./types/Cart.ts";
 import TerrainForm from './components/TerrainForm.tsx';
 import RidingPositionForm from './components/RidingPositionForm.tsx';
 import HeightForm from "./components/HeightForm.tsx";
+import FakeBikeRecommendation from "./components/FakeRecommendation.tsx";
 
 interface ChatModalProps {
     open: boolean;
@@ -79,7 +80,8 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         } else if (message.formType === 'FORM3') {
             return (
                 <>
-                    <HeightForm onSubmit={(data) => submitForm('FORM3', data)} />
+                    {/*<HeightForm onSubmit={(data) => submitForm('FORM3', data)} />*/}
+                    <FakeBikeRecommendation/>
                 </>
             );
         } else {
