@@ -49,7 +49,6 @@ export default function Home() {
                     </Grid>
                 </Box>
                 <Divider sx={{width: "50%"}}></Divider>
-                <Divider sx={{width: "50%"}}></Divider>
                 <Button
                     color='inherit'
                     key='catalog'
