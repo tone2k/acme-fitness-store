@@ -1,5 +1,4 @@
 import {Box, createTheme, Divider, Grid, Stack, TextField, ThemeProvider, Typography} from "@mui/material";
-import Payment from './assets/payment.png';
 import Button from "@mui/material/Button";
 import {Link as RouterLink} from "react-router-dom";
 import SendIcon from '@mui/icons-material/Send';
@@ -104,7 +103,7 @@ export default function AcmeFooter({handleLogin}: AcmeFooterProps) {
                                 <Typography variant="body2">© 2024 ACME Fitness</Typography>
                             </Grid>
                             <Grid item xs={12} sm={6} sx={{textAlign: {xs: 'center', sm: 'right'}}}>
-                                <img src={Payment} alt="payment-options"/>
+                                <img src="/payment.png" alt="payment-options"/>
                             </Grid>
                             <Grid item xs={12} sx={{textAlign: {xs: 'center', sm: 'left'}}}>
                                 <Typography variant="body2">This website is for demo purposes only. It is not an actual e-commerce
