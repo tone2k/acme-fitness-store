@@ -12,7 +12,7 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-import {Close, Refresh, Send} from '@mui/icons-material';
+import {Close, Fullscreen, FullscreenExit, Refresh, Send} from '@mui/icons-material';
 import {useChatService} from './hooks/useChatService';
 import {summarizeCart} from "./utils/helpers";
 import {CartData} from "./types/Cart";
@@ -23,6 +23,7 @@ import {PromptHeaderStyled} from "./components/styled/PromptHeader.styled.tsx";
 import {CardStyled} from "./components/styled/Card.styled.tsx";
 import {PrimaryButtonStyled} from "./components/styled/PrimaryButton.styled.tsx";
 import HeightForm from "./components/HeightForm.tsx";
+import parse from 'html-react-parser';
 
 
 interface ChatModalProps {
@@ -97,8 +98,12 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         } else if (message.formType === 'RECOMMENDATION') {
             return <FakeBikeRecommendation/>;
         } else {
-            return <>{message.content}</>;
+            return <>{parse(message.content)}</>;
         }
+    };
+
+    const toggleExpand = () => {
+        setIsExpanded((prev) => !prev);
     };
 
     useEffect(() => {
@@ -159,6 +164,19 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
             }}
         >
             <DialogTitle sx={{padding: '8px 16px', margin: 0}}>
+                <IconButton
+                    data-cy="assist-expand-toggle"
+                    aria-label={isExpanded ? 'Shrink modal' : 'Expand modal'}
+                    onClick={toggleExpand}
+                    sx={{
+                        position: 'absolute',
+                        left: 8,
+                        top: 8,
+                        color: 'inherit',
+                    }}
+                >
+                    {isExpanded ? <FullscreenExit/> : <Fullscreen/>}
+                </IconButton>
                 <PromptHeaderStyled>Chat with FitAssist</PromptHeaderStyled>
                 <Typography
                     sx={{margin: '4px 0 0 0', fontSize: '0.8rem', lineHeight: 1, fontWeight: 'bold', color: 'green'}}>

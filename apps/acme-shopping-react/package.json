@@ -20,6 +20,7 @@
     "@mui/x-data-grid": "^7.13.0",
     "@tanstack/react-query": "^5.52.0",
     "axios": "^1.7.4",
+    "html-react-parser": "^5.1.16",
     "js-cookie": "^3.0.5",
     "marked-react": "^2.0.0",
     "react": "^18.3.1",

@@ -62,7 +62,7 @@ export const parseMessageContentAndBuildLinks = (message: string) => {
     const itemPattern = /{{([^|]+)\|([^}]+)}}/g;
 
     const parsedMessage = message.replace(itemPattern, (match, itemName, itemId) => {
-        return `<a data-cy=assist-linked-product href="/product/${itemId}" target="_self">${itemName}</a>`;
+        return `<a data-cy="assist-linked-product" href="/product/${itemId}" target="_self">${itemName}</a>`;
     });
 
     return parsedMessage;

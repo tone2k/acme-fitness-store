@@ -1,4 +1,4 @@
-import {Box, Card, CardContent, CardMedia, List, ListItem, styled,} from '@mui/material';
+import {Box, CardContent, CardMedia, List, ListItem,} from '@mui/material';
 import {PrimaryButtonStyled} from "./styled/PrimaryButton.styled.tsx";
 import {CardStyled} from "./styled/Card.styled.tsx";
 import {CardLabelStyled} from "./styled/CardLabel.styled.tsx";
@@ -42,7 +42,7 @@ export default function FakeRecommendation() {
                         Velocity V9 is a high-performance hybrid bike that combines speed and comfort for riders who
                         demand the best of both worlds.
                     </CardParagraphStyled>
-                    <PrimaryButtonStyled variant="contained">
+                    <PrimaryButtonStyled href="/product/7283caf9-a24f-44ea-baba-a9ee64f86b54" variant="contained">
                         CHECK IT OUT
                     </PrimaryButtonStyled>
                 </CardContent>
