@@ -31,7 +31,7 @@ function AppLayout({ children }: AppLayoutProps) {
     <Box>
       <AcmeAppBar handleLogin={handleLogin} handleLogout={handleLogout} />
       <Box>{children}</Box>
-      <AcmeFooter  handleLogin={handleLogin}/>
+      <AcmeFooter />
     </Box>
   );
 }
@@ -95,8 +95,6 @@ export default function AppRoutes() {
     },
   ]);
 
-  return (<RouterProvider router={router} fallbackElement={<div>Unknown Route</div>}>
-  </RouterProvider>
-  );
+  return (<RouterProvider router={router} fallbackElement={<div>Unknown Route</div>} />);
 }
 
