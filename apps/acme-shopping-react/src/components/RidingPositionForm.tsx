@@ -1,5 +1,11 @@
-import { useState } from 'react';
-import { Box, Typography, Card, CardContent, CardMedia, Button } from '@mui/material';
+import {useState} from 'react';
+import {Box, CardContent, CardMedia} from '@mui/material';
+import {PromptHeaderStyled} from "./styled/PromptHeader.styled.tsx";
+import {CardStyled} from "./styled/Card.styled.tsx";
+import {CardLabelStyled} from "./styled/CardLabel.styled.tsx";
+import {CardParagraphStyled} from "./styled/CardParagraph.styled.tsx";
+import {SecondaryButtonStyled} from "./styled/SecondaryButton.styled.tsx";
+import {RecommendedStyled} from "./styled/Recommended.styled.tsx";
 
 const ridingPositions = [
     {
@@ -15,38 +21,39 @@ const ridingPositions = [
     }
 ];
 
+
 interface RidingPositionFormProps {
     onSubmit: (data: { ridingPosition: string }) => void;
 }
 
-export default function RidingPositionForm({ onSubmit }: RidingPositionFormProps) {
+export default function RidingPositionForm({onSubmit}: RidingPositionFormProps) {
     const [selectedPosition, setSelectedPosition] = useState('');
 
     const handlePositionSelect = (position: string) => {
         setSelectedPosition(position);
-        onSubmit({ ridingPosition: position });
+        onSubmit({ridingPosition: position});
     };
 
     const handleNotSure = () => {
         setSelectedPosition('');
-        onSubmit({ ridingPosition: '' });
+        onSubmit({ridingPosition: ''});
     };
 
     return (
-        <Box sx={{ maxWidth: 600, margin: 'auto', padding: 2, borderRadius: 4 }}>
-            <Typography variant="h5" gutterBottom align="center" sx={{ mb: 3 }}>
+        <Box sx={{maxWidth: 600, margin: 'auto', padding: 2}}>
+            <PromptHeaderStyled variant="h5" gutterBottom>
                 Select a riding position
-            </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mb: 2 }}>
+            </PromptHeaderStyled>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', gap: 2, mb: 2}}>
                 {ridingPositions.map((position) => (
-                    <Card
+                    <CardStyled
                         key={position.name}
                         sx={{
                             width: '48%',
                             display: 'flex',
                             flexDirection: 'column',
                             cursor: 'pointer',
-                            border: selectedPosition === position.name ? '2px solid blue' : 'none',
+                            border: selectedPosition === position.name ? '2px solid #5C0A90' : undefined,
                             borderRadius: 2,
                             overflow: 'hidden'
                         }}
@@ -58,39 +65,28 @@ export default function RidingPositionForm({ onSubmit }: RidingPositionFormProps
                             image={position.image}
                             alt={position.name}
                         />
-                        <CardContent sx={{ flexGrow: 1, backgroundColor: 'white' }}>
-                            <Typography gutterBottom variant="h6" component="div">
+                        <CardContent sx={{flexGrow: 1}}>
+                            <CardLabelStyled gutterBottom variant="h6">
                                 {position.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
+                            </CardLabelStyled>
+                            <CardParagraphStyled variant="body2" color="text.secondary">
                                 {position.description}
-                            </Typography>
-                            {position && (
-                                <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    size="small"
-                                    sx={{ mt: 1, borderRadius: 4, textTransform: 'none' }}
+                            </CardParagraphStyled>
+                            {position?.recommended && (
+                                <RecommendedStyled
+                                    sx={{mt: 1, textTransform: 'none'}}
                                 >
                                     Recommended
-                                </Button>
+                                </RecommendedStyled>
                             )}
                         </CardContent>
-                    </Card>
+                    </CardStyled>
                 ))}
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button
-                    variant="outlined"
-                    onClick={handleNotSure}
-                    sx={{
-                        borderColor: '#ccc',
-                        color: '#666',
-                        '&:hover': { borderColor: '#999', backgroundColor: '#f5f5f5' }
-                    }}
-                >
+            <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                <SecondaryButtonStyled onClick={handleNotSure}>
                     I'M NOT SURE
-                </Button>
+                </SecondaryButtonStyled>
             </Box>
         </Box>
     );

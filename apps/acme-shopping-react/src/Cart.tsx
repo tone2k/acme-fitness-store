@@ -22,15 +22,15 @@ export default function Cart() {
 
     const {data: cartData} = useGetCart(userInfo.userId, userInfo);
     const deleteCartItemMutation = useDeleteCartItem(userInfo.userId);
-    const {data: { data: products }} = useGetProducts();
-
+    const productsResult = useGetProducts();
+    const products = productsResult?.data?.data ?? [];
     const cartItems = cartData?.cart ?? [];
     const total = cartItems.reduce((acc, curr) => acc + (curr.quantity * parseFloat(curr.price)), 0);
 
     const getProductImg = (itemId: string) => {
-        const product = products?.find((product: ProductData) => product.id === itemId);
-        return product?.imageUrl1 || '/static/images/new_bikes_3.jpg'
-    }
+        const product = products.find((product: ProductData) => product.id === itemId);
+        return product?.imageUrl1 || '/static/images/new_bikes_3.jpg';
+    };
 
     const columns: GridColDef[] = [
         {

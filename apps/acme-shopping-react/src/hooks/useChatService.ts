@@ -1,12 +1,12 @@
-import {useState, useEffect, useCallback} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 import {getCurrentProductInView, parseMessageContentAndBuildLinks} from "../utils/helpers.ts";
-import { FormRecommendationData } from '../types/FormRecommendationData.ts';
+import {FormRecommendationData} from '../types/FormRecommendationData.ts';
 
 interface ChatMessage {
     content: string;
     role: 'USER' | 'ASSISTANT';
-    formType: 'FORM1' | 'FORM2' | 'FORM3' | null;
+    formType: 'FORM1' | 'FORM2' | 'FORM3' | 'RECOMMENDATION' | null;
 }
 
 interface AcmeChatResponse {
@@ -26,7 +26,7 @@ export const useChatService = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([]);
-    const [currentForm, setCurrentForm] = useState<'FORM1' | 'FORM2' | 'FORM3'| null>(null);
+    const [currentForm, setCurrentForm] = useState<'FORM1' | 'FORM2' | 'FORM3' | 'RECOMMENDATION' | null>(null);
     const [formData, setFormData] = useState<FormRecommendationData>({});
     const [isCompletingForm, setIsCompletingForm] = useState<boolean>(false);
     const [isFormCompleted, setIsFormCompleted] = useState<boolean>(false);
@@ -102,10 +102,11 @@ export const useChatService = () => {
             const newHistory = [...updatedHistory, form1Message];
             setChatHistory(newHistory);
             saveChatHistory(newHistory);
+            setIsLoading(false);
         } else {
             try {
                 const refinedHistory = [...updatedHistory]
-                if(updatedHistory[0].role === "ASSISTANT"){
+                if (updatedHistory[0].role === "ASSISTANT") {
                     refinedHistory.shift();
                 }
                 const payload = {
@@ -174,41 +175,27 @@ export const useChatService = () => {
             saveChatHistory(newHistory);
         } else if (formType === 'FORM3') {
             setCurrentForm(null);
-            // setIsFormCompleted(true);
+            setIsCompletingForm(false);
+            setIsFormCompleted(true);
+            setIsLoading(false);
+
             const finalMessage: ChatMessage = {
-                content: `These are the customers preferences for a bike, please make a recommendation: ${JSON.stringify({...formData, ...data})}`,
-                role: 'USER',
+                content: 'Thank you for completing those! Here\'s what I recommend:',
+                role: 'ASSISTANT',
                 formType: null,
             };
 
-            let newHistory;
-
-            newHistory = [...chatHistory, {
-                content: 'Excellent! Thank you for completing those.',
+            const recommendationMessage: ChatMessage = {
+                content: '',
                 role: 'ASSISTANT',
-            }];
-            setChatHistory(newHistory);
-            saveChatHistory(newHistory);
-
-            delete finalMessage.formType;
-
-            const payload = {
-                messages: [finalMessage]
+                formType: 'RECOMMENDATION',
             };
-            const response = await axios.post<AcmeChatResponse>('/ai/question', payload);
-            const assistantMessages = response.data.messages.map(content => ({
-                content: parseMessageContentAndBuildLinks(content),
-                role: 'ASSISTANT' as const,
-                formType: null
-            }));
 
-            newHistory = [...newHistory, assistantMessages[0]];
+            const newHistory = [...chatHistory, finalMessage, recommendationMessage];
             setChatHistory(newHistory);
             saveChatHistory(newHistory);
         }
     }, [chatHistory, formData, saveChatHistory]);
-
-
 
 
     return {

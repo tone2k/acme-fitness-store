@@ -4,23 +4,26 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    TextField,
     IconButton,
     List,
     ListItem,
     ListItemText,
-    Button,
     Paper,
+    TextField,
     Typography
 } from '@mui/material';
 import {Close, Refresh, Send} from '@mui/icons-material';
 import {useChatService} from './hooks/useChatService';
-import {summarizeCart} from "./utils/helpers.ts";
-import {CartData} from "./types/Cart.ts";
-import TerrainForm from './components/TerrainForm.tsx';
-import RidingPositionForm from './components/RidingPositionForm.tsx';
+import {summarizeCart} from "./utils/helpers";
+import {CartData} from "./types/Cart";
+import TerrainForm from './components/TerrainForm';
+import RidingPositionForm from './components/RidingPositionForm';
+import FakeBikeRecommendation from "./components/FakeRecommendation";
+import {PromptHeaderStyled} from "./components/styled/PromptHeader.styled.tsx";
+import {CardStyled} from "./components/styled/Card.styled.tsx";
+import {PrimaryButtonStyled} from "./components/styled/PrimaryButton.styled.tsx";
 import HeightForm from "./components/HeightForm.tsx";
-import FakeBikeRecommendation from "./components/FakeRecommendation.tsx";
+
 
 interface ChatModalProps {
     open: boolean;
@@ -33,8 +36,27 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const [inputMessage, setInputMessage] = useState('');
     const [jiggle, setJiggle] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
-    const {chatHistory, sendMessage, refreshChat, isLoading, error, currentForm, submitForm, isCompletingForm, setIsFormCompleted, isFormCompleted} = useChatService();
+    const {
+        chatHistory,
+        sendMessage,
+        refreshChat,
+        isLoading,
+        error,
+        currentForm,
+        submitForm,
+        isCompletingForm,
+        setIsFormCompleted,
+        isFormCompleted
+    } = useChatService();
     const closeButtonRef = useRef(null);
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const defaultWidth = {xs: '90vw', sm: '420px'};
+    const defaultHeight = {xs: '90vh', sm: '600px'};
+
+    const expandedWidth = {xs: '90vw', sm: '840px'};
+    const expandedHeight = {xs: '90vh', sm: '1000px'};
 
     const handleClose = (event: object, reason: 'backdropClick' | 'escapeKeyDown') => {
         if (reason !== 'backdropClick') {
@@ -46,6 +68,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
 
     const handleSend = async (message: string) => {
         if (message.trim()) {
+            setInputMessage('');
             await sendMessage(message, summarizeCart(cartData.cart));
             setInputMessage('');
         }
@@ -54,49 +77,38 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const handleBackdropClick = () => {
         setJiggle(true);
         if (closeButtonRef.current) {
-            closeButtonRef.current.style.transform = 'scale(2.5)';
+            (closeButtonRef.current as HTMLElement).style.transform = 'scale(2.5)';
         }
         setTimeout(() => {
             setJiggle(false);
             if (closeButtonRef.current) {
-                closeButtonRef.current.style.transform = 'scale(1)';
+                (closeButtonRef.current as HTMLElement).style.transform = 'scale(1)';
             }
         }, 500);
     };
 
-    const renderMessageContent = (message) => {
+    const renderMessageContent = (message: any) => {
         if (message.formType === 'FORM1') {
-            return (
-                <>
-                    <TerrainForm onSubmit={(data) => submitForm('FORM1', data)} />
-                </>
-            );
+            return <TerrainForm onSubmit={(data) => submitForm('FORM1', data)}/>;
         } else if (message.formType === 'FORM2') {
-            return (
-                <>
-                    <RidingPositionForm onSubmit={(data) => submitForm('FORM2', data)} />
-                </>
-            );
+            return <RidingPositionForm onSubmit={(data) => submitForm('FORM2', data)}/>;
         } else if (message.formType === 'FORM3') {
-            return (
-                <>
-                    {/*<HeightForm onSubmit={(data) => submitForm('FORM3', data)} />*/}
-                    <FakeBikeRecommendation/>
-                </>
-            );
+            return <HeightForm onSubmit={(data) => submitForm('FORM3', data)}/>
+        } else if (message.formType === 'RECOMMENDATION') {
+            return <FakeBikeRecommendation/>;
         } else {
             return <>{message.content}</>;
         }
     };
 
     useEffect(() => {
-        if(isCompletingForm){
+        if (isCompletingForm) {
             setIsExpanded(true);
         }
     }, [isCompletingForm]);
 
     useEffect(() => {
-        if(!open){
+        if (!open) {
             setIsExpanded(false);
         }
     }, [open]);
@@ -119,9 +131,16 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         };
     }, [open]);
 
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
+        }
+    }, [chatHistory]);
+
     return (
         <Dialog
             open={open}
+            maxWidth={false}
             onClose={handleClose}
             disableEnforceFocus
             hideBackdrop
@@ -132,17 +151,19 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     bottom: 16,
                     right: 16,
                     m: 0,
-                    width: isExpanded ? "10000" : {xs: '90vw', sm: 420},
-                    height: isExpanded ?  "7500" : {xs: '90vh', sm: 600},
+                    width: isExpanded ? expandedWidth : defaultWidth,
+                    height: isExpanded ? expandedHeight : defaultHeight,
                     pointerEvents: 'auto',
                     transition: 'width 0.3s, height 0.3s',
                 },
             }}
         >
-            <DialogTitle
-                sx={{padding: '8px 16px', margin: 0}}>
-                <Typography sx={{margin: 0, fontSize: '1.2rem', lineHeight: 1.2}}>Chat with FitAssist</Typography>
-                <Typography sx={{margin: '4px 0 0 0', fontSize: '0.8rem', lineHeight: 1, fontWeight: 'bold', color: 'green'}}>Powered by SpringAI</Typography>
+            <DialogTitle sx={{padding: '8px 16px', margin: 0}}>
+                <PromptHeaderStyled>Chat with FitAssist</PromptHeaderStyled>
+                <Typography
+                    sx={{margin: '4px 0 0 0', fontSize: '0.8rem', lineHeight: 1, fontWeight: 'bold', color: 'green'}}>
+                    Powered by SpringAI
+                </Typography>
                 <IconButton
                     data-cy="assist-close"
                     ref={closeButtonRef}
@@ -176,23 +197,23 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
             </DialogTitle>
             <DialogContent dividers sx={{p: 1}}>
                 <List sx={{
-                    height: isExpanded ? 'calc(100% - 64px)' : 450,
+                    height: isExpanded ? 'calc(100% - 64px)' : '450px',
                     overflow: 'auto',
                     transition: 'height 0.3s',
                 }}>
                     {chatHistory.map((message, index) => (
                         <ListItem
-                            id={"assist-message-" + index}
+                            id={`assist-message-${index}`}
                             key={index}
                             sx={{
                                 justifyContent: message.role === 'USER' ? 'flex-end' : 'flex-start',
                             }}
                         >
-                            <Paper
+                            <CardStyled
                                 elevation={2}
                                 sx={{
                                     p: 1,
-                                    backgroundColor: message.role === 'USER' ? 'primary.light' : 'grey.200',
+                                    backgroundColor: message.role === 'USER' ? '#5C0A90' : '#F5F5F5',
                                     borderRadius: message.role === 'USER' ? '20px 20px 0 20px' : '20px 20px 20px 0',
                                 }}
                             >
@@ -201,17 +222,21 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                                     sx={{
                                         wordBreak: 'break-word',
                                         '& .MuiListItemText-primary': {
-                                            color: message.role === 'USER' ? 'primary.contrastText' : 'text.primary',
+                                            color: message.role === 'USER' ? '#FFFFFF' : '#140A00',
                                         }
                                     }}
                                 />
-                            </Paper>
+                            </CardStyled>
                         </ListItem>
                     ))}
+                    <div ref={messagesEndRef}/>
                 </List>
-                {isLoading && !isCompletingForm && (<Typography variant="body2"
-                                           sx={{position: 'absolute', bottom: 100, left: 16, color: 'text.secondary'}}>FitAssist
-                    is currently typing...</Typography>)}
+                {isLoading && !isCompletingForm && (
+                    <Typography variant="body2"
+                                sx={{position: 'absolute', bottom: 100, left: 16, color: 'text.secondary'}}>
+                        FitAssist is currently typing...
+                    </Typography>
+                )}
                 {error && (
                     <Paper sx={{p: 1, mt: 1, backgroundColor: 'error.light', color: 'error.contrastText'}}>
                         Error: {error.message}
@@ -233,18 +258,17 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                             void handleSend(inputMessage);
                         }
                     }}
-                    // disabled={currentForm !== null}
                 />
-                <Button
+                <PrimaryButtonStyled
                     data-cy="assist-send-button"
                     variant="contained"
                     endIcon={<Send/>}
                     onClick={() => void handleSend(inputMessage)}
-                    // disabled={!inputMessage.trim() || isLoading || (currentForm !== null && !isFormCompleted)}
+                    disabled={!inputMessage.trim() || isLoading}
                 >
                     Send
-                </Button>
+                </PrimaryButtonStyled>
             </DialogActions>
         </Dialog>
     );
-};
+}

@@ -1,44 +1,69 @@
-import { Box, Typography, Card, CardContent, CardMedia, Button } from '@mui/material';
+import {Box, Card, CardContent, CardMedia, List, ListItem, styled,} from '@mui/material';
+import {PrimaryButtonStyled} from "./styled/PrimaryButton.styled.tsx";
+import {CardStyled} from "./styled/Card.styled.tsx";
+import {CardLabelStyled} from "./styled/CardLabel.styled.tsx";
+import {CardParagraphStyled} from "./styled/CardParagraph.styled.tsx";
+import {CardPriceStyled} from "./styled/CardPrice.styled.tsx";
+import {InfoHeaderStyled} from "./styled/InfoHeader.styled.tsx";
+import {ListItemTextStyled} from "./styled/ListItemText.style.tsx";
+import MagicIcon from "./MagicIcon.tsx";
+import {NewBadgeStyled} from "./styled/NewBadge.styled.tsx";
+import {InStockBadgeStyled} from "./styled/InStockBadge.styled.tsx";
 
-export default function FakeBikeRecommendation() {
+
+export default function FakeRecommendation() {
     return (
-        <Card sx={{ maxWidth: 1244, margin: 'auto', borderRadius: 2, overflow: 'hidden', boxShadow: 3 }}>
+        <CardStyled sx={{
+            maxWidth: 800,
+            margin: 'auto',
+            display: 'flex',
+            borderRadius: '4px',
+            overflow: 'hidden'
+        }}>
             <CardMedia
                 component="img"
-                sx={{ width: 400}}
+                sx={{width: '50%', height: '100%', objectFit: 'cover'}}
                 image="/bike.png"
                 alt="Velocity V9 Bike"
             />
-            <CardContent>
-                <Box>
-                    <Typography variant="h6" color="text.primary">
+            <Box sx={{width: '50%', display: 'flex', flexDirection: 'column'}}>
+                <CardContent sx={{flex: '1 0 auto'}}>
+                    <CardLabelStyled>
                         Velocity V9
-                    </Typography>
-                    <Typography variant="h5" color="secondary" sx={{ mb: 2 }}>
+                    </CardLabelStyled>
+                    <CardPriceStyled>
                         $2,199.99
-                    </Typography>
-                    <Typography variant="subtitle1" color="text.secondary">
-                        Velocity V9 is a high-performance hybrid bike that combines speed and comfort for riders who demand the best of both worlds.
-                    </Typography>
-                    <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+                    </CardPriceStyled>
+                    <Box sx={{display: 'flex', gap: 1, mb: 2}}>
+                        <NewBadgeStyled label="New" size="small"/>
+                        <InStockBadgeStyled label="In Stock" size="small"/>
+                    </Box>
+                    <CardParagraphStyled variant="body1">
+                        Velocity V9 is a high-performance hybrid bike that combines speed and comfort for riders who
+                        demand the best of both worlds.
+                    </CardParagraphStyled>
+                    <PrimaryButtonStyled variant="contained">
                         CHECK IT OUT
-                    </Button>
-                </Box>
-            </CardContent>
-            <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <Box>
-                    <Typography variant="subtitle2" sx={{ mt: 2 }}>
+                    </PrimaryButtonStyled>
+                </CardContent>
+                <CardContent>
+                    <InfoHeaderStyled>
+                        <MagicIcon/>
                         Why is the Velocity V9 a great fit for me?
-                    </Typography>
-                    <Typography variant="body4" color="text.secondary">
-                        <ul>
-                            <li>Lightweight frame and 700c wheels with high-quality tires make it a great fit for paved roads and gravel alike.</li>
-                            <li>Upright posture is ideal for a comfortable ride.</li>
-                            <li>Tires and frame work well for a 170cm tall rider.</li>
-                        </ul>
-                    </Typography>
-                </Box>
-            </CardContent>
-        </Card>
+                    </InfoHeaderStyled>
+                    <List dense>
+                        {[
+                            'Lightweight frame and 700c wheels with high-quality tires make it a great fit for paved roads and gravel alike.',
+                            'Upright posture is ideal for a comfortable ride.',
+                            'Tires and frame work well for a 170cm tall rider.',
+                        ].map((text, index) => (
+                            <ListItem key={index} disablePadding>
+                                <ListItemTextStyled primary={text}/>
+                            </ListItem>
+                        ))}
+                    </List>
+                </CardContent>
+            </Box>
+        </CardStyled>
     );
 }

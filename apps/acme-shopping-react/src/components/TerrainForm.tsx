@@ -1,86 +1,87 @@
-import { useState } from 'react';
-import { Box, Typography, Card, CardContent, CardMedia, Button } from '@mui/material';
+import {useState} from 'react';
+import {Box, CardContent, CardMedia} from '@mui/material';
+import {PromptHeaderStyled} from "./styled/PromptHeader.styled.tsx";
+import {CardStyled} from "./styled/Card.styled.tsx";
+import {CardParagraphStyled} from "./styled/CardParagraph.styled.tsx";
+import {SecondaryButtonStyled} from "./styled/SecondaryButton.styled.tsx";
+import {CardLabelStyled} from "./styled/CardLabel.styled.tsx";
+import {RecommendedStyled} from "./styled/Recommended.styled.tsx";
 
 const terrainOptions = [
     {
         name: 'Paved paths',
         description: 'Suburban and city roads, or established bike paths',
         image: '/paved.png',
-        recommended: true
+        recommended: true,
     },
     {
         name: 'Gravel roads',
         description: 'More agility for gravel trails and roads',
-        image: '/gravel.png'
+        image: '/gravel.png',
     },
     {
         name: 'Trails',
         description: 'Added stability for mountain biking, trails, jumps, and off-roading',
-        image: '/trail.png'
-    }
+        image: '/trail.png',
+    },
 ];
 
 interface TerrainFormProps {
     onSubmit: (data: { terrain: string }) => void;
 }
 
-export default function TerrainForm({ onSubmit }: TerrainFormProps) {
+export default function TerrainForm({onSubmit}: TerrainFormProps) {
     const [selectedTerrain, setSelectedTerrain] = useState('');
 
     const handleTerrainSelect = (terrain: string) => {
         setSelectedTerrain(terrain);
-        onSubmit({ terrain });
+        onSubmit({terrain});
     };
 
     const handleNotSure = () => {
         setSelectedTerrain('');
-        onSubmit({ terrain: '' });
+        onSubmit({terrain: ''});
     };
 
     return (
-        <Box sx={{ margin: 'auto', padding: 2 }}>
-            <Typography variant="h5" gutterBottom>
+        <Box sx={{margin: 'auto', padding: 2, maxWidth: 600}}>
+            <PromptHeaderStyled variant="h5" gutterBottom>
                 Select a terrain
-            </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+            </PromptHeaderStyled>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', gap: 2}}>
                 {terrainOptions.map((option) => (
-                    <Card
+                    <CardStyled
                         key={option.name}
                         sx={{
                             width: '32%',
                             display: 'flex',
                             flexDirection: 'column',
                             cursor: 'pointer',
-                            border: selectedTerrain === option.name ? '2px solid blue' : 'none'
+                            border: selectedTerrain === option.name ? '2px solid #5C0A90' : undefined,
                         }}
                         onClick={() => handleTerrainSelect(option.name)}
                     >
-                        <CardMedia
-                            component="img"
-                            height="140"
-                            image={option.image}
-                            alt={option.name}
-                        />
-                        <CardContent sx={{ flexGrow: 1 }}>
-                            <Typography gutterBottom variant="h6" component="div">
+                        <CardMedia component="img" height="140" image={option.image} alt={option.name}/>
+                        <CardContent sx={{flexGrow: 1}}>
+                            <CardLabelStyled gutterBottom variant="h6">
                                 {option.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
+                            </CardLabelStyled>
+                            <CardParagraphStyled variant="body2">
                                 {option.description}
-                            </Typography>
-                            {option && (
-                                <Typography variant="body2" color="primary" sx={{ mt: 1 }}>
+                            </CardParagraphStyled>
+                            {option?.recommended && (
+                                <RecommendedStyled
+                                    sx={{mt: 1, textTransform: 'none'}}
+                                >
                                     Recommended
-                                </Typography>
+                                </RecommendedStyled>
                             )}
                         </CardContent>
-                    </Card>
+                    </CardStyled>
                 ))}
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                <Button variant="outlined" onClick={handleNotSure}>
-                    I'M NOT SURE
-                </Button>
+            <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}>
+                <SecondaryButtonStyled onClick={handleNotSure}>I'M NOT SURE</SecondaryButtonStyled>
             </Box>
         </Box>
     );

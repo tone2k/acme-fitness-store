@@ -80,7 +80,6 @@ export function getCurrentProductInView() {
 }
 
 export const summarizeCart = (cartItems) => {
-    console.log(cartItems);
     if (!cartItems) {
         return "Nothing. The cart is empty.";
     }

@@ -1,5 +1,8 @@
 import {useState} from 'react';
-import {Box, Typography, Slider, Button, Paper} from '@mui/material';
+import {Box, Paper, Slider, Typography} from '@mui/material';
+import {PromptHeaderStyled} from './styled/PromptHeader.styled.tsx';
+import {PrimaryButtonStyled} from './styled/PrimaryButton.styled.tsx';
+import {SecondaryButtonStyled} from './styled/SecondaryButton.styled.tsx';
 
 interface HeightFormProps {
     onSubmit: (data: { height: string }) => void;
@@ -17,15 +20,30 @@ export default function HeightForm({onSubmit}: HeightFormProps) {
     };
 
     return (
-        <>
-            <Typography variant="h6" align="center" gutterBottom sx={{color: '#4B4B4B', fontWeight: 'bold', width: 400}}>
+        <Box sx={{margin: 'auto', padding: 2, minWidth: 300, maxWidth: 500}}>
+            <PromptHeaderStyled variant="h5" gutterBottom>
                 How tall are you?
-            </Typography>
-            <Paper elevation={3} sx={{padding: 4, maxWidth: 400, margin: 'auto', borderRadius: 8}}>
-                <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative'}}>
+            </PromptHeaderStyled>
+            <Paper elevation={3} sx={{padding: 4, borderRadius: 2}}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                    }}
+                >
                     <Box
-                        sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                        <Typography sx={{fontSize: 14, color: '#4B4B4B', mb: 1}}>250cm</Typography>
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Typography sx={{fontSize: 14, color: '#140A00', mb: 1}}>
+                            250cm
+                        </Typography>
                         <Slider
                             orientation="vertical"
                             value={height}
@@ -35,52 +53,42 @@ export default function HeightForm({onSubmit}: HeightFormProps) {
                             sx={{
                                 height: 180,
                                 '& .MuiSlider-thumb': {
-                                    width: 20, // Thumb size
+                                    width: 20,
                                     height: 20,
-                                    backgroundColor: '#003B70',
+                                    backgroundColor: '#5C0A90',
                                 },
                                 '& .MuiSlider-rail': {
                                     width: 6,
-                                    backgroundColor: '#B3B3B3',
+                                    backgroundColor: '#C0CFDB',
                                 },
                                 '& .MuiSlider-track': {
                                     width: 6,
-                                    backgroundColor: '#003B70',
+                                    backgroundColor: '#5C0A90',
                                 },
                             }}
                         />
-                        <Typography sx={{fontSize: 14, color: '#4B4B4B', mt: 1}}>90cm</Typography>
-
+                        <Typography sx={{fontSize: 14, color: '#140A00', mt: 1}}>
+                            90cm
+                        </Typography>
                     </Box>
-                    <Typography variant="h4" sx={{ml: 5, color: '#4B4B4B'}}>
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            ml: 5,
+                            color: '#140A00',
+                            width: '300px',
+                            textAlign: 'center',
+                            fontWeight: 'bold',
+                        }}
+                    >
                         {height} cm
                     </Typography>
                 </Box>
             </Paper>
             <Box sx={{display: 'flex', justifyContent: 'space-between', mt: 4}}>
-                <Button
-                    variant="contained"
-                    onClick={handleSubmit}
-                    sx={{
-                        backgroundColor: '#003B70',
-                        color: 'white',
-                        '&:hover': {backgroundColor: '#005A8D'}
-                    }}
-                >
-                    CONTINUE
-                </Button>
-                <Button
-                    variant="outlined"
-                    onClick={handleSkip}
-                    sx={{
-                        borderColor: '#B3B3B3',
-                        color: '#4B4B4B',
-                        '&:hover': {backgroundColor: '#F5F5F5'}
-                    }}
-                >
-                    SKIP FOR NOW
-                </Button>
+                <PrimaryButtonStyled onClick={handleSubmit}>CONTINUE</PrimaryButtonStyled>
+                <SecondaryButtonStyled onClick={handleSkip}>SKIP FOR NOW</SecondaryButtonStyled>
             </Box>
-        </>
+        </Box>
     );
 }
