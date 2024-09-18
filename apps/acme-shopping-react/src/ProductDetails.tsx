@@ -39,13 +39,17 @@ export default function ProductDetails() {
     };
 
     return (
-        <Stack alignItems='center'>
-            <Stack alignItems='center' spacing={5} sx={{my: '5rem'}}>
+        <>
+            <Stack alignItems='center' spacing={{ xs: 3, md: 5 }} sx={{ mx: { xs: 3, md: 25 }, my: 5 }}>
                 <h2 id="product-title">{product.name}</h2>
+
                 <Typography align='center'>{product.shortDescription}</Typography>
+
                 <Divider sx={{width: "50%"}}/>
-                <Stack direction='row' spacing={4} alignItems='center'>
+
+                <Stack direction={{ xs: 'column', md: 'row' }} spacing={4} alignItems='center'>
                     <img src={product.imageUrl1} width="350px" alt={`image-${product.name}`}/>
+
                     <Stack alignItems='center' spacing={2}>
                         <Typography>Available Now</Typography>
                         <Typography>{`USD ${product.price}`}</Typography>
@@ -85,10 +89,11 @@ export default function ProductDetails() {
                 </Stack>
                 <Divider sx={{width: "50%"}}/>
             </Stack>
-            <Stack alignItems='left' sx={{mx: '25rem'}}>
+
+            <Stack alignItems='left' sx={{ mx: { xs: 3, md: 25 }, my: { xs: 1, md: 2 } }}>
                 <Typography variant='h3'>Product details</Typography>
                 <Markdown>{product.description}</Markdown>
             </Stack>
-        </Stack>
+        </>
     );
 }
