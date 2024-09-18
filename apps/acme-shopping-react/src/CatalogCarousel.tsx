@@ -1,18 +1,13 @@
 import Slider from 'react-slick';
 import Container from "@mui/material/Container";
-import { useGetProducts } from './hooks/catalogHooks'; 
-import { Link } from "react-router-dom";
+import {useGetProducts} from './hooks/catalogHooks';
+import {Link, Typography, useMediaQuery, useTheme} from "@mui/material";
 
 export default function CatalogCarousel() {
-    const { data, isLoading, error } = useGetProducts();
+    const {data, isLoading, error} = useGetProducts();
 
-    const settings = {
-        dots: true,
-        infinite: false, 
-        speed: 500,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-    };
+    const theme = useTheme();
+    const showMultipleImages = useMediaQuery(theme.breakpoints.up('md'));
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -31,23 +26,21 @@ export default function CatalogCarousel() {
     const first15Products = products.slice(0, 15);
 
     return (
-        <Container sx={{ paddingY: 2}}>
+        <Container sx={{py: 2}}>
             <Slider
                 dots={true}
                 infinite={false}
                 speed={500}
-                slidesToShow={3}
+                slidesToShow={showMultipleImages ? 3 : 1}
                 slidesToScroll={1}
             >
                 {first15Products.map((product) => (
-                    <div key={product.id}>
-                        <Link to={`/product/${product.id}`} style={{ textDecoration: 'none' }}>
-                            <img src={product.imageUrl1} alt={product.name} style={{ width: "100%" }} />
-                            <p style={{ textAlign: "center", marginTop: "10px", color: 'inherit' }}>{product.name}</p>
-                        </Link>
-                    </div>
+                    <Link href={`/product/${product.id}`} sx={{textDecoration: 'none'}} key={product.id}>
+                        <img src={product.imageUrl1} alt={product.name} style={{width: "100%"}}/>
+                        <Typography sx={{textAlign: "center", py: 5}}>{product.name}</Typography>
+                    </Link>
                 ))}
             </Slider>
-    </Container>
+        </Container>
     );
 }
