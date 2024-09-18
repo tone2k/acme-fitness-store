@@ -32,7 +32,7 @@ export default function FakeRecommendation() {
                         Velocity V9
                     </CardLabelStyled>
                     <CardPriceStyled>
-                        $2,199.99
+                        $1,099.99
                     </CardPriceStyled>
                     <Box sx={{display: 'flex', gap: 1, mb: 2}}>
                         <NewBadgeStyled label="New" size="small"/>
