@@ -50,7 +50,14 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         isFormCompleted
     } = useChatService();
     const closeButtonRef = useRef(null);
-    const { isConnected, connect, disconnect } = useFitAssistSocket();
+    const {
+        socketChatHistory,
+        client,
+        isConnected,
+        connect,
+        disconnect,
+        publishQuestion,
+    } = useFitAssistSocket();
 
     useEffect(() => {
         if (open) {
@@ -85,7 +92,8 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const handleSend = async (message: string) => {
         if (message.trim()) {
             setInputMessage('');
-            await sendMessage(message, summarizeCart(cartData.cart));
+           //await sendMessage(message, summarizeCart(cartData.cart));REST CALL
+            publishQuestion(message);
             setInputMessage('');
         }
     };
@@ -151,7 +159,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
         }
-    }, [chatHistory]);
+    }, [socketChatHistory]);
 
     return (
         <Dialog
@@ -217,7 +225,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     overflow: 'auto',
                     transition: 'height 0.3s',
                 }}>
-                    {chatHistory.map((message, index) => (
+                    {socketChatHistory.map((message, index) => (
                         <ListItem
                             id={`assist-message-${index}`}
                             key={index}

@@ -3,13 +3,13 @@ import axios from 'axios';
 import {getCurrentProductInView, parseMessageContentAndBuildLinks} from "../utils/helpers.ts";
 import {FormRecommendationData} from '../types/FormRecommendationData.ts';
 
-interface ChatMessage {
+export interface ChatMessage {
     content: string;
     role: 'USER' | 'ASSISTANT';
     formType: 'FORM1' | 'FORM2' | 'FORM3' | 'RECOMMENDATION' | null;
 }
 
-interface AcmeChatResponse {
+export interface AcmeChatResponse {
     messages: string[];
 }
 
