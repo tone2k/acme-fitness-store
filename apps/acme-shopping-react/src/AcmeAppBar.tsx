@@ -3,9 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import Logo from './assets/logo.png';
-import LogoSmall from './assets/logo-small.png';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {Badge, Box, Menu, MenuItem, Modal, Stack, Typography} from "@mui/material";
 import AssistIcon from '@mui/icons-material/TipsAndUpdates';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -76,12 +74,12 @@ export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps)
                     <Stack direction='row' alignItems='center' justifyContent='space-between'>
                         <Stack direction='row' sx={{display: {xs: 'flex', sm: 'none'}}}>
                             <IconButton component={Link} to={'/'}>
-                                <img src={LogoSmall} alt="acme-logo"/>
+                                <img src="/logo-small.png" alt="acme-logo"/>
                             </IconButton>
                         </Stack>
                         <Stack direction='row' sx={{display: {xs: 'none', sm: 'flex'}}}>
                             <IconButton component={Link} to={'/'}>
-                                <img src={Logo} alt="acme-logo"/>
+                                <img src="/logo.png" alt="acme-logo"/>
                             </IconButton>
                             {pages.map((page) => (
                                 <Button
