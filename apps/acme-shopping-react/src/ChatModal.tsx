@@ -24,6 +24,7 @@ import {CardStyled} from "./components/styled/Card.styled.tsx";
 import {PrimaryButtonStyled} from "./components/styled/PrimaryButton.styled.tsx";
 import HeightForm from "./components/HeightForm.tsx";
 import { useFitAssistSocket } from './hooks/useFitAssistSocket';
+import {useGetUserInfo} from "./hooks/userHooks.ts";
 
 
 interface ChatModalProps {
@@ -37,6 +38,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const [inputMessage, setInputMessage] = useState('');
     const [jiggle, setJiggle] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
+    const {data: userInfo} = useGetUserInfo();
     const {
         chatHistory,
         sendMessage,
@@ -61,11 +63,11 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
 
     useEffect(() => {
         if (open) {
-            connect();
+            connect(userInfo.userId); //TODO need to fix how to pass this forward.
         } else {
             disconnect();
         }
-    }, [open]);
+    }, [open, userInfo]);
 
     useEffect(() => {
         if (isConnected) {
@@ -92,8 +94,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const handleSend = async (message: string) => {
         if (message.trim()) {
             setInputMessage('');
-           //await sendMessage(message, summarizeCart(cartData.cart));REST CALL
-            publishQuestion(message);
+            publishQuestion(message, summarizeCart(cartData.cart));
             setInputMessage('');
         }
     };

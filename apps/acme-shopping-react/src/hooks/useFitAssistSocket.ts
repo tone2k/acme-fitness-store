@@ -8,6 +8,7 @@ const STORAGE_KEY = 'acme_chat_history';
 export const useFitAssistSocket = () => {
     const [client, setClient] = useState<Client | null>(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [userId, setUserId] = useState(`no-user`);
 
     //From ChatService
     const [socketChatHistory, setSocketChatHistory] = useState<ChatMessage[]>([]);
@@ -21,18 +22,18 @@ export const useFitAssistSocket = () => {
         });
 
         stompClient.onConnect = () => {
-            stompClient.subscribe('/greetings', message => {
+            stompClient.subscribe(`/greetings/${userId}`, message => {
                 console.log(`Received message: ${message.body}`);
             });
 
             stompClient.subscribe('/answer', messages => {
                 console.log(`Answer message: ${messages.body}`);
-                const response:AcmeChatResponse = JSON.parse(messages.body)
+                const response: AcmeChatResponse = JSON.parse(messages.body)
                 handleAnswer(response.messages);
             })
 
             stompClient.publish({
-                destination: '/hello',
+                destination: `/hello/${userId}`,
                 body: JSON.stringify(
                     {
                         conversationId: 'test-id',
@@ -66,9 +67,10 @@ export const useFitAssistSocket = () => {
                 stompClient.deactivate();
             }
         };
-    }, []);
+    }, [userId]);
 
-    const connect = () => {
+    const connect = (newUserId: string) => {
+        // setUserId(newUserId);
         if (client && !client.active) {
             client.activate();
             console.log('Connected to FitAssist WebSocket');
@@ -85,7 +87,7 @@ export const useFitAssistSocket = () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
     }, []); //todo REFACTOR
 
-    const publishQuestion = (message: string) => {
+    const publishQuestion = (message: string, cartData: string) => {
         setIsLoading(true);
         setError(null);
 
@@ -110,15 +112,16 @@ export const useFitAssistSocket = () => {
             }))
         };
         const latestMsg = payload['messages'].pop();
-        // payload['messages'].push({content: cartData, role: 'USER'});
-        // payload['messages'].push({content: getCurrentProductInView(), role: 'USER'})
+        payload['messages'].push({content: cartData, role: 'USER'});
+        payload['messages'].push({content: getCurrentProductInView(), role: 'USER'})
         payload['messages'].push(latestMsg);
+        setSocketChatHistory(updatedHistory);
+        saveChatHistory(updatedHistory);
+
         client.publish({
             destination: '/question',
             body: JSON.stringify(payload),
         });
-        setSocketChatHistory(updatedHistory);
-        saveChatHistory(updatedHistory);
     }
 
     const handleAnswer = (messages: string[]) => {
