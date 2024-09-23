@@ -35,9 +35,9 @@ export default function CatalogCarousel() {
                 slidesToScroll={1}
             >
                 {first15Products.map((product) => (
-                    <Link href={`/product/${product.id}`} sx={{textDecoration: 'none'}} key={product.id}>
+                    <Link href={`/product/${product.id}`} sx={{textDecoration: 'none', outline: 'none'}} key={product.id}>
                         <img src={product.imageUrl1} alt={product.name} style={{width: "100%"}}/>
-                        <Typography sx={{textAlign: "center", py: 5}}>{product.name}</Typography>
+                        <Typography sx={{textAlign: "center", py: 4}}>{product.name}</Typography>
                     </Link>
                 ))}
             </Slider>

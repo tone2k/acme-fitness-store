@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {DataGrid, GridColDef, GridPaginationModel} from '@mui/x-data-grid';
 import {CartItemData} from "./types/Cart.ts"
-import {Box, Link, Stack, Typography, Grid, Container, Breadcrumbs} from "@mui/material";
+import {Box, Link, Stack, Typography, Grid, Container, Breadcrumbs, Divider} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from "@mui/material/IconButton";
 import {NavLink, useNavigate} from "react-router-dom";
@@ -109,10 +109,13 @@ export default function Cart() {
 
     function CustomTotalFooter() {
         return (
+            <>
+                <Divider sx={{width:'100%'}}/>
             <Stack direction='row' sx={{p: 1}} justifyContent='space-between'>
                 <Typography>Total</Typography>
                 <Typography sx={{pr: '8rem'}}>${total.toFixed(2)}</Typography>
             </Stack>
+            </>
         );
     }
 
@@ -134,10 +137,10 @@ export default function Cart() {
             </Breadcrumbs>
             <Grid mt={5} container spacing={3} alignItems="flex-start">
                 <Grid item xs={12} md={9}>
-                    <Typography align="center" variant='h3'>Your Shopping cart awaits!</Typography>
+                <Typography sx={{my: '2rem'}} align="center" variant='h3'>Your Shopping cart awaits!</Typography>
                     {cartItems.length > 0 ? (
                         <>
-                            <Typography>You currently have {cartItems.length} item(s) in your cart</Typography>
+                            <Typography sx={{my: '1rem'}}>You currently have <strong>{cartItems.length} item(s)</strong> in your cart</Typography>
                             <DataGrid
                                 sx={{'& .MuiDataGrid-columnSeparator': {display: 'none'}}}
                                 rows={cartItems}
@@ -153,7 +156,7 @@ export default function Cart() {
                                     footer: CustomTotalFooter
                                 }}
                             />
-                            <Box sx={{width: '100%', display: 'flex', justifyContent: 'space-between', mt: 2}}>
+                            <Box sx={{width: '100%', display: 'flex', justifyContent: 'space-between', my: '2rem'}}>
                                 <Button variant='outlined' color='inherit' onClick={handleShoppingClick}>
                                     Continue Shopping
                                 </Button>

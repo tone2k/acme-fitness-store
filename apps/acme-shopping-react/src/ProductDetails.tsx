@@ -8,6 +8,7 @@ import FavoriteIcon from '@mui/icons-material/FavoriteBorder';
 import Markdown from "marked-react";
 import {useGetUserInfo} from "./hooks/userHooks";
 import {CartItemData} from "./types/Cart.ts";
+import Container from "@mui/material/Container";
 
 export default function ProductDetails() {
     const {productId} = useParams<{ productId: string}>()
@@ -39,8 +40,8 @@ export default function ProductDetails() {
     };
 
     return (
-        <>
-            <Stack alignItems='center' spacing={{ xs: 3, md: 5 }} sx={{ mx: { xs: 3, md: 25 }, my: 5 }}>
+        <Container>
+            <Stack alignItems='center' spacing={{ xs: 3, md: 5 }} sx={{ mx: 3, my: 5 }}>
                 <h2 id="product-title">{product.name}</h2>
 
                 <Typography align='center'>{product.shortDescription}</Typography>
@@ -90,10 +91,10 @@ export default function ProductDetails() {
                 <Divider sx={{width: "50%"}}/>
             </Stack>
 
-            <Stack alignItems='left' sx={{ mx: { xs: 3, md: 25 }, my: { xs: 1, md: 2 } }}>
-                <Typography variant='h3'>Product details</Typography>
+            <Typography variant='h4'>Product details</Typography>
+            <Stack alignItems='left' sx={{mx: 3, my: {xs: 1, md: 2}}}>
                 <Markdown>{product.description}</Markdown>
             </Stack>
-        </>
+        </Container>
     );
 }

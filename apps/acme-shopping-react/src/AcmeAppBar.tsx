@@ -73,17 +73,18 @@ export default function AcmeAppBar({handleLogin, handleLogout}: AcmeAppBarProps)
                 <Container maxWidth="xl" sx={{paddingX: {xs: 0, sm: 0}}}>
                     <Stack direction='row' alignItems='center' justifyContent='space-between'>
                         <Stack direction='row' sx={{display: {xs: 'flex', sm: 'none'}}}>
-                            <IconButton component={Link} to={'/'}>
+                            <IconButton disableRipple component={Link} to={'/'}>
                                 <img src="/logo-small.png" alt="acme-logo"/>
                             </IconButton>
                         </Stack>
                         <Stack direction='row' sx={{display: {xs: 'none', sm: 'flex'}}}>
-                            <IconButton component={Link} to={'/'}>
+                            <IconButton disableRipple component={Link} to={'/'}>
                                 <img src="/logo.png" alt="acme-logo"/>
                             </IconButton>
                             {pages.map((page) => (
                                 <Button
-                                    sx={{color: 'secondary.contrastText', display: {xs: 'none', md: 'flex'} }}
+                                    centerRipple
+                                    sx={{my: 2, color: 'secondary.contrastText', display: {xs: 'none', md: 'flex'} }}
                                     key={page.name}
                                     component={Link}
                                     to={page.navigateTo}>
