@@ -92,3 +92,11 @@ services:
       - '6379:6379'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+
+  assist-redis:
+    container_name: assist-redis
+    image: bitnami/redis:latest
+    ports:
+     - '63779:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes

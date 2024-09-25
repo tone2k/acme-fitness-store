@@ -7,6 +7,13 @@ management:
       exposure:
         include: info,health
 spring:
+  jpa:
+    defer-datasource-initialization: true
+  data:
+    redis:
+      host: localhost
+      password:
+      port: 63779
   ai:
     openai:
       chat:

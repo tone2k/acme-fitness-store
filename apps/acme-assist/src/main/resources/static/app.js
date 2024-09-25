@@ -1,5 +1,5 @@
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8081/websocket/ai/v2'
+    brokerURL: 'ws://localhost:8081/websocket/ai/v2',
 });
 
 stompClient.onConnect = (frame) => {
@@ -55,6 +55,10 @@ function sendName() {
                 userId: $("#name").val(),
                 page: '/'
             })
+    });
+    stompClient.subscribe('/answer'+'/' + $("#name").val(), (chatResponse) => {
+        console.log('Answer' + chatResponse);
+        showGreeting(JSON.parse(chatResponse.body).messages[0])
     });
 }
 
