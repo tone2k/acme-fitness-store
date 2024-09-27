@@ -1,0 +1,13 @@
+apiVersion: apps.tanzu.vmware.com/v1
+kind: ContainerApp
+metadata:
+  name: joomla
+  annotations:
+    containerapp.apps.tanzu.vmware.com/class: "kubernetes"
+spec:
+  description: Joomla application from Helm
+  image: oci://registry-1.docker.io/bitnamicharts/joomla
+  relatedRefs:
+    - for: kubernetes.list-replicas
+      kind: Pod
+      labelSelector: app.kubernetes.io/name=joomla

@@ -2,6 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: bitnami
+  namespace: default
 spec:
   type: "oci"
   interval: 5m
