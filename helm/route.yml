@@ -1,0 +1,25 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: joomla-main
+  annotations:
+    healthcheck.gslb.tanzu.vmware.com/service: joomla
+    healthcheck.gslb.tanzu.vmware.com/path: /
+    healthcheck.gslb.tanzu.vmware.com/port: "9898"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: default-gateway
+      sectionName: http-joomla
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: joomla
+          port: 9898
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
