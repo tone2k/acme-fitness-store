@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: alfresco
+spec:
+  serviceAccountName: fluxcd-helmrelease-installer
+  interval: 10m
+  timeout: 5m
+  chart:
+    spec:
+      chart: alfresco-content-services
+      sourceRef:
+        kind: HelmRepository
+        name: alfresco-charts
+      interval: 5m
+  values:
+    externalProtocol: "http"
+    persistence:
+      enabled: true
+      storageClass: "standard"
+    alfresco:
+      repository:
+        replicas: 1
+      share:
+        replicas: 1
