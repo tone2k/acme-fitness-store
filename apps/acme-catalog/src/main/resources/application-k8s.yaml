@@ -2,6 +2,7 @@ spring:
   cloud:
     config:
       enabled: false
+
   mvc:
     static-path-pattern: /static/images/**
 
@@ -25,6 +26,4 @@ management:
 
 eureka:
   client:
-    enabled: true
-    service-url:
-      defaultZone: https://service-registry-6adcc289-b1db-473f-a3a1-ccc355144a45.apps.tas.vmtanzu.com
+    enabled: false

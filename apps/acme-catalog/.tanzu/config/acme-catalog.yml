@@ -9,9 +9,10 @@ spec:
     nonSecretEnv:
       - name: BP_JVM_VERSION
         value: "21"
-      - name: SPRING_PROFILES_ACTIVE
-        value: "k8s"
     path: ../..
+  nonSecretEnv:
+    - name: SPRING_PROFILES_ACTIVE
+      value: k8s
   ports:
   - name: main
     port: 8080
