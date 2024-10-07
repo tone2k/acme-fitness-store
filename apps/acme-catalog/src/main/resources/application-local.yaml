@@ -2,6 +2,7 @@ spring:
   cloud:
     config:
       enabled: true
+
   config:
     import:
       - configserver:http://localhost:8888

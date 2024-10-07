@@ -16,3 +16,8 @@ spec:
   ports:
   - name: main
     port: 8080
+
+  acceptedServiceBindings:
+    - name: db
+      types:
+        - postgresql
