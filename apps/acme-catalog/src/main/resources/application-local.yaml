@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: acme-catalog
   cloud:
     config:
       enabled: true

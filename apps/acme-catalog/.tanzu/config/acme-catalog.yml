@@ -1,0 +1,17 @@
+apiVersion: apps.tanzu.vmware.com/v1
+kind: ContainerApp
+metadata:
+  creationTimestamp: null
+  name: acme-catalog
+spec:
+  build:
+    buildpacks: {}
+    nonSecretEnv:
+      - name: BP_JVM_VERSION
+        value: "21"
+      - name: SPRING_PROFILES_ACTIVE
+        value: "k8s"
+    path: ../..
+  ports:
+  - name: main
+    port: 8080
