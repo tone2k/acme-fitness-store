@@ -178,7 +178,17 @@ Assume Tanzu Platform has been configured with a project, space, and clusters.
     tanzu plugin install --group vmware-tanzu/app-developer
     ```
 
-3. Build the application using buildpacks and deploy.
+3. Login to Tanzu Platform and set project / space scope
+    ```bash
+    tanzu login
+    tanzu project use
+    tanzu space use
+    ```
+
+   > [!TIP]
+   > This can be verified using `tanzu context current`
+   
+4. Build the application using buildpacks and deploy.
     ```bash
     tanzu deploy
     ```
