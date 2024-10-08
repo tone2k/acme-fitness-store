@@ -1,20 +1,17 @@
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {ReactNode} from "react";
-import {CssBaseline, ThemeProvider} from '@mui/material';
-import {theme} from './theme.ts'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactNode } from "react";
+import { CssBaseline } from "@mui/material";
 
 interface Props {
-    children?: ReactNode;
+  children?: ReactNode;
 }
 
-export default function AppProvider({children}: Readonly<Props>) {
-    const queryClient = new QueryClient();
-    return (
-        <QueryClientProvider client={queryClient}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline enableColorScheme/>
-                {children}
-            </ThemeProvider>
-        </QueryClientProvider>
-    );
+export default function AppProvider({ children }: Readonly<Props>) {
+  const queryClient = new QueryClient();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <CssBaseline enableColorScheme />
+      {children}
+    </QueryClientProvider>
+  );
 }

@@ -9,22 +9,23 @@ import DeliveryMethod from "./DeliveryMethod.tsx";
 import PaymentMethod from "./PaymentMethod.tsx";
 import OrderReview from "./OrderReview.tsx";
 import OrderConfirmation from "./OrderConfirmation.tsx";
+import HomePageV2 from "./home/page.tsx";
+import Home from "./Home.tsx";
 
-const Home = lazy(() => import('./Home.tsx'));
-const Catalog = lazy(() => import('./Catalog.tsx'));
-const Contact = lazy(() => import('./Contact.tsx'));
-const Cart = lazy(() => import('./Cart.tsx'));
+const Catalog = lazy(() => import("./Catalog.tsx"));
+const Contact = lazy(() => import("./Contact.tsx"));
+const Cart = lazy(() => import("./Cart.tsx"));
 
 type AppLayoutProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 function AppLayout({ children }: AppLayoutProps) {
   const handleLogin = () => {
-      window.location.href = '/acme-login';
+    window.location.href = "/acme-login";
   };
 
   const handleLogout = () => {
-    window.location.href = '/scg-logout?redirect=/';
+    window.location.href = "/scg-logout?redirect=/";
   };
 
   return (
@@ -45,7 +46,6 @@ const mainLayout = (
 );
 
 export default function AppRoutes() {
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -53,48 +53,56 @@ export default function AppRoutes() {
       children: [
         {
           path: "/",
-          element: <Home />
+          element: <Home />,
+        },
+        {
+          path: "/v2",
+          element: <HomePageV2 />,
         },
         {
           path: "catalog",
-          element: <Catalog />
+          element: <Catalog />,
         },
         {
           path: "contact",
-          element: <Contact />
+          element: <Contact />,
         },
         {
           path: "product/:productId",
-          element: <ProductDetails />
+          element: <ProductDetails />,
         },
         {
           path: "cart",
-          element: <Cart />
+          element: <Cart />,
         },
         {
           path: "checkout",
-          element: <Checkout />
+          element: <Checkout />,
         },
         {
           path: "delivery",
-          element: <DeliveryMethod />
+          element: <DeliveryMethod />,
         },
         {
           path: "payment",
-          element: <PaymentMethod />
+          element: <PaymentMethod />,
         },
         {
           path: "review",
-          element: <OrderReview />
+          element: <OrderReview />,
         },
         {
           path: "confirmation",
-          element: <OrderConfirmation />
+          element: <OrderConfirmation />,
         },
       ],
     },
   ]);
 
-  return (<RouterProvider router={router} fallbackElement={<div>Unknown Route</div>} />);
+  return (
+    <RouterProvider
+      router={router}
+      fallbackElement={<div>Unknown Route</div>}
+    />
+  );
 }
-
