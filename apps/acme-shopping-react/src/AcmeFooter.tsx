@@ -1,9 +1,10 @@
-import {createTheme, Divider, Grid, Link, Stack, TextField, ThemeProvider, Typography} from "@mui/material";
+import {createTheme, Divider, Grid, Stack, TextField, ThemeProvider, Typography} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import XIcon from '@mui/icons-material/X';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import Container from "@mui/material/Container";
+import {Link} from "react-router-dom";
 
 const footerTheme = createTheme({
     typography: {
@@ -48,16 +49,16 @@ export default function AcmeFooter() {
                                 <Typography variant='h6' marginBottom={1}>Pages</Typography>
 
                                 {/*TODO: fix these links that don't go anywhere*/}
-                                <Link href="/" underline="hover" sx={{color: "black"}}>About us</Link>
-                                <Link href="/" underline="hover" sx={{color: "black"}}>Terms and Conditions</Link>
-                                <Link href="/" underline="hover" sx={{color: "black"}}>FAQ</Link>
-                                <Link href="/contact" underline="hover" sx={{color: "black"}}>Contact us</Link>
+                                <Link to="/" style={{textDecoration: "none", color: "black"}}>About us</Link>
+                                <Link to="/" style={{textDecoration: "none", color: "black"}}>Terms and Conditions</Link>
+                                <Link to="/" style={{textDecoration: "none", color: "black"}}>FAQ</Link>
+                                <Link to="/contact" style={{textDecoration: "none", color: "black"}}>Contact us</Link>
                             </Stack>
 
                             <Divider sx={{width: "100%", marginY: 2}}/>
 
                             <Typography variant='h6' marginBottom={1}>User</Typography>
-                            <Link href="/acme-login" underline="hover" sx={{color: "black"}}>Login</Link>
+                            <Link to="/acme-login/" style={{textDecoration: "none", color: "black"}}>Login</Link>
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={4} paddingX={{xs: 0, sm: 2}}>

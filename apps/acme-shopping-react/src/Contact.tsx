@@ -1,8 +1,9 @@
 import {MouseEvent as ReactMouseEvent} from "react"
-import {Box, Breadcrumbs, Button, Container, Grid, Link, Paper, Stack, TextField, Typography} from '@mui/material';
+import {Box, Breadcrumbs, Button, Container, Grid, Paper, Stack, TextField, Typography} from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import {Link} from "react-router-dom";
 
 const handleClick = (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -13,7 +14,7 @@ export default function Home() {
     return (
         <Container sx={{mt: 2}}>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" href="/">
+                <Link to="/" color="inherit">
                     Home
                 </Link>
                 <Typography color="text.primary">Contact</Typography>
@@ -69,8 +70,11 @@ export default function Home() {
                     <Typography variant="body2" color="textSecondary">
                         Please feel free to write an email to us or to use our electronic ticketing system.
                     </Typography>
-                    <Typography variant="body2"><strong><Link
-                        href="mailto:hello@beyondvirtual.io">hello@beyondvirtual.io</Link></strong></Typography>
+                    <Typography variant="body2">
+                        <strong>
+                            <Link to="mailto:hello@beyondvirtual.io">hello@beyondvirtual.io</Link>
+                        </strong>
+                    </Typography>
                 </Grid>
             </Grid>
 

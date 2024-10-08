@@ -4,7 +4,7 @@ import SellIcon from '@mui/icons-material/Sell';
 import SendIcon from '@mui/icons-material/Send';
 import LoopIcon from '@mui/icons-material/Loop';
 import Button from "@mui/material/Button";
-import {Link as RouterLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import CatalogCarousel from "./CatalogCarousel.tsx";
 
@@ -57,7 +57,7 @@ export default function Home() {
             <Button
                 color='inherit'
                 key='catalog'
-                component={RouterLink}
+                component={Link}
                 to='catalog'
                 sx={{fontSize: '1.5rem', fontWeight: '1000', letterSpacing: '0.18rem'}}
             >
@@ -70,7 +70,7 @@ export default function Home() {
                 <TravelExploreIcon fontSize='large'/>
                 <Typography>Do you want to explore more?</Typography>
                 <Typography>We keep updating our inventory with exciting new products !!</Typography>
-                <Button variant='outlined' color='inherit' component={RouterLink} to='catalog'>
+                <Button variant='outlined' color='inherit' component={Link} to='catalog'>
                     Find More in Catalog
                 </Button>
             </Stack>

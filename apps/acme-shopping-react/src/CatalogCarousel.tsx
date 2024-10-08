@@ -1,7 +1,8 @@
 import Slider from 'react-slick';
 import Container from "@mui/material/Container";
 import {useGetProducts} from './hooks/catalogHooks';
-import {Link, Typography, useMediaQuery, useTheme} from "@mui/material";
+import {Typography, useMediaQuery, useTheme} from "@mui/material";
+import {Link} from "react-router-dom";
 
 export default function CatalogCarousel() {
     const {data, isLoading, error} = useGetProducts();
@@ -35,7 +36,7 @@ export default function CatalogCarousel() {
                 slidesToScroll={1}
             >
                 {first15Products.map((product) => (
-                    <Link href={`/product/${product.id}`} sx={{textDecoration: 'none', outline: 'none'}} key={product.id}>
+                    <Link to={`/product/${product.id}`} style={{textDecoration: 'none', outline: 'none'}} key={product.id}>
                         <img src={product.imageUrl1} alt={product.name} style={{width: "100%"}}/>
                         <Typography sx={{textAlign: "center", py: 4}}>{product.name}</Typography>
                     </Link>

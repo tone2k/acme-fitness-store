@@ -1,6 +1,6 @@
-import {Breadcrumbs, Card, CardActionArea, Container, Grid, Link, Stack, Typography} from "@mui/material";
+import {Breadcrumbs, Card, CardActionArea, Container, Grid, Stack, Typography} from "@mui/material";
 import {useGetProducts} from './hooks/catalogHooks';
-import {Link as RouterLink} from "react-router-dom";
+import {Link, Link as RouterLink} from "react-router-dom";
 
 export default function Catalog() {
     const { data, isLoading, error} = useGetProducts();
@@ -17,7 +17,7 @@ export default function Catalog() {
     return (
         <Container sx={{mt: 2}}>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" href="/">
+                <Link to="/" color="inherit" >
                     Home
                 </Link>
                 <Typography color="text.primary">Catalog</Typography>

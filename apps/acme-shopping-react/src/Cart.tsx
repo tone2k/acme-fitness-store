@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {DataGrid, GridColDef, GridPaginationModel} from '@mui/x-data-grid';
 import {CartItemData} from "./types/Cart.ts"
-import {Box, Link, Stack, Typography, Grid, Container, Breadcrumbs, Divider} from "@mui/material";
+import {Box, Stack, Typography, Grid, Container, Breadcrumbs, Divider} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from "@mui/material/IconButton";
-import {NavLink, useNavigate} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
 import {useDeleteCartItem, useGetCart} from './hooks/cartHooks.ts';
 import {useGetUserInfo} from './hooks/userHooks';
 import Button from "@mui/material/Button";
@@ -60,7 +60,7 @@ export default function Cart() {
             width: 250,
             renderCell: (params) => {
                 const row = params.row as CartItemData;
-                return <Link href={`/product/${row.itemid}`} color='inherit'>{row.name}</Link>
+                return <Link to={`/product/${row.itemid}`} color='inherit'>{row.name}</Link>
             }
         },
         {field: 'quantity', headerName: 'Quantity', resizable: false, width: 120},
@@ -130,7 +130,7 @@ export default function Cart() {
     return (
         <Container sx={{mt: 2}}>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" href="/">
+                <Link to="/" color="inherit" >
                     Home
                 </Link>
                 <Typography color="text.primary">Cart</Typography>
