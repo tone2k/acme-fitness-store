@@ -70,7 +70,11 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const handleSend = async (message: string) => {
         if (message.trim()) {
             setInputMessage('');
-            await sendMessage(message, summarizeCart(cartData.cart));
+            if (cartData != null) {
+                await sendMessage(message, summarizeCart(cartData.cart));
+            } else {
+                await sendMessage(message);
+            }
             setInputMessage('');
         }
     };

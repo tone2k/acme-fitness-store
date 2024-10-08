@@ -77,7 +77,7 @@ export const useChatService = () => {
         initializeChatHistory();
     }, [initializeChatHistory]);
 
-    const sendMessage = useCallback(async (message: string, cartData: string) => {
+    const sendMessage = useCallback(async (message: string, cartData?: string) => {
         setIsLoading(true);
         setError(null);
 
@@ -116,7 +116,9 @@ export const useChatService = () => {
                     }))
                 };
                 const latestMsg = payload['messages'].pop();
-                payload['messages'].push({content: cartData, role: 'USER'});
+                if (cartData != null) {
+                    payload['messages'].push({content: cartData, role: 'USER'});
+                }
                 payload['messages'].push({content: getCurrentProductInView(), role: 'USER'})
                 payload['messages'].push(latestMsg);
 
