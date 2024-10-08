@@ -23,3 +23,6 @@ spec:
         - path:
             type: PathPrefix
             value: /products
+        - path:
+            type: PathPrefix
+            value: /static
