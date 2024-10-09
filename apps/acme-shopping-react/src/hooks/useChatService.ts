@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
-import {getCurrentProductInView, parseMessageContentAndBuildLinks} from "../utils/helpers.ts";
+import {getCurrentProductInView, parseMessageContentAndBuildLinks, summarizeCart} from "../utils/helpers.ts";
 import {FormRecommendationData} from '../types/FormRecommendationData.ts';
+import {CartData} from "../types/Cart.ts";
 
 interface ChatMessage {
     content: string;
@@ -77,7 +78,7 @@ export const useChatService = () => {
         initializeChatHistory();
     }, [initializeChatHistory]);
 
-    const sendMessage = useCallback(async (message: string, cartData: string) => {
+    const sendMessage = useCallback(async (message: string, cartData?: CartData) => {
         setIsLoading(true);
         setError(null);
 
@@ -116,7 +117,9 @@ export const useChatService = () => {
                     }))
                 };
                 const latestMsg = payload['messages'].pop();
-                payload['messages'].push({content: cartData, role: 'USER'});
+                if (cartData != null) {
+                    payload['messages'].push({content: summarizeCart(cartData), role: 'USER'});
+                }
                 payload['messages'].push({content: getCurrentProductInView(), role: 'USER'})
                 payload['messages'].push(latestMsg);
 

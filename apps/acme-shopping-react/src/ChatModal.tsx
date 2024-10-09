@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import {Close, Fullscreen, FullscreenExit, Refresh, Send} from '@mui/icons-material';
 import {useChatService} from './hooks/useChatService';
-import {summarizeCart} from "./utils/helpers";
 import {CartData} from "./types/Cart";
 import TerrainForm from './components/TerrainForm';
 import RidingPositionForm from './components/RidingPositionForm';
@@ -70,7 +69,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const handleSend = async (message: string) => {
         if (message.trim()) {
             setInputMessage('');
-            await sendMessage(message, summarizeCart(cartData.cart));
+            await sendMessage(message, cartData);
             setInputMessage('');
         }
     };
