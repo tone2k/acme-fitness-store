@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 8080 --host",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && cp Staticfile ./dist",
     "lint": "eslint .",
     "preview": "vite preview"
   },
