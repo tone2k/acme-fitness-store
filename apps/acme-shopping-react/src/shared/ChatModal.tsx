@@ -16,7 +16,7 @@ export default function ChatModal() {
   const [expanded, setExpanded] = useState(false);
 
   const { data: userInfo } = useGetUserInfo();
-  const { data: cartData } = useGetCart(userInfo?.userId || "", userInfo);
+  const { data: cartData } = useGetCart(userInfo);
 
   const {
     chatHistory,
