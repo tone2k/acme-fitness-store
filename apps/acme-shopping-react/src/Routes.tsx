@@ -1,8 +1,6 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { lazy, ReactNode, Suspense } from "react";
-import AcmeAppBar from "./AcmeAppBar.tsx";
 import { Box } from "@mui/material";
-import AcmeFooter from "./AcmeFooter.tsx";
 import ProductDetails from "./ProductDetails.tsx";
 import Checkout from "./Checkout.tsx";
 import DeliveryMethod from "./DeliveryMethod.tsx";
@@ -11,6 +9,8 @@ import OrderReview from "./OrderReview.tsx";
 import OrderConfirmation from "./OrderConfirmation.tsx";
 import HomePageV2 from "./home/page.tsx";
 import Home from "./Home.tsx";
+import Footer from "./shared/Footer";
+import NavigationBar from "./shared/NavigationBar";
 
 const Catalog = lazy(() => import("./Catalog.tsx"));
 const Contact = lazy(() => import("./Contact.tsx"));
@@ -20,19 +20,11 @@ type AppLayoutProps = {
   children: ReactNode;
 };
 function AppLayout({ children }: AppLayoutProps) {
-  const handleLogin = () => {
-    window.location.href = "/acme-login";
-  };
-
-  const handleLogout = () => {
-    window.location.href = "/scg-logout?redirect=/";
-  };
-
   return (
     <Box>
-      <AcmeAppBar handleLogin={handleLogin} handleLogout={handleLogout} />
+      <NavigationBar />
       <Box>{children}</Box>
-      <AcmeFooter />
+      <Footer />
     </Box>
   );
 }

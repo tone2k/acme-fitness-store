@@ -1,5 +1,5 @@
 import { Facebook, Instagram, X } from "@mui/icons-material";
-import Button from "./components/Button.tsx";
+import Button from "../components/Button.tsx";
 
 export default function Footer() {
   return (
@@ -94,7 +94,7 @@ export default function Footer() {
                 className="flex-grow rounded w-full py-2 mb-2 indent-2"
                 required
               />
-              <Button type="filled">Sign up</Button>
+              <Button variant="filled">Sign up</Button>
             </div>
           </div>
 

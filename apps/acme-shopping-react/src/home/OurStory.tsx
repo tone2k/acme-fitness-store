@@ -17,7 +17,9 @@ export default function OurStory() {
           </p>
 
           <a href="/contact">
-            <Button type="outline">Learn more</Button>
+            <Button variant="outline" className="border-black">
+              Learn more
+            </Button>
           </a>
         </div>
       </div>

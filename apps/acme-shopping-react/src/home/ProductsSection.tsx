@@ -25,7 +25,7 @@ export default function ProductsSection() {
       </div>
 
       <a href="/catalog">
-        <Button type="filled">Shop all bikes</Button>
+        <Button variant="filled">Shop all bikes</Button>
       </a>
     </div>
   );
