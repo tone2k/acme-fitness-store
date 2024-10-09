@@ -1,114 +1,147 @@
-import {createTheme, Divider, Grid, Stack, TextField, ThemeProvider, Typography} from "@mui/material";
-import SendIcon from '@mui/icons-material/Send';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import XIcon from '@mui/icons-material/X';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import Container from "@mui/material/Container";
-import {Link} from "react-router-dom";
+import { Facebook, Instagram, X } from "@mui/icons-material";
+import Button from "./components/Button.tsx";
 
-const footerTheme = createTheme({
-    typography: {
-        h6: {
-            fontSize: '1.1rem',
-            fontWeight: '700',
-        },
-        body2: {
-            color: "#CCCCCC",
-            fontSize: '0.9rem',
-            fontWeight: '550'
-        },
-        allVariants: {
-            color: "#000000",
-            fontFamily: [
-                "Montserrat",
-                "Helvetica",
-                "Arial",
-                'sans-serif',
-            ].join(','),
-        },
-    },
-});
+export default function Footer() {
+  return (
+    <footer className="bg-navy text-white pt-12">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Shop Section */}
+          <div>
+            <h3 className="text-grape-300 font-semibold text-lg mb-4">Shop</h3>
 
-export default function AcmeFooter() {
+            <ul className="space-y-2">
+              <li>
+                <a href="/catalog" className="hover:text-lemon hover:underline">
+                  Bikes
+                </a>
+              </li>
+              <li>
+                <a href="/catalog" className="hover:text-lemon hover:underline">
+                  About
+                </a>
+              </li>
+            </ul>
+          </div>
 
-    const address = {
-        name: "ACME Fitness",
-        address: "2705 Thunder Road",
-        city: "Palo Alto",
-        state: "California",
-        country: "USA"
-    }
+          {/* Resources Section */}
+          <div>
+            <h3 className="text-grape-300 font-semibold text-lg mb-4">
+              Resources
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="/faq" className="hover:text-lemon hover:underline">
+                  FAQ
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/shipping"
+                  className="hover:text-lemon hover:underline"
+                >
+                  Shipping
+                </a>
+              </li>
+              <li>
+                <a href="/contact" className="hover:text-lemon hover:underline">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div>
 
-    return (
-        <ThemeProvider theme={footerTheme}>
-            <Stack sx={{backgroundColor: '#f6f8f9'}}>
-                <Container maxWidth="xl">
-                    <Grid container direction='row' sx={{marginY: 6}}>
-                        <Grid item xs={12} sm={6} md={4} paddingX={{xs: 0, sm: 2}}>
-                            <Stack>
-                                <Typography variant='h6' marginBottom={1}>Pages</Typography>
+          {/* Address Section */}
+          <div>
+            <h3 className="text-grape-300 font-semibold text-lg mb-4">
+              ACME Fitness
+            </h3>
+            <address className="not-italic">
+              2705 Thunder Road
+              <br />
+              Palo Alto, California
+              <br />
+              Country
+              <br />
+            </address>
+          </div>
 
-                                {/*TODO: fix these links that don't go anywhere*/}
-                                <Link to="/" style={{textDecoration: "none", color: "black"}}>About us</Link>
-                                <Link to="/" style={{textDecoration: "none", color: "black"}}>Terms and Conditions</Link>
-                                <Link to="/" style={{textDecoration: "none", color: "black"}}>FAQ</Link>
-                                <Link to="/contact" style={{textDecoration: "none", color: "black"}}>Contact us</Link>
-                            </Stack>
+          {/* User Login and Newsletter Section */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-grape-300 font-semibold text-lg mb-2">
+                User
+              </h3>
+              <a
+                href="/acme-login"
+                className="hover:text-lemon hover:underline"
+              >
+                Login
+              </a>
+            </div>
+            <div>
+              <h3 className="text-grape-300 font-semibold text-lg mb-2">
+                Get the latest
+              </h3>
+              <p className="my-1">
+                Join the Acme Fitness community and stay up to date with the
+                world of fitness.
+              </p>
 
-                            <Divider sx={{width: "100%", marginY: 2}}/>
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                className="flex-grow rounded w-full py-2 mb-2 indent-2"
+                required
+              />
+              <Button type="filled">Sign up</Button>
+            </div>
+          </div>
 
-                            <Typography variant='h6' marginBottom={1}>User</Typography>
-                            <Link to="/acme-login/" style={{textDecoration: "none", color: "black"}}>Login</Link>
-                        </Grid>
+          {/* Social Media Section */}
+          <div>
+            <h3 className="text-grape-300 font-semibold text-lg mb-4">
+              Follow Us
+            </h3>
+            <div className="flex space-x-4">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-blue-600"
+              >
+                <Facebook className="size-6" />
+                <span className="sr-only">Facebook</span>
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-blue-400"
+              >
+                <X className="size-6" />
+                <span className="sr-only">Twitter</span>
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-pink-600"
+              >
+                <Instagram className="size-6" />
+                <span className="sr-only">Instagram</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                        <Grid item xs={12} sm={6} md={4} paddingX={{xs: 0, sm: 2}}>
-                            <Divider sx={{width: "100%", marginY: 2, display: {xs: 'flex', sm: 'none'}}}/>
-                            <Typography variant='h6' marginBottom={1}>Where to find us</Typography>
-                            <Typography>{address.name}</Typography>
-                            <Typography>{address.address}</Typography>
-                            <Typography>{`${address.city}, ${address.state}`}</Typography>
-                            <Typography>{address.country}</Typography>
-                        </Grid>
-
-                        <Grid item xs={12} sm={6} md={4} paddingX={{xs: 0, sm: 2}}>
-                            <Divider sx={{width: 1, marginY: 2, display: {xs: 'flex', md: 'none'}}}/>
-
-                            <Typography variant='h6' sx={{mb: 1}}>Get the news</Typography>
-                            <Typography sx={{mb: 2}}>What's new in the world of Fitness</Typography>
-                            <TextField sx={{width: '100%'}} size='small' placeholder="Enter your email."
-                                       InputProps={{endAdornment: <SendIcon/>}}/>
-
-                            <Divider sx={{width: "100%", my: 2}}/>
-
-                            <Typography variant='h6' sx={{mt: 3, mb: 2}}>Stay in touch</Typography>
-                            <Stack direction="row" spacing={2}>
-                                <FacebookIcon/>
-                                <XIcon/>
-                                <InstagramIcon/>
-                            </Stack>
-                        </Grid>
-                    </Grid>
-                </Container>
-
-                <Stack direction={{xs: 'column', md: 'row'}} alignItems='center' justifyContent="space-between" sx={{background: "#333", p: 4 }}>
-                    <span>
-                        <Typography variant="body2">{`© ${new Date().getFullYear()} ACME Fitness`}</Typography>
-                        <Typography variant="body2" sx={{fontStyle: 'italic'}}>
-                            This website is for demo purposes only. It is not an actual e-commerce site.
-                        </Typography>
-                    </span>
-
-                    <Stack direction='row' justifyContent='end' alignItems='center' gap={1} sx={{ mt: {xs: 4, md: 0 } }}>
-                        <img src="/payment/visa.png" width={50} alt="visa"/>
-                        <img src="/payment/discover.png" width={50} alt="discover"/>
-                        <img src="/payment/mastercard.png" width={50} alt="mastercard"/>
-                        <img src="/payment/american-express.png" width={50} alt="american-express"/>
-                        <img src="/payment/paypal.png" width={50} alt="paypal"/>
-                    </Stack>
-
-
-                </Stack>
-            </Stack>
-        </ThemeProvider>
-    );
+      <div className="mt-8 p-4 bg-black text-sm text-end">
+        <p>
+          &copy; {new Date().getFullYear()} ACME Fitness. This website is for
+          demo purposes only. It is not an actual e-commerce site.
+        </p>
+      </div>
+    </footer>
+  );
 }

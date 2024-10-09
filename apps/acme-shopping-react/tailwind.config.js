@@ -6,6 +6,7 @@ export default {
       transparent: "transparent",
       current: "currentColor",
       white: "#ffffff",
+      black: "#000000",
       chocolate: {
         DEFAULT: "#140A00",
         50: "#F7F6F6",
