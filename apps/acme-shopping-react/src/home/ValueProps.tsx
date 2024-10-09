@@ -21,8 +21,11 @@ export default function ValueProps() {
     <div className="bg-blueberry-900 w-full text-white py-16  text-center px-8 md:px-12 lg:px-24">
       <div className="flex flex-col md:flex-row justify-between my-4 gap-8">
         {items.map((item) => (
-          <div className="flex flex-col justify-center items-center">
-            <img src={item.image} className="size-20 mb-4" />
+          <div
+            className="flex flex-col justify-center items-center"
+            key={item.title}
+          >
+            <img src={item.image} alt={item.title} className="size-20 mb-4" />
 
             <h4>{item.title}</h4>
             <p>{item.description}</p>

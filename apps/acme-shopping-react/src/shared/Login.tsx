@@ -8,8 +8,6 @@ export default function LoginButton() {
 
   const { data: userInfo } = useGetUserInfo();
 
-  console.log(userInfo);
-
   return (
     <>
       <Button

@@ -20,7 +20,7 @@ export default function ProductsSection() {
 
       <div className="flex flex-row justify-between my-4 gap-8 flex-wrap md:flex-nowrap">
         {products.map((product) => (
-          <ProductCard product={product} />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
 
