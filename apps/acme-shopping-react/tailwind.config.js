@@ -7,6 +7,7 @@ export default {
       current: "currentColor",
       white: "#ffffff",
       black: "#000000",
+      green: "#6DB33F",
       chocolate: {
         DEFAULT: "#140A00",
         50: "#F7F6F6",

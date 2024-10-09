@@ -11,6 +11,7 @@ import HomePageV2 from "./home/page.tsx";
 import Home from "./Home.tsx";
 import Footer from "./shared/Footer";
 import NavigationBar from "./shared/NavigationBar";
+import ChatModal from "./shared/ChatModal";
 
 const Catalog = lazy(() => import("./Catalog.tsx"));
 const Contact = lazy(() => import("./Contact.tsx"));
@@ -24,6 +25,7 @@ function AppLayout({ children }: AppLayoutProps) {
     <Box>
       <NavigationBar />
       <Box>{children}</Box>
+      <ChatModal />
       <Footer />
     </Box>
   );
