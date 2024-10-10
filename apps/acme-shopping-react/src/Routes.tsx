@@ -15,6 +15,7 @@ import BikesPage from "./bikes/page";
 import AccessoriesPage from "./accessories/page";
 import Catalog from "./Catalog";
 import ProductPage from "./products/page";
+import FAQPage from "./faq/page.tsx";
 
 const Contact = lazy(() => import("./Contact.tsx"));
 const Cart = lazy(() => import("./Cart.tsx"));
@@ -65,6 +66,10 @@ export default function AppRoutes() {
         {
           path: "contact",
           element: <Contact />,
+        },
+        {
+          path: "faq",
+          element: <FAQPage />,
         },
         {
           path: "product/:productId",
