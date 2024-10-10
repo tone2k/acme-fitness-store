@@ -5,7 +5,7 @@ import OurStory from "./OurStory.tsx";
 
 export default function HomePageV2() {
   return (
-    <div className="">
+    <>
       <Hero />
 
       <ProductsSection />
@@ -13,6 +13,6 @@ export default function HomePageV2() {
       <OurStory />
 
       <ValueProps />
-    </div>
+    </>
   );
 }

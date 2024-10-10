@@ -2,6 +2,11 @@
 export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    fontFamily: {
+      sans: ["Roboto", "ui-sans-serif", "system-ui"],
+      serif: ["Roboto Serif", "ui-serif", "Georgia"],
+      mono: ["ui-monospace", "SFMono-Regular"],
+    },
     colors: {
       transparent: "transparent",
       current: "currentColor",
