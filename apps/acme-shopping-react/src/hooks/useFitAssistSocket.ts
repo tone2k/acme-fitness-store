@@ -31,7 +31,6 @@ interface AcmeProductRequest {
 export const useFitAssistSocket = () => {
     const [client, setClient] = useState<Client | null>(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [userId, setUserId] = useState(`no-user`);
     const [messageId, setMessageId] = useState(`no-message-id`);
     const [bikeRecommendation, setBikeRecommendation] = useState<BikeRecommendationProps>({
         productName: 'Bike name',
@@ -44,12 +43,10 @@ export const useFitAssistSocket = () => {
 
     //From ChatService
     const [socketChatHistory, setSocketChatHistory] = useState<ChatMessage[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<Error | null>(null);
-    const [formData, setFormData] = useState<FormRecommendationData>({});
+    const [isSocketLoading, setIsSocketLoading] = useState<boolean>(false);
     const [isPresentingSelectorForm, setIsPresentingSelectorForm] = useState<boolean>(false);
 
-    const stateRef = useRef();
+    const stateRef = useRef<ChatMessage[]>();
     stateRef.current = socketChatHistory;
 
     useEffect(() => {
@@ -59,6 +56,7 @@ export const useFitAssistSocket = () => {
 
         stompClient.onConnect = () => {
             stompClient.subscribe('/chatResponse', message => {
+                setIsSocketLoading(false)
                 const response: AcmeChatResponse = JSON.parse(message.body);
                 console.log(`ChatResponse message:  + ${message.body}`);
                 switch (response.messageType) {
@@ -106,7 +104,7 @@ export const useFitAssistSocket = () => {
                 stompClient.deactivate();
             }
         };
-    }, [userId]);
+    });
 
     const connect = () => {
         // setUserId(newUserId);
@@ -143,13 +141,17 @@ export const useFitAssistSocket = () => {
         initializeChatHistory();
     }, [initializeChatHistory]);
 
+    const refreshChat = useCallback(() => {
+        localStorage.removeItem(STORAGE_KEY);
+        setSocketChatHistory([]);
+    }, []);
+
     const saveChatHistory = useCallback((history: ChatMessage[]) => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
     }, []); //todo REFACTOR
 
     const publishQuestion = (message: string, cartData?: CartData) => {
-        setIsLoading(true);
-        setError(null);
+        setIsSocketLoading(true);
 
         const newUserMessage: ChatMessage = {
             content: message,
@@ -194,6 +196,7 @@ export const useFitAssistSocket = () => {
     };
 
     const publishGreetings = () => {
+        setIsSocketLoading(true);
         const greetingsContent = JSON.stringify(
             {
                 conversationId: 'test-id',
@@ -253,6 +256,7 @@ export const useFitAssistSocket = () => {
     }
 
     const submitTerrain = (data: FormRecommendationData) => {
+        setIsSocketLoading(true);
         const terrainRequest = JSON.stringify(
             {
                 data: data.terrain,
@@ -288,13 +292,15 @@ export const useFitAssistSocket = () => {
 
         const newHistory = [...stateRef.current, recommendationMessage];
         setSocketChatHistory(newHistory);
+        setIsPresentingSelectorForm(false);
     }
 
     return {
         socketChatHistory,
-        client,
+        refreshChat,
         isConnected,
         isPresentingSelectorForm,
+        isSocketLoading,
         bikeRecommendation,
         connect,
         disconnect,
