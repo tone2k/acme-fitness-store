@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { Send, CloseSharp, CropFree } from "@mui/icons-material";
+import { Send, CloseSharp, CropFree, Refresh } from "@mui/icons-material";
 import { ChatMessage, useChatService } from "../hooks/useChatService";
 import TerrainForm from "../components/TerrainForm";
 import RidingPositionForm from "../components/RidingPositionForm";
@@ -106,6 +106,14 @@ export default function ChatModal() {
                   className="hidden md:inline"
                 >
                   <CropFree className="size-6" />
+                </Button>
+
+                <Button
+                  variant="icon"
+                  onClick={() => refreshChat()}
+                  className="hidden md:inline"
+                >
+                  <Refresh className="size-6" />
                 </Button>
 
                 <Button variant="icon" onClick={() => setOpen(false)}>

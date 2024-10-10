@@ -133,7 +133,7 @@ export const useChatService = () => {
           const latestMsg = payload["messages"].pop();
           if (cartData != null) {
             payload["messages"].push({
-              content: summarizeCart(cartData),
+              content: summarizeCart(cartData.cart),
               role: "USER",
             });
           }
