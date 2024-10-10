@@ -33,7 +33,7 @@ export default function ChatModal() {
   } = useChatService();
   const {
     socketChatHistory,
-    client,
+    isSocketLoading,
     isConnected,
     isPresentingSelectorForm,
     bikeRecommendation,
@@ -163,7 +163,7 @@ export default function ChatModal() {
                 );
               })}
 
-              {isLoading && !isPresentingSelectorForm && (
+              {isSocketLoading && !isPresentingSelectorForm && (
                 <p className="text-black/50">
                   FitAssist is currently typing...
                 </p>

@@ -56,9 +56,9 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const closeButtonRef = useRef(null);
     const {
         socketChatHistory,
-        client,
         isConnected,
         isPresentingSelectorForm,
+        isSocketLoading,
         bikeRecommendation,
         connect,
         disconnect,
@@ -99,7 +99,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const handleSend = async (message: string) => {
         if (message.trim()) {
             setInputMessage('');
-            publishQuestion(message, summarizeCart(cartData.cart));
+            publishQuestion(message, cartData);
             setInputMessage('');
         }
     };
@@ -280,7 +280,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     ))}
                     <div ref={messagesEndRef}/>
                 </List>
-                {isLoading && !isPresentingSelectorForm && (
+                {isSocketLoading && (
                     <Typography variant="body2"
                                 sx={{position: 'absolute', bottom: 100, left: 16, color: 'text.secondary'}}>
                         FitAssist is currently typing...
@@ -302,7 +302,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     size="small"
                     sx={{flexGrow: 1, mr: 1}}
                     onKeyDown={(e) => {
-                        if (e.key === 'Enter' && inputMessage.trim() && !isLoading) {
+                        if (e.key === 'Enter' && inputMessage.trim() && !isSocketLoading) {
                             e.preventDefault();
                             void handleSend(inputMessage);
                         }
@@ -313,7 +313,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
                     variant="contained"
                     endIcon={<Send/>}
                     onClick={() => void handleSend(inputMessage)}
-                    disabled={!inputMessage.trim() || isLoading}
+                    disabled={!inputMessage.trim() || isSocketLoading}
                 >
                     Send
                 </PrimaryButtonStyled>
