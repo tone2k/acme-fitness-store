@@ -18,8 +18,7 @@ import ProductPage from "./products/page";
 import FAQPage from "./resources/faq/page";
 import ShippingPage from "./resources/shipping/page";
 import ContactPage from "./resources/contact/page.tsx";
-
-const Cart = lazy(() => import("./Cart"));
+import CartPage from "./cart/page.tsx";
 
 function AppLayout({ children }: { children: ReactNode }) {
   return (
@@ -82,7 +81,7 @@ export default function AppRoutes() {
         },
         {
           path: "cart",
-          element: <Cart />,
+          element: <CartPage />,
         },
         {
           path: "checkout",

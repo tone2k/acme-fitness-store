@@ -15,7 +15,7 @@ h3 {
 }
 
 h4 {
-    @apply text-xl md:text-2xl
+    @apply md:text-2xl
 }
 
 h5 {
