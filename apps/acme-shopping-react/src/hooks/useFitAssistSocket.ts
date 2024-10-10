@@ -1,9 +1,10 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {Client} from '@stomp/stompjs';
-import {getCurrentProductInView, parseMessageContentAndBuildLinks} from "../utils/helpers.ts";
+import {getCurrentProductInView, parseMessageContentAndBuildLinks, summarizeCart} from "../utils/helpers.ts";
 import {ChatMessage, GreetingResponse} from "./useChatService.ts";
 import {FormRecommendationData} from "../types/FormRecommendationData.ts";
 import {BikeRecommendationProps} from "../components/BikeRecommendation.tsx";
+import {CartData} from "../types/Cart.ts";
 
 const STORAGE_KEY = 'acme_chat_history';
 
@@ -107,7 +108,7 @@ export const useFitAssistSocket = () => {
         };
     }, [userId]);
 
-    const connect = (newUserId: string) => {
+    const connect = () => {
         // setUserId(newUserId);
         if (client && !client.active) {
             client.activate();
@@ -130,16 +131,9 @@ export const useFitAssistSocket = () => {
     const initializeChatHistory = useCallback(() => {
         const loadedHistory = loadChatHistory();
         if (loadedHistory.length === 0) {
-            //todo Cleanup this
-            // client.publish({
-            //     destination: `/hello/${userId}`,
-            //     body: JSON.stringify(
-            //         {
-            //             conversationId: 'test-id',
-            //             userId: 'react-frontend',
-            //             page: '/'
-            //         }),
-            // });
+            if (isConnected) {
+                publishGreetings();
+            }
         } else {
             setSocketChatHistory(loadedHistory);
         }
@@ -153,7 +147,7 @@ export const useFitAssistSocket = () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
     }, []); //todo REFACTOR
 
-    const publishQuestion = (message: string, cartData: string) => {
+    const publishQuestion = (message: string, cartData?: CartData) => {
         setIsLoading(true);
         setError(null);
 
@@ -178,7 +172,12 @@ export const useFitAssistSocket = () => {
             }))
         };
         const latestMsg = payload['messages'].pop();
-        payload['messages'].push({content: cartData, role: 'USER'});
+        if (cartData != null) {
+            payload["messages"].push({
+                content: summarizeCart(cartData),
+                role: "USER",
+            });
+        }
         payload['messages'].push({content: getCurrentProductInView(), role: 'USER'})
         payload['messages'].push(latestMsg);
         setSocketChatHistory(updatedHistory);
@@ -272,12 +271,12 @@ export const useFitAssistSocket = () => {
     const displayProduct = (request: AcmeProductRequest) => {
         console.log('Display AcmeProductRequest - Message:' + request)
         setBikeRecommendation({
-            productName: request.productName,
-            productId: request.productId,
-            productPrice: request.productPrice,
-            productDescription: request.productDescription,
-            productImage: request.productImage,
-            recommendationText: request.bikeRecommendation,
+                productName: request.productName,
+                productId: request.productId,
+                productPrice: request.productPrice,
+                productDescription: request.productDescription,
+                productImage: request.productImage,
+                recommendationText: request.bikeRecommendation,
             }
         )
 
