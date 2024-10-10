@@ -12,13 +12,16 @@ export default function Footer() {
 
             <ul className="space-y-2">
               <li>
-                <a href="/catalog" className="hover:text-lemon hover:underline">
+                <a href="/bikes" className="hover:text-lemon hover:underline">
                   Bikes
                 </a>
               </li>
               <li>
-                <a href="/catalog" className="hover:text-lemon hover:underline">
-                  About
+                <a
+                  href="/accessories"
+                  className="hover:text-lemon hover:underline"
+                >
+                  Accessories
                 </a>
               </li>
             </ul>

@@ -1,12 +1,12 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { lazy, ReactNode, Suspense } from "react";
 import { Box } from "@mui/material";
-import Checkout from "./Checkout.tsx";
-import DeliveryMethod from "./DeliveryMethod.tsx";
-import PaymentMethod from "./PaymentMethod.tsx";
-import OrderReview from "./OrderReview.tsx";
-import OrderConfirmation from "./OrderConfirmation.tsx";
-import HomePageV2 from "./home/page.tsx";
+import Checkout from "./Checkout";
+import DeliveryMethod from "./DeliveryMethod";
+import PaymentMethod from "./PaymentMethod";
+import OrderReview from "./OrderReview";
+import OrderConfirmation from "./OrderConfirmation";
+import HomePageV2 from "./home/page";
 import Home from "./Home";
 import Footer from "./shared/Footer";
 import NavigationBar from "./shared/NavigationBar";
@@ -15,10 +15,11 @@ import BikesPage from "./bikes/page";
 import AccessoriesPage from "./accessories/page";
 import Catalog from "./Catalog";
 import ProductPage from "./products/page";
-import FAQPage from "./faq/page.tsx";
+import FAQPage from "./resources/faq/page";
+import ShippingPage from "./resources/shipping/page";
+import ContactPage from "./resources/contact/page.tsx";
 
-const Contact = lazy(() => import("./Contact.tsx"));
-const Cart = lazy(() => import("./Cart.tsx"));
+const Cart = lazy(() => import("./Cart"));
 
 function AppLayout({ children }: { children: ReactNode }) {
   return (
@@ -64,12 +65,16 @@ export default function AppRoutes() {
           element: <AccessoriesPage />,
         },
         {
-          path: "contact",
-          element: <Contact />,
-        },
-        {
           path: "faq",
           element: <FAQPage />,
+        },
+        {
+          path: "shipping",
+          element: <ShippingPage />,
+        },
+        {
+          path: "contact",
+          element: <ContactPage />,
         },
         {
           path: "product/:productId",
