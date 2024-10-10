@@ -3,12 +3,13 @@ import { Send, CloseSharp, CropFree, Refresh } from "@mui/icons-material";
 import { ChatMessage, useChatService } from "../hooks/useChatService";
 import TerrainForm from "../components/TerrainForm";
 import RidingPositionForm from "../components/RidingPositionForm";
-import FakeBikeRecommendation from "../components/FakeRecommendation";
 import HeightForm from "../components/HeightForm.tsx";
 import parse from "html-react-parser";
 import Button from "../components/Button.tsx";
-import { useGetUserInfo } from "../hooks/userHooks.ts";
-import { useGetCart } from "../hooks/cartHooks.ts";
+import {useGetUserInfo} from "../hooks/userHooks.ts";
+import {useGetCart} from "../hooks/cartHooks.ts";
+import {useFitAssistSocket} from "../hooks/useFitAssistSocket.ts";
+import BikeRecommendation from "../components/BikeRecommendation.tsx";
 
 import "../styles/chat.css";
 
@@ -32,6 +33,18 @@ export default function ChatModal() {
     setIsFormCompleted,
     isFormCompleted,
   } = useChatService();
+  const {
+    socketChatHistory,
+    client,
+    isConnected,
+    isPresentingSelectorForm,
+    bikeRecommendation,
+    connect,
+    disconnect,
+    publishQuestion,
+    submitTerrain,
+  } = useFitAssistSocket();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleSend = async (e: FormEvent) => {
@@ -39,7 +52,7 @@ export default function ChatModal() {
 
     if (inputMessage.trim()) {
       setInputMessage("");
-      await sendMessage(inputMessage, cartData);
+      publishQuestion(inputMessage, cartData)
       setInputMessage("");
     }
   };
@@ -48,7 +61,7 @@ export default function ChatModal() {
     if (message?.formType === "FORM1") {
       return (
         <TerrainForm
-          onSubmit={(data) => submitForm("FORM1", data)}
+          onSubmit={(data) => submitTerrain(data)}
           isExpanded={expanded}
         />
       );
@@ -73,7 +86,8 @@ export default function ChatModal() {
     }
 
     if (message?.formType === "RECOMMENDATION") {
-      return <FakeBikeRecommendation isExpanded={expanded} />;
+      // return <FakeBikeRecommendation isExpanded={expanded} />; //TODO clean up
+        return <BikeRecommendation {...bikeRecommendation}></BikeRecommendation>; //TODO replace with pass in value
     }
 
     return <div className="chat">{parse(message.content)}</div>;
@@ -86,13 +100,18 @@ export default function ChatModal() {
   };
 
   useEffect(() => {
-    if (isCompletingForm) {
+    if (isPresentingSelectorForm) {
       setExpanded(true);
     }
-  }, [isCompletingForm]);
+  }, [isPresentingSelectorForm]);
 
   // reset expanded to false upon open changed
   useEffect(() => {
+    if (open) {
+      connect();
+    } else {
+      disconnect();
+    }
     setExpanded(false);
     scrollToBottomMessage();
   }, [open]);
@@ -101,6 +120,12 @@ export default function ChatModal() {
   useEffect(() => {
     scrollToBottomMessage();
   }, [chatHistory]);
+
+    useEffect(() => {
+        if (isConnected) {
+            console.log('Successfully connected to FitAssist WebSocket');
+        }
+    }, [isConnected]);
 
   return (
     <div className="fixed bottom-4 right-0 z-50">
@@ -141,7 +166,7 @@ export default function ChatModal() {
             </div>
 
             <div className="flex-grow overflow-auto p-4 space-y-4">
-              {chatHistory?.map((message, index) => {
+              {socketChatHistory?.map((message, index) => {
                 return (
                   <div
                     key={index}
@@ -149,7 +174,6 @@ export default function ChatModal() {
                       message.role === "USER" ? "justify-end" : "justify-start"
                     }`}
                   >
-                    {/*  TODO Refactor this*/}
                     <div
                       className={`rounded-lg p-2 px-3 max-w-[95%] ${
                         message.role === "USER"
@@ -163,7 +187,7 @@ export default function ChatModal() {
                 );
               })}
 
-              {isLoading && !isCompletingForm && (
+              {isLoading && !isPresentingSelectorForm && (
                 <p className="text-black/50">
                   FitAssist is currently typing...
                 </p>
