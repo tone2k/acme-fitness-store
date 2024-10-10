@@ -8,19 +8,18 @@ import PaymentMethod from "./PaymentMethod.tsx";
 import OrderReview from "./OrderReview.tsx";
 import OrderConfirmation from "./OrderConfirmation.tsx";
 import HomePageV2 from "./home/page.tsx";
-import Home from "./Home.tsx";
+import Home from "./Home";
 import Footer from "./shared/Footer";
 import NavigationBar from "./shared/NavigationBar";
 import ChatModal from "./shared/ChatModal";
+import BikesPage from "./bikes/page";
+import AccessoriesPage from "./accessories/page";
+import Catalog from "./Catalog";
 
-const Catalog = lazy(() => import("./Catalog.tsx"));
 const Contact = lazy(() => import("./Contact.tsx"));
 const Cart = lazy(() => import("./Cart.tsx"));
 
-type AppLayoutProps = {
-  children: ReactNode;
-};
-function AppLayout({ children }: AppLayoutProps) {
+function AppLayout({ children }: { children: ReactNode }) {
   return (
     <Box>
       <NavigationBar />
@@ -31,31 +30,37 @@ function AppLayout({ children }: AppLayoutProps) {
   );
 }
 
-const mainLayout = (
-  <AppLayout>
-    <Suspense>
-      <Outlet />
-    </Suspense>
-  </AppLayout>
-);
-
 export default function AppRoutes() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: mainLayout,
+      element: (
+        <AppLayout>
+          <Suspense>
+            <Outlet />
+          </Suspense>
+        </AppLayout>
+      ),
       children: [
         {
-          path: "/",
+          path: "/v1",
           element: <Home />,
         },
         {
-          path: "/v2",
+          path: "/",
           element: <HomePageV2 />,
         },
         {
           path: "catalog",
           element: <Catalog />,
+        },
+        {
+          path: "bikes",
+          element: <BikesPage />,
+        },
+        {
+          path: "accessories",
+          element: <AccessoriesPage />,
         },
         {
           path: "contact",
@@ -93,10 +98,5 @@ export default function AppRoutes() {
     },
   ]);
 
-  return (
-    <RouterProvider
-      router={router}
-      fallbackElement={<div>Unknown Route</div>}
-    />
-  );
+  return <RouterProvider router={router} />;
 }

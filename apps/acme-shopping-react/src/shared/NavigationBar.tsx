@@ -21,24 +21,17 @@ export default function NavigationBar() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
               <a
-                href="/catalog"
+                href="/bikes"
                 className="px-3 py-2 rounded-md font-medium hover:bg-gray-700"
               >
                 Bikes
               </a>
 
               <a
-                href="/catalog"
+                href="/accessories"
                 className="px-3 py-2 rounded-md font-medium hover:bg-gray-700"
               >
                 Accessories
-              </a>
-
-              <a
-                href="/catalog"
-                className="px-3 py-2 rounded-md font-medium hover:bg-gray-700"
-              >
-                Sale
               </a>
             </div>
           </div>

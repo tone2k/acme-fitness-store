@@ -18,7 +18,7 @@ export default function ProductsSection() {
       <p className="text-chocolate font-bold">Products</p>
       <h2 className="text-grape-900">Featured bikes</h2>
 
-      <div className="flex flex-row justify-between my-4 gap-8 flex-wrap md:flex-nowrap">
+      <div className="flex flex-row justify-between my-4 gap-4 flex-wrap lg:flex-nowrap">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
