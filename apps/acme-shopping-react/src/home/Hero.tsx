@@ -15,7 +15,7 @@ export default function Hero() {
           <p className="mt-4 text-2xl font-bold mb-6">New Arrival</p>
           <h1 className="text-8xl font-bold mb-16">Velo Racing Bikes</h1>
 
-          <a href="/catalog">
+          <a href="/bikes">
             <Button variant="outline">Shop Velo</Button>
           </a>
         </div>

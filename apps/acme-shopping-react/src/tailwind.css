@@ -3,21 +3,21 @@
 @tailwind utilities;
 
 h1 {
-    @apply text-7xl
+    @apply text-5xl md:text-7xl
 }
 
 h2 {
-    @apply text-5xl
+    @apply text-3xl md:text-5xl
 }
 
 h3 {
-    @apply text-3xl
+    @apply text-2xl md:text-3xl
 }
 
 h4 {
-    @apply text-2xl
+    @apply text-xl md:text-2xl
 }
 
 h5 {
-    @apply text-lg
+    @apply md:text-lg
 }

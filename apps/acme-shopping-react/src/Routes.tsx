@@ -1,7 +1,6 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { lazy, ReactNode, Suspense } from "react";
 import { Box } from "@mui/material";
-import ProductDetails from "./ProductDetails.tsx";
 import Checkout from "./Checkout.tsx";
 import DeliveryMethod from "./DeliveryMethod.tsx";
 import PaymentMethod from "./PaymentMethod.tsx";
@@ -15,6 +14,7 @@ import ChatModal from "./shared/ChatModal";
 import BikesPage from "./bikes/page";
 import AccessoriesPage from "./accessories/page";
 import Catalog from "./Catalog";
+import ProductPage from "./products/page";
 
 const Contact = lazy(() => import("./Contact.tsx"));
 const Cart = lazy(() => import("./Cart.tsx"));
@@ -68,7 +68,7 @@ export default function AppRoutes() {
         },
         {
           path: "product/:productId",
-          element: <ProductDetails />,
+          element: <ProductPage />,
         },
         {
           path: "cart",

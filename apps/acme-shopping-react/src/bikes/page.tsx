@@ -38,13 +38,13 @@ export default function BikesPage() {
         </div>
 
         <div>
-          <h1>All bikes from ACME Fitness</h1>
+          <h1>All bikes</h1>
         </div>
       </div>
 
       <hr className="border-8 border-mint border-dashed border-spacing-8" />
 
-      <div className="grid grid-cols-2 gap-8 bg-blueberry-50 p-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-navy-50 p-16">
         {bikes.map((bike) => (
           <ProductCard key={bike.id} product={bike} />
         ))}
