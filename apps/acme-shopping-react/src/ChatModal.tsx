@@ -35,7 +35,7 @@ interface ChatModalProps {
     productId: string | null;
     cartData: CartData;
 }
-
+//TODO delete unused.
 export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
     const [inputMessage, setInputMessage] = useState('');
     const [jiggle, setJiggle] = useState(false);
@@ -68,7 +68,7 @@ export default function ChatModal({open, onClose, cartData}: ChatModalProps) {
 
     useEffect(() => {
         if (open) {
-            connect(userInfo.userId); //TODO need to fix how to pass this forward.
+            connect();
         } else {
             disconnect();
         }
