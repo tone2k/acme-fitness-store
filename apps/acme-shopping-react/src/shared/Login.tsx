@@ -1,23 +1,31 @@
 import UserIcon from "@mui/icons-material/AccountCircle";
-import Button from "../components/Button.tsx";
+import Button from "../components/Button";
 import { useState } from "react";
-import { useGetUserInfo } from "../hooks/userHooks.ts";
+import { useGetUserInfo } from "../hooks/userHooks";
 
 export default function LoginButton() {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
 
   const { data: userInfo } = useGetUserInfo();
+
+  if (userInfo?.userName == null) {
+    return (
+      <div>
+        <Button
+          variant="outline"
+          onClick={() => (window.location.href = "/acme-login")}
+        >
+          Sign in
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <>
       <Button
         variant="icon"
         onClick={() => {
-          if (userInfo?.userName == null) {
-            window.location.href = "/acme-login";
-            return;
-          }
-
           setOpen(!open);
         }}
       >
