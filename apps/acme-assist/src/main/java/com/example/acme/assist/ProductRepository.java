@@ -65,7 +65,7 @@ public class ProductRepository {
 
     public Product getProductByProductName(String productName) {
         try {
-            String catalogService = getCatalogService();
+            String catalogService = getCatalogServiceUrl();
             if (catalogService == null)
                 return null;
 
