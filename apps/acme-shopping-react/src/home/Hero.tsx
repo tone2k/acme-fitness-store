@@ -2,7 +2,7 @@ import Button from "../components/Button.tsx";
 
 export default function Hero() {
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative w-full h-[52rem]">
       {/* Hero Image */}
       <img
         src="/hero.png"
