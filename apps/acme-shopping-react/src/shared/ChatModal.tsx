@@ -95,8 +95,8 @@ export default function ChatModal() {
           >
             <div className="p-4 bg-primary text-primary-foreground flex justify-between items-center">
               <div>
-                <h2 className="text-xl font-bold">Chat with FitAssist</h2>
-                <p className="text-xs text-green font-bold">
+                <h2 className="text-xl text-chocolate">Chat with FitAssist</h2>
+                <p className="text-xs text-navy-600">
                   Powered by SpringAI
                 </p>
               </div>
@@ -133,11 +133,12 @@ export default function ChatModal() {
                       message.role === "USER" ? "justify-end" : "justify-start"
                     }`}
                   >
+                      {/*  TODO Refactor this*/}
                     <div
                       className={`rounded-lg p-2 max-w-[80%] ${
                         message.role === "USER"
-                          ? "bg-grape text-white"
-                          : "bg-black/15"
+                          ? "bg-navy text-white rounded-3xl px-6"
+                          : "bg-navy-50 border-solid border-navy-200 border-2"
                       }`}
                     >
                       {renderMessageContent(message)}
