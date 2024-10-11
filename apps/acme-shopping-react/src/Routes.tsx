@@ -1,24 +1,19 @@
+import { ReactNode, Suspense } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import { lazy, ReactNode, Suspense } from "react";
 import { Box } from "@mui/material";
-import Checkout from "./Checkout";
-import DeliveryMethod from "./DeliveryMethod";
-import PaymentMethod from "./PaymentMethod";
-import OrderReview from "./OrderReview";
-import OrderConfirmation from "./OrderConfirmation";
 import HomePageV2 from "./home/page";
-import Home from "./Home";
 import Footer from "./shared/Footer";
 import NavigationBar from "./shared/NavigationBar";
 import ChatModal from "./shared/ChatModal";
 import BikesPage from "./bikes/page";
 import AccessoriesPage from "./accessories/page";
-import Catalog from "./Catalog";
 import ProductPage from "./products/page";
 import FAQPage from "./resources/faq/page";
 import ShippingPage from "./resources/shipping/page";
-import ContactPage from "./resources/contact/page.tsx";
-import CartPage from "./cart/page.tsx";
+import ContactPage from "./resources/contact/page";
+import CartPage from "./cart/page";
+import CheckoutPage from "./checkout/page";
+import OrderConfirmationPage from "./checkout/confirmation/page.tsx";
 
 function AppLayout({ children }: { children: ReactNode }) {
   return (
@@ -44,16 +39,8 @@ export default function AppRoutes() {
       ),
       children: [
         {
-          path: "/v1",
-          element: <Home />,
-        },
-        {
           path: "/",
           element: <HomePageV2 />,
-        },
-        {
-          path: "catalog",
-          element: <Catalog />,
         },
         {
           path: "bikes",
@@ -85,23 +72,11 @@ export default function AppRoutes() {
         },
         {
           path: "checkout",
-          element: <Checkout />,
-        },
-        {
-          path: "delivery",
-          element: <DeliveryMethod />,
-        },
-        {
-          path: "payment",
-          element: <PaymentMethod />,
-        },
-        {
-          path: "review",
-          element: <OrderReview />,
+          element: <CheckoutPage />,
         },
         {
           path: "confirmation",
-          element: <OrderConfirmation />,
+          element: <OrderConfirmationPage />,
         },
       ],
     },

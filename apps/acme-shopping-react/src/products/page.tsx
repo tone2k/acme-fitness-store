@@ -9,7 +9,7 @@ import Markdown from "marked-react";
 import Button from "../components/Button.tsx";
 import formatDollar from "../utils/formatDollar.ts";
 
-import "../description.css";
+import "../styles/description.css";
 
 export default function ProductPage() {
   const { productId } = useParams<{ productId: string }>();

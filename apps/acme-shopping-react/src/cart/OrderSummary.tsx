@@ -4,9 +4,13 @@ import Button from "../components/Button.tsx";
 
 interface OrderSummaryProps {
   cart: CartData;
+  hideCheckoutButton?: boolean;
 }
 
-export default function OrderSummary({ cart }: OrderSummaryProps) {
+export default function OrderSummary({
+  cart,
+  hideCheckoutButton,
+}: OrderSummaryProps) {
   const cartItems = cart?.cart ?? [];
   const cartTotal = cartItems.reduce(
     (acc, curr) => acc + curr.quantity * parseFloat(curr.price),
@@ -16,7 +20,7 @@ export default function OrderSummary({ cart }: OrderSummaryProps) {
   return (
     <div className="w-full lg:w-1/3 overflow-hidden">
       <div className="bg-navy-50 border border-navy-200 shadow-lg rounded-lg p-6">
-        <h3 className="font-semibold mb-3">Order Summary</h3>
+        <h3 className="mb-3">Order Summary</h3>
 
         <table className="w-full">
           <tbody>
@@ -46,11 +50,13 @@ export default function OrderSummary({ cart }: OrderSummaryProps) {
           </tbody>
         </table>
 
-        <a href="/checkout" data-cy="checkout-button">
-          <Button variant="filled" className="w-full py-3 my-2">
-            Checkout
-          </Button>
-        </a>
+        {!hideCheckoutButton ? (
+          <a href="/checkout" data-cy="checkout-button">
+            <Button variant="filled" className="w-full py-3 my-2">
+              Checkout
+            </Button>
+          </a>
+        ) : null}
       </div>
     </div>
   );

@@ -62,7 +62,7 @@ export default function CartSummary({
                   <td className="p-2 md:p-4 hidden md:block">
                     <img
                       src={getProductImg(item.itemid)}
-                      className="size-36 object-cover rounded"
+                      className="size-36 object-contain rounded"
                       alt={item.name}
                     />
                   </td>
