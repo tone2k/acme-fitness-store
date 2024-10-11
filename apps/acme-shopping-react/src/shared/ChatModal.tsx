@@ -10,6 +10,8 @@ import Button from "../components/Button.tsx";
 import { useGetUserInfo } from "../hooks/userHooks.ts";
 import { useGetCart } from "../hooks/cartHooks.ts";
 
+import "../styles/chat.css";
+
 export default function ChatModal() {
   const [open, setOpen] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
@@ -61,7 +63,7 @@ export default function ChatModal() {
       return <FakeBikeRecommendation />;
     }
 
-    return <>{parse(message.content)}</>;
+    return <div className="chat">{parse(message.content)}</div>;
   };
 
   useEffect(() => {
