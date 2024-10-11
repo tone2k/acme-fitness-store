@@ -30,7 +30,6 @@
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1",
     "tailwind-merge": "^2.5.3",
-    "slick-carousel": "^1.8.1",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
     "ws": "^8.18.0"

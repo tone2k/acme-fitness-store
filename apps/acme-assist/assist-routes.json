@@ -1,28 +1,39 @@
 {
   "routes": [
-  {
-    "predicates": [
-      "Path=/ai/*",
-      "Method=POST"
-    ],
-    "filters": [
-      "StripPrefix=0"
-    ],
-    "tags": [
-      "assist-service"
-    ]
-  },
-  {
-    "predicates": [
-      "Path=/ai/admin/*",
-      "Method=GET"
-    ],
-    "filters": [
-      "StripPrefix=0"
-    ],
-    "tags": [
-      "assist-service"
-    ]
-  }
-]
+    {
+      "predicates": [
+        "Path=/ai/*",
+        "Method=POST"
+      ],
+      "filters": [
+        "StripPrefix=0"
+      ],
+      "tags": [
+        "assist-service"
+      ]
+    },
+    {
+      "predicates": [
+        "Path=/ai/admin/*",
+        "Method=GET"
+      ],
+      "filters": [
+        "StripPrefix=0"
+      ],
+      "tags": [
+        "assist-service"
+      ]
+    },
+    {
+      "predicates": [
+        "Path=/websocket/ai/v2/**"
+      ],
+      "filters": [
+        "StripPrefix=0"
+      ],
+      "tags": [
+        "assist-service"
+      ]
+    }
+  ]
 }
