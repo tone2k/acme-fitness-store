@@ -46,7 +46,12 @@ export default function ChatModal() {
 
   const renderMessageContent = (message: ChatMessage) => {
     if (message?.formType === "FORM1") {
-      return <TerrainForm onSubmit={(data) => submitForm("FORM1", data)} />;
+      return (
+        <TerrainForm
+          onSubmit={(data) => submitForm("FORM1", data)}
+          isExpanded={expanded}
+        />
+      );
     }
 
     if (message.formType === "FORM2") {

@@ -1,88 +1,79 @@
-import {useState} from 'react';
-import {Box, CardContent, CardMedia} from '@mui/material';
-import {PromptHeaderStyled} from "./styled/PromptHeader.styled.tsx";
-import {CardStyled} from "./styled/Card.styled.tsx";
-import {CardParagraphStyled} from "./styled/CardParagraph.styled.tsx";
-import {SecondaryButtonStyled} from "./styled/SecondaryButton.styled.tsx";
-import {CardLabelStyled} from "./styled/CardLabel.styled.tsx";
-import {RecommendedStyled} from "./styled/Recommended.styled.tsx";
+import { useState } from "react";
 
 const terrainOptions = [
-    {
-        name: 'Paved paths',
-        description: 'Suburban and city roads, or established bike paths',
-        image: '/paved.png',
-        recommended: true,
-    },
-    {
-        name: 'Gravel roads',
-        description: 'More agility for gravel trails and roads',
-        image: '/gravel.png',
-    },
-    {
-        name: 'Trails',
-        description: 'Added stability for mountain biking, trails, jumps, and off-roading',
-        image: '/trail.png',
-    },
+  {
+    name: "Paved paths",
+    description: "Suburban and city roads, or established bike paths",
+    image: "/paved.png",
+    recommended: true,
+  },
+  {
+    name: "Gravel roads",
+    description: "More agility for gravel trails and roads",
+    image: "/gravel.png",
+  },
+  {
+    name: "Trails",
+    description:
+      "Added stability for mountain biking, trails, jumps, and off-roading",
+    image: "/trail.png",
+  },
 ];
 
 interface TerrainFormProps {
-    onSubmit: (data: { terrain: string }) => void;
+  onSubmit: (data: { terrain: string }) => void;
+  isExpanded: boolean;
 }
 
-export default function TerrainForm({onSubmit}: TerrainFormProps) {
-    const [selectedTerrain, setSelectedTerrain] = useState('');
+export default function TerrainForm({
+  onSubmit,
+  isExpanded,
+}: TerrainFormProps) {
+  const [selectedTerrain, setSelectedTerrain] = useState("");
 
-    const handleTerrainSelect = (terrain: string) => {
-        setSelectedTerrain(terrain);
-        onSubmit({terrain});
-    };
+  const handleTerrainSelect = (terrain: string) => {
+    setSelectedTerrain(terrain);
+    onSubmit({ terrain });
+  };
 
-    const handleNotSure = () => {
-        setSelectedTerrain('');
-        onSubmit({terrain: ''});
-    };
+  return (
+    <>
+      <h3 className="text-grape mt-1 mb-3 text-center">Select a terrain</h3>
 
-    return (
-        <Box sx={{margin: 'auto', padding: 2, maxWidth: 600}}>
-            <PromptHeaderStyled variant="h5" gutterBottom>
-                Select a terrain
-            </PromptHeaderStyled>
-            <Box sx={{display: 'flex', justifyContent: 'space-between', gap: 2}}>
-                {terrainOptions.map((option) => (
-                    <CardStyled
-                        key={option.name}
-                        sx={{
-                            width: '32%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            cursor: 'pointer',
-                            border: selectedTerrain === option.name ? '2px solid #5C0A90' : undefined,
-                        }}
-                        onClick={() => handleTerrainSelect(option.name)}
-                    >
-                        <CardMedia component="img" height="140" image={option.image} alt={option.name}/>
-                        <CardContent sx={{flexGrow: 1}}>
-                            <CardLabelStyled gutterBottom variant="h6">
-                                {option.name}
-                            </CardLabelStyled>
-                            <CardParagraphStyled variant="body2">
-                                {option.description}
-                            </CardParagraphStyled>
-                            {option?.recommended && (
-                                <RecommendedStyled
-                                    sx={{mt: 1, textTransform: 'none'}}
-                                >
-                                    Recommended
-                                </RecommendedStyled>
-                            )}
-                        </CardContent>
-                    </CardStyled>
-                ))}
-            </Box>
-            <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}>
-                <SecondaryButtonStyled onClick={handleNotSure}>I'M NOT SURE</SecondaryButtonStyled>
-            </Box>
-        </Box>
-    );
+      <div
+        className={`flex ${
+          isExpanded ? "flex-row" : "flex-col"
+        }  space-between gap-4`}
+      >
+        {terrainOptions.map((option) => (
+          <div
+            key={option.name}
+            className={`w-full rounded-lg cursor-pointer bg-white hover:shadow-lg ${
+              selectedTerrain === option.name ? "border-2 border-grape" : ""
+            }`}
+            onClick={() => handleTerrainSelect(option.name)}
+          >
+            <div className="w-full">
+              <img
+                className="rounded-t object-cover h-36 w-full bg-white"
+                src={option.image}
+                alt={option.name}
+              />
+            </div>
+
+            <div className="pt-2 px-2 flex-grow-1">
+              <h5 className="font-bold mb-2">{option.name}</h5>
+              <p>{option.description}</p>
+
+              {option?.recommended && (
+                <div className="m-4 font-bold text-center rounded-xl bg-lemon border-2 border-black shadow">
+                  Recommended
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
 }
