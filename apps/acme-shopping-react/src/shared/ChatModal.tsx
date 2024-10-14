@@ -64,14 +64,25 @@ export default function ChatModal() {
     }
 
     if (message?.formType === "FORM3") {
-      return <HeightForm onSubmit={(data) => submitForm("FORM3", data)} />;
+      return (
+        <HeightForm
+          onSubmit={(data) => submitForm("FORM3", data)}
+          isExpanded={expanded}
+        />
+      );
     }
 
     if (message?.formType === "RECOMMENDATION") {
-      return <FakeBikeRecommendation />;
+      return <FakeBikeRecommendation isExpanded={expanded} />;
     }
 
     return <div className="chat">{parse(message.content)}</div>;
+  };
+
+  const scrollToBottomMessage = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   useEffect(() => {
@@ -83,13 +94,12 @@ export default function ChatModal() {
   // reset expanded to false upon open changed
   useEffect(() => {
     setExpanded(false);
+    scrollToBottomMessage();
   }, [open]);
 
-  // scroll most recent message into view
+  // scroll most recent message into view when new messages are added
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    scrollToBottomMessage();
   }, [chatHistory]);
 
   return (
@@ -141,7 +151,7 @@ export default function ChatModal() {
                   >
                     {/*  TODO Refactor this*/}
                     <div
-                      className={`rounded-lg p-2 px-3 max-w-[80%] ${
+                      className={`rounded-lg p-2 px-3 max-w-[95%] ${
                         message.role === "USER"
                           ? "bg-navy text-white rounded"
                           : "bg-navy-50 border-2 border-navy-100"
@@ -149,7 +159,6 @@ export default function ChatModal() {
                     >
                       {renderMessageContent(message)}
                     </div>
-                    <div ref={messagesEndRef} />
                   </div>
                 );
               })}
@@ -159,6 +168,8 @@ export default function ChatModal() {
                   FitAssist is currently typing...
                 </p>
               )}
+
+              <div ref={messagesEndRef} />
             </div>
 
             <form onSubmit={handleSend} className="p-4">
