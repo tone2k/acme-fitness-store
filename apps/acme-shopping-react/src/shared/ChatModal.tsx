@@ -56,7 +56,10 @@ export default function ChatModal() {
 
     if (message.formType === "FORM2") {
       return (
-        <RidingPositionForm onSubmit={(data) => submitForm("FORM2", data)} />
+        <RidingPositionForm
+          onSubmit={(data) => submitForm("FORM2", data)}
+          isExpanded={expanded}
+        />
       );
     }
 
