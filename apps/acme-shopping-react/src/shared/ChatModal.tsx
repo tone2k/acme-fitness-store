@@ -96,9 +96,7 @@ export default function ChatModal() {
             <div className="p-4 bg-primary text-primary-foreground flex justify-between items-center">
               <div>
                 <h2 className="text-xl text-chocolate">Chat with FitAssist</h2>
-                <p className="text-xs text-navy-600">
-                  Powered by SpringAI
-                </p>
+                <p className="text-xs text-navy-600">Powered by SpringAI</p>
               </div>
 
               <div>
@@ -133,12 +131,12 @@ export default function ChatModal() {
                       message.role === "USER" ? "justify-end" : "justify-start"
                     }`}
                   >
-                      {/*  TODO Refactor this*/}
+                    {/*  TODO Refactor this*/}
                     <div
-                      className={`rounded-lg p-2 max-w-[80%] ${
+                      className={`rounded-lg p-2 px-3 max-w-[80%] ${
                         message.role === "USER"
-                          ? "bg-navy text-white rounded-3xl px-6"
-                          : "bg-navy-50 border-solid border-navy-200 border-2"
+                          ? "bg-navy text-white rounded"
+                          : "bg-navy-50 border-2 border-navy-100"
                       }`}
                     >
                       {renderMessageContent(message)}
@@ -155,18 +153,18 @@ export default function ChatModal() {
               )}
             </div>
 
-            <form onSubmit={handleSend} className="p-4 border-t">
+            <form onSubmit={handleSend} className="p-4">
               <div className="flex space-x-2">
                 <input
-                  className="w-full indent-3"
+                  className="w-full indent-3 focus:outline-none border rounded border-black/50"
                   type="text"
-                  placeholder="Type a message..."
+                  placeholder="Ask anything about our bikes..."
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                 />
 
                 <Button type="submit" variant="icon">
-                  <Send className="h-4 w-4" />
+                  <Send className="h-4 w-4 text-black/50" />
                 </Button>
               </div>
             </form>
