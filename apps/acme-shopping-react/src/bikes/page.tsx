@@ -1,18 +1,18 @@
 import { useGetProducts } from "../hooks/catalogHooks";
 import Loading from "../components/Loading";
 import ProductCard from "../components/ProductCard";
-import Error from "../components/Error";
 
 export default function BikesPage() {
-  const { data, isLoading, error } = useGetProducts();
+  const { data, isLoading } = useGetProducts();
 
   if (isLoading) {
     return <Loading />;
   }
 
-  if (error) {
-    return <Error />;
-  }
+// TODO: maybe we can refactor the Catalog Service to remove duplicate `data` tag
+    if (isLoading || data?.data == null) {
+        return null;
+    }
 
   const bikes = data.data.filter((product) => product.tags.includes("bicycle"));
 

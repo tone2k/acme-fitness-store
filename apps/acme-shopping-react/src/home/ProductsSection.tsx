@@ -3,10 +3,10 @@ import ProductCard from "../components/ProductCard.tsx";
 import { useGetProducts } from "../hooks/catalogHooks.ts";
 
 export default function ProductsSection() {
-  const { data } = useGetProducts();
+  const { data, isLoading} = useGetProducts();
 
   // TODO: maybe we can refactor the Catalog Service to remove duplicate `data` tag
-  if (data?.data == null) {
+  if ( isLoading || data?.data == null) {
     return null;
   }
 

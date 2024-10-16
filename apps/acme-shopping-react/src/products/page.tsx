@@ -23,8 +23,9 @@ export default function ProductPage() {
     return <Loading />;
   }
 
-  if (error) {
-    return <Error />;
+// TODO: maybe we can refactor the Catalog Service to remove duplicate `data` tag
+  if (isProductLoading || data?.data == null) {
+    return null;
   }
 
   const product = data.data;

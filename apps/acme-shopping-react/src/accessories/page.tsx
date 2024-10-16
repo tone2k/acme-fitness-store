@@ -10,9 +10,10 @@ export default function AccessoriesPage() {
     return <Loading />;
   }
 
-  if (error) {
-    return <Error />;
-  }
+// TODO: maybe we can refactor the Catalog Service to remove duplicate `data` tag
+    if (isLoading || data?.data == null) {
+        return null;
+    }
 
   const accessories = data.data
     .filter((product) => !product.tags.includes("bicycle"))
