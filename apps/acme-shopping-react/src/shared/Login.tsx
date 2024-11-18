@@ -10,7 +10,7 @@ export default function LoginButton() {
 
   if (userInfo?.userName == null) {
     return (
-      <div>
+      <div id="login-button">
         <Button
           variant="outline"
           onClick={() => (window.location.href = "/acme-login")}
@@ -25,6 +25,7 @@ export default function LoginButton() {
     <>
       <Button
         variant="icon"
+        id="logged-in-button"
         onClick={() => {
           setOpen(!open);
         }}
