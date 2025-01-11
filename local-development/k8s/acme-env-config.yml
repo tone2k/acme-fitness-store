@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: acme-env-config
+data:
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-discovery:8761/eureka"
+
+  SPRING_CLOUD_CONFIG_IMPORT: "configserver:http://config-server:8888"
+
+  REDIS_HOST: "cart-redis"
+  REDIS_PORT: "6379"
+  AUTH_MODE: "0"
+
+  SPRING_DATASOURCE_URL_CATALOG: "jdbc:postgresql://catalog-postgres:5432/acme-catalog"
+  SPRING_DATASOURCE_USERNAME_CATALOG: "root"
+  SPRING_DATASOURCE_PASSWORD_CATALOG: "rootpassword"
+
+  SPRING_DATASOURCE_URL_ASSIST: "jdbc:postgresql://assist-postgres:5432/acme-assist"
+  SPRING_DATASOURCE_USERNAME_ASSIST: "root"
+  SPRING_DATASOURCE_PASSWORD_ASSIST: "rootpassword"

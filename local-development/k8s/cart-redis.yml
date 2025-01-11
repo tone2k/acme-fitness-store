@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart-redis
+  template:
+    metadata:
+      labels:
+        app: cart-redis
+    spec:
+      containers:
+      - name: cart-redis
+        image: bitnami/redis:latest
+        env:
+          - name: ALLOW_EMPTY_PASSWORD
+            value: "yes"
+        ports:
+          - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-redis
+spec:
+  selector:
+    app: cart-redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: redis
+

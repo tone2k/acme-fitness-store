@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acme-order
+  template:
+    metadata:
+      labels:
+        app: acme-order
+    spec:
+      containers:
+        - name: acme-order
+          image: localhost:5001/acme-order:latest
+          ports:
+            - containerPort: 8086
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: ConnectionStrings__OrderDb
+              value: "Host=order-postgres;Port=5432;Database=acme-order;User ID=root;Password=rootpassword"
+
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-discovery:8761/eureka"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-order
+spec:
+  selector:
+    app: acme-order
+  ports:
+    - name: http
+      port: 8086
+      targetPort: 8086

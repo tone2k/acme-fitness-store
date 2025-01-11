@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acme-catalog
+  template:
+    metadata:
+      labels:
+        app: acme-catalog
+    spec:
+      containers:
+        - name: acme-catalog
+          image: localhost:5001/acme-catalog:latest
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "local"
+
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://catalog-postgres:5432/acme-catalog"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "rootpassword"
+
+            - name: SPRING_CLOUD_CONFIG_IMPORT
+              value: "configserver:http://config-server:8888"
+
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-discovery:8761/eureka"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-catalog
+spec:
+  selector:
+    app: acme-catalog
+  ports:
+    - name: http
+      port: 8082
+      targetPort: 8082

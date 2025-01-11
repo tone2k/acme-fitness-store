@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acme-payment
+  template:
+    metadata:
+      labels:
+        app: acme-payment
+    spec:
+      containers:
+        - name: acme-payment
+          image: localhost:5001/acme-payment:latest
+          ports:
+            - containerPort: 8084
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "local"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://payment-postgres:5432/acme-payment"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "rootpassword"
+
+            - name: SPRING_CLOUD_CONFIG_IMPORT
+              value: "configserver:http://config-server:8888"
+
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-discovery:8761/eureka"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-payment
+spec:
+  selector:
+    app: acme-payment
+  ports:
+    - name: http
+      port: 8084
+      targetPort: 8084

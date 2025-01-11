@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
+        <AssemblyName>acme-order</AssemblyName>
         <TargetFramework>net8.0</TargetFramework>
         <Description>acme-order project</Description>
         <RootNamespace>AcmeOrder</RootNamespace>

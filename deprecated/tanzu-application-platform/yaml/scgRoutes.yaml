@@ -236,7 +236,7 @@ spec:
     tags:
     - order
   service:
-    name: acme-order
+    name: acme-order.yml
 ---
 apiVersion: "tanzu.vmware.com/v1"
 kind: SpringCloudGatewayMapping

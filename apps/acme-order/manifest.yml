@@ -1,14 +1,14 @@
 ---
 applications:
-  - name: acme-order
+  - name: acme-order.yml
     memory: 200M
     path: bin/Release/net8.0/linux-x64/publish/
     buildpacks: 
       - dotnet_core_buildpack
     services:
       - acme-registry
-      - acme-order-postgres
+      - acme-order.yml-postgres
     routes:
-      - route: acme-order.apps.internal
+      - route: acme-order.yml.apps.internal
     env:
       AcmeServiceSettings__AuthUrl: "https://acme-fitness.apps.vcf3.vmtanzu.com" # To be replaced with your Gateway url in TAS

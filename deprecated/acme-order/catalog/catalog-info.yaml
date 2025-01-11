@@ -1,12 +1,12 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: acme-order
+  name: acme-order.yml
   description: ACME Fitness Store  Order Service
   tags:
     - tanzu
   annotations:
-    'backstage.io/kubernetes-label-selector': 'app.kubernetes.io/part-of=acme-order'
+    'backstage.io/kubernetes-label-selector': 'app.kubernetes.io/part-of=acme-order.yml'
 spec:
   type: service
   lifecycle: production

@@ -4,4 +4,4 @@
         enabled: true
     config:
       import:
-        - configserver:http://localhost:8888
+        - configserver:http://config-server:8888

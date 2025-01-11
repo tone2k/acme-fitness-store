@@ -1,10 +1,10 @@
 apiVersion: carto.run/v1alpha1
 kind: Workload
 metadata:
-  name: acme-order
+  name: acme-order.yml
   labels:
     apps.tanzu.vmware.com/workload-type: server
-    app.kubernetes.io/part-of: acme-order
+    app.kubernetes.io/part-of: acme-order.yml
     networking.knative.dev/visibility: cluster-local
     apps.tanzu.vmware.com/has-tests: "true"
     apps.tanzu.vmware.com/auto-configure-actuators: "true"

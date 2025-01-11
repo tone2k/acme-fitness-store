@@ -54,7 +54,7 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: rootpassword
-      POSTGRES_DB: acme-order
+      POSTGRES_DB: acme-order.yml
     ports:
       - "5432:5432"
 

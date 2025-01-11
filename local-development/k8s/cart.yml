@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      containers:
+        - name: cart
+          image: localhost:5001/acme-cart:latest
+          env:
+            - name: REDIS_HOST
+              value: "cart-redis"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: CART_PORT
+              value: "5000"
+            - name: AUTH_MODE
+              value: "0"
+
+
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-discovery:8761/eureka"
+
+            - name: SPRING_CLOUD_CONFIG_IMPORT
+              value: "configserver:http://config-server:8888"
+
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart
+spec:
+  selector:
+    app: cart
+  ports:
+    - port: 8085
+      targetPort: 5000
+      name: cart

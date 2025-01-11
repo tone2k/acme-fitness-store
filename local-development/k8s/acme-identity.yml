@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-identity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acme-identity
+  template:
+    metadata:
+      labels:
+        app: acme-identity
+    spec:
+      containers:
+        - name: acme-identity
+          image: localhost:5001/acme-identity:latest
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "local"
+
+            - name: SPRING_CLOUD_CONFIG_IMPORT
+              value: "configserver:http://config-server:8888"
+
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-discovery:8761/eureka"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-identity
+spec:
+  selector:
+    app: acme-identity
+  ports:
+    - name: http
+      port: 8083
+      targetPort: 8083

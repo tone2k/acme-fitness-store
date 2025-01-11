@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-auth
+  template:
+    metadata:
+      labels:
+        app: gateway-auth
+    spec:
+      containers:
+        - name: gateway-auth
+          image: localhost:5001/gateway-auth:latest
+          ports:
+            - containerPort: 8090
+            - containerPort: 9000
+          env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-discovery:8761/eureka"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-auth
+spec:
+  selector:
+    app: gateway-auth
+  ports:
+    - name: gateway
+      port: 8090
+      targetPort: 8090
+    - name: auth
+      port: 9000
+      targetPort: 9000

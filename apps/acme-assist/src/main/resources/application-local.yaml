@@ -30,5 +30,6 @@ spring:
     password: rootpassword
     url: jdbc:postgresql://localhost:5433/acme-assist
 eureka:
-  instance:
-    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-discovery:8761/eureka

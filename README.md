@@ -46,7 +46,7 @@ Assumption that the proper Cloud Foundry CLI has been installed.
 cf create-service p.redis on-demand-cache acme-redis 
 cf create-service postgres on-demand-postgres-db acme-postgres
 cf create-service postgres on-demand-postgres-db acme-assist-postgres
-cf create-service postgres on-demand-postgres-db acme-order-postgres       
+cf create-service postgres on-demand-postgres-db acme-order.yml-postgres       
 
 # This sets up your TAS/tPCF config server. It assumes that your config files are located at <this-repository-url> in the branch config (label) under the directory config (searchPaths). You can checkout the branch to see the structure if you like.
 cf create-service p.config-server standard acme-config  -c  '{ "git": { "uri": "<this-repository-url>", "label": "config", "searchPaths": "config" } }'
@@ -128,12 +128,12 @@ cf start acme-assist
 #### Order Service
 
 ```bash
-cd ../acme-order
+cd ../acme-order.yml
 dotnet publish -r linux-x64
 cf push --no-start
-cf add-network-policy acme-order acme-payment
-cf bind-service acme-order acme-gateway -c order-routes.json
-cf start acme-order
+cf add-network-policy acme-order.yml acme-payment
+cf bind-service acme-order.yml acme-gateway -c order-routes.json
+cf start acme-order.yml
 ```
 
 #### Shopping Service

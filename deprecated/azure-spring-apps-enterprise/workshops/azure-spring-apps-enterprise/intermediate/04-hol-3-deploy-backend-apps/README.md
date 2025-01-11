@@ -103,7 +103,7 @@ az spring app deploy --name ${CATALOG_SERVICE_APP} \
 
 # Deploy Order Service
 az spring app deploy --name ${ORDER_SERVICE_APP} \
-    --source-path ../apps/acme-order 
+    --source-path ../apps/acme-order.yml 
 
 # Deploy Cart Service 
 az spring app deploy --name ${CART_SERVICE_APP} \

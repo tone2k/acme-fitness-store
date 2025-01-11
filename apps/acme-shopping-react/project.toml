@@ -1,0 +1,12 @@
+[project]
+name = "acme-shopping"
+
+[[build.env]]
+name = "BP_NODE_RUN_SCRIPTS"
+value = "build"
+
+[build]
+
+[[build.buildpacks]]
+id = "paketo-buildpacks/nodejs"
+
