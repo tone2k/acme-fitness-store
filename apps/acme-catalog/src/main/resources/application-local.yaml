@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 spring:
   cloud:
     config:
@@ -6,3 +9,7 @@ spring:
   config:
     import:
       - configserver:http://config-server:8888
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-discovery:8761/eureka

@@ -1,3 +1,6 @@
+server:
+  port: 8083
+
 spring:
   application:
     name: acme-identity
@@ -13,4 +16,8 @@ spring:
   config:
     import:
       - configserver:http://config-server:8888
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-discovery:8761/eureka
 
