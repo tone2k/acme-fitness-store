@@ -2,13 +2,13 @@ services:
 
   discovery:
     container_name: discovery-server
-    image: steeltoeoss/eureka-server
+    image: steeltoe.azurecr.io/eureka-server
     ports:
       - "8761:8761"
 
   config:
     container_name: config-server
-    image: steeltoeoss/config-server
+    image: steeltoe.azurecr.io/config-server
     ports:
       - "8888:8888"
     volumes:

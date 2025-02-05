@@ -1,5 +1,4 @@
-# Identity
-
+# ACME Identity Service
 
 > An identity service, as a wrapper for the provided SSO service.
 
@@ -21,4 +20,3 @@ To run locally
 ```bash
 ./gradlew bootRun --args="--spring.profiles.active=local"
 ```
-
