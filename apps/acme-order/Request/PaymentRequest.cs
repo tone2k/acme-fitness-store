@@ -1,9 +1,12 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AcmeOrder.Request;
 
 public class PaymentRequest
 {
-    [JsonProperty("card")] public CardRequest Card { get; set; }
-    [JsonProperty("total")] public string Total { get; set; }
+    [JsonPropertyName("card")]
+    public CardRequest Card { get; set; }
+
+    [JsonPropertyName("total")]
+    public string Total { get; set; }
 }

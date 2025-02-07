@@ -1,48 +1,33 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using AcmeOrder.Db;
 using AcmeOrder.Models;
 using AcmeOrder.Request;
 using AcmeOrder.Response;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Steeltoe.Common.Discovery;
-using Steeltoe.Discovery;
-
 
 namespace AcmeOrder.Services;
 
-public class OrderService
+public class OrderService(PostgresOrderContext context, ILogger<OrderService> logger, HttpClient httpClient)
 {
     private const string PendingTransactionId = "pending";
-    private readonly OrderContext _context;
-    private readonly HttpClient _httpClient;
-    private readonly ILogger<OrderService> _logger;
+    private readonly OrderContext _context = context;
 
-
-
-    public OrderService(PostgresOrderContext context, ILogger<OrderService> logger, HttpClient httpClient)
-    {
-        _context = context;
-        _logger = logger;
-        _httpClient = httpClient;
-
-
-    }
-
-    public async Task<OrderCreateResponse> Create(string userid, Order orderIn, string authorization)
+    public async Task<OrderCreateResponse> CreateAsync(ClaimsPrincipal user, Order orderIn, string authorization, CancellationToken cancellationToken)
     {
         var order = new Order
         {
             Paid = "pending",
-            UserId = userid,
+            UserId = user.FindFirst(ClaimTypes.Email)?.Value,
             Firstname = orderIn.Firstname,
             Lastname = orderIn.Lastname,
             Total = orderIn.Total,
@@ -53,10 +38,13 @@ public class OrderService
             Cart = orderIn.Cart
         };
 
-        var payment = await MakePayment(orderIn.Total, order.Card, authorization);
-        _logger.LogDebug("Received payment response transactionId {transactionId}", payment.TransactionId);
+        var payment = await MakePayment(orderIn.Total, order.Card, authorization, cancellationToken);
+        logger.LogDebug("Received payment response transactionId {transactionId}", payment.TransactionId);
 
-        if (string.Equals(PendingTransactionId, payment.TransactionId)) return new OrderCreateResponse();
+        if (string.Equals(PendingTransactionId, payment.TransactionId))
+        {
+            return new OrderCreateResponse();
+        }
 
         order.Paid = payment.TransactionId;
 
@@ -64,7 +52,7 @@ public class OrderService
 
         return new OrderCreateResponse
         {
-            UserId = userid,
+            UserId = user.FindFirst(ClaimTypes.Email)?.Value,
             OrderId = savedOrder.Id.ToString(),
             Payment = payment
         };
@@ -72,7 +60,17 @@ public class OrderService
 
     public List<OrderResponse> Get()
     {
-        return FromOrderToOrderResponse(_context.Orders.ToList());
+        return FromOrderToOrderResponse([.. _context.Orders]);
+    }
+
+    public List<OrderResponse> GetPaidOrdersAsResponses()
+    {
+        // This might not be the best way to check, but:
+        // - Orders are initialized with paid="pending"
+        // - Orders with failed payment have negative numbers
+        // - Orders with completed payment have guids
+        var paidOrders = _context.Orders.Where(order => order.Paid.Length > 7);
+        return FromOrderToOrderResponse([.. paidOrders]);
     }
 
     public List<OrderResponse> Get(string userId)
@@ -82,14 +80,14 @@ public class OrderService
 
     private Order SaveOrder(Order order)
     {
-        _logger.LogDebug("Attempting to Save Order {order}", order);
+        logger.LogDebug("Attempting to Save Order {order}", order);
         var saved = _context.Orders.Add(order).Entity;
         _context.SaveChanges();
-        _logger.LogDebug("Saved Order {saved}", saved);
+        logger.LogDebug("Saved Order {saved}", saved);
         return saved;
     }
 
-    private async Task<Payment> MakePayment(string total, Card card, string authorization)
+    private async Task<Payment> MakePayment(string total, Card card, string authorization, CancellationToken cancellationToken)
     {
         var paymentRequest = new PaymentRequest
         {
@@ -104,26 +102,27 @@ public class OrderService
             Total = total
         };
 
-        var json = JsonConvert.SerializeObject(paymentRequest);
-        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        var jsonString = JsonSerializer.Serialize(paymentRequest);
+        var data = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-        _logger.LogDebug("Making Payment Request for {total} to {baseurl}/pay", total, _httpClient.BaseAddress);
-        var request = new HttpRequestMessage(HttpMethod.Post, "/pay");
-        request.Content = data;
-        request.Headers.Authorization = AuthenticationHeaderValue.Parse(authorization);
+        logger.LogDebug("Making Payment Request for {total} to {baseurl}/pay", total, httpClient.BaseAddress);
+        var request = new HttpRequestMessage(HttpMethod.Post, "/pay")
+        {
+            Content = data
+        };
+        request.Headers.Authorization = AuthenticationHeaderValue.Parse($"bearer {authorization}");
+        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        var response = await _httpClient.SendAsync(request);
+        var response = await httpClient.SendAsync(request, cancellationToken);
 
         if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Unauthorized &&
             response.StatusCode != HttpStatusCode.BadRequest &&
-            response.StatusCode != HttpStatusCode.PaymentRequired) return new Payment();
+            response.StatusCode != HttpStatusCode.PaymentRequired)
+        {
+            return new Payment();
+        }
 
-        var str = await response.Content.ReadAsStringAsync();
-        _logger.LogInformation(str);
-        var result = JsonConvert.DeserializeObject<Payment>(str);
-        return result;
+        return await response.Content.ReadFromJsonAsync<Payment>(cancellationToken);
     }
 
     private static List<OrderResponse> FromOrderToOrderResponse(IEnumerable<Order> orderList)

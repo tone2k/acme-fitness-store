@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using AcmeOrder.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 
 namespace AcmeOrder.Db;
 
 public class SqliteOrderContext(IConfiguration configuration) : OrderContext(configuration)
 {
+    private readonly JsonSerializerOptions _jsonSerializerOptions =
+        new() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=sqlite.order.db");
@@ -28,26 +32,20 @@ public class SqliteOrderContext(IConfiguration configuration) : OrderContext(con
             entity.Property(e => e.Address)
                 .HasColumnName("address")
                 .HasConversion(
-                    v => JsonConvert.SerializeObject(v,
-                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
-                    v => JsonConvert.DeserializeObject<Address>(v,
-                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+                    v => JsonSerializer.Serialize(v, _jsonSerializerOptions),
+                    v => JsonSerializer.Deserialize<Address>(v, _jsonSerializerOptions));
 
             entity.Property(e => e.Card)
                 .HasColumnName("card")
                 .HasConversion(
-                    v => JsonConvert.SerializeObject(v,
-                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
-                    v => JsonConvert.DeserializeObject<Card>(v,
-                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+                    v => JsonSerializer.Serialize(v, _jsonSerializerOptions),
+                    v => JsonSerializer.Deserialize<Card>(v, _jsonSerializerOptions));
 
             entity.Property(e => e.Cart)
                 .HasColumnName("cart")
                 .HasConversion(
-                    v => JsonConvert.SerializeObject(v,
-                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
-                    v => JsonConvert.DeserializeObject<ICollection<Cart>>(v,
-                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+                    v => JsonSerializer.Serialize(v, _jsonSerializerOptions),
+                    v => JsonSerializer.Deserialize<ICollection<Cart>>(v, _jsonSerializerOptions));
 
             entity.Property(e => e.Date)
                 .HasColumnName("date")

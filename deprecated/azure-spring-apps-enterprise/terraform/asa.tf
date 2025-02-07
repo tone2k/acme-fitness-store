@@ -303,7 +303,7 @@ resource "azurerm_spring_cloud_gateway_route_config" "asa_app_order_routing" {
     description            = "Creates an order for the user."
     filters                = ["StripPrefix=0"]
     order                  = 200
-    predicates             = ["Path=/order/add/{userId}", "Method=POST"]
+    predicates             = ["Path=/order/add", "Method=POST"]
     sso_validation_enabled = true
     title                  = "Create an order."
     token_relay            = true

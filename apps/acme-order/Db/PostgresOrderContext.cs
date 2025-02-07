@@ -2,15 +2,16 @@
 using AcmeOrder.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Steeltoe.Connector.PostgreSql.EFCore;
+using Steeltoe.Connectors.EntityFrameworkCore.PostgreSql;
 
 namespace AcmeOrder.Db;
 
-public class PostgresOrderContext(IConfiguration configuration) : OrderContext(configuration)
+public class PostgresOrderContext(IConfiguration configuration, IServiceProvider serviceProvider) : OrderContext(configuration)
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(Configuration);
+        optionsBuilder.UseNpgsql(serviceProvider);
+        base.OnConfiguring(optionsBuilder);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

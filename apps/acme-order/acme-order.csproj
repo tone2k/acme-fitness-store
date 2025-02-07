@@ -1,37 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <Description>acme-order project</Description>
-        <RootNamespace>AcmeOrder</RootNamespace>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Description>acme-order project</Description>
+		<RootNamespace>AcmeOrder</RootNamespace>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <SteeltoeVersion>3.2.8</SteeltoeVersion>
-    </PropertyGroup>
+	<PropertyGroup>
+		<SteeltoeVersion>4.0.*-*</SteeltoeVersion>
+		<AspDotNetVersion>8.0.*</AspDotNetVersion>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.2"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4"/>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
-        <PackageReference Include="Steeltoe.Connector.CloudFoundry" Version="$(SteeltoeVersion)" />
-        <PackageReference Include="Steeltoe.Connector.ConnectorCore" Version="$(SteeltoeVersion)"/>
-        <PackageReference Include="Steeltoe.Discovery.Eureka" Version="$(SteeltoeVersion)"/>
-        <PackageReference Include="Steeltoe.Discovery.ClientCore" Version="$(SteeltoeVersion)"/>
-        <PackageReference Include="Steeltoe.Extensions.Configuration.CloudFoundryCore" Version="$(SteeltoeVersion)" />
-        <PackageReference Include="Steeltoe.Management.CloudFoundryCore" Version="$(SteeltoeVersion)" />
-        <PackageReference Include="Steeltoe.Management.EndpointCore" Version="$(SteeltoeVersion)"/>
-        <PackageReference Include="Steeltoe.Connector.EFCore" Version="$(SteeltoeVersion)"/>
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspDotNetVersion)" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(AspDotNetVersion)" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(AspDotNetVersion)" />
+		<PackageReference Include="Steeltoe.Connectors.EntityFrameworkCore" Version="$(SteeltoeVersion)" />
+		<PackageReference Include="Steeltoe.Discovery.Eureka" Version="$(SteeltoeVersion)" />
+		<PackageReference Include="Steeltoe.Discovery.HttpClients" Version="$(SteeltoeVersion)" />
+		<PackageReference Include="Steeltoe.Management.Endpoint" Version="$(SteeltoeVersion)" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Migrations\Postgres"/>
-        <Folder Include="Migrations\Sqlite"/>
-    </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Migrations\Postgres" />
+		<Folder Include="Migrations\Sqlite" />
+	</ItemGroup>
 
 </Project>

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using AcmeOrder.Auth;
 using AcmeOrder.Models;
 using AcmeOrder.Response;
 using AcmeOrder.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 
 namespace AcmeOrder.Controllers;
 
@@ -13,29 +15,40 @@ namespace AcmeOrder.Controllers;
 [ApiController]
 public class OrderController(OrderService orderService) : ControllerBase
 {
-    [HttpPost("add/{userid}")]
-    [ServiceFilter(typeof(AuthorizeResource))]
-    public async Task<ActionResult<OrderCreateResponse>> Create(string userid, Order orderIn)
+    [HttpPost("add")]
+    [Authorize]
+    public async Task<ActionResult<OrderCreateResponse>> Create(Order orderIn, CancellationToken cancellationToken)
     {
-        var authorization = HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
-        return await orderService.Create(userid, orderIn, authorization);
+        var user = Request.HttpContext.User;
+        var accessToken = await HttpContext.GetTokenAsync("access_token");
+        return await orderService.CreateAsync(user, orderIn, accessToken, cancellationToken);
     }
 
     [HttpGet("all")]
-    [ServiceFilter(typeof(AuthorizeResource))]
+    [Authorize]
     public ActionResult<List<OrderResponse>> Get()
     {
         return orderService.Get();
     }
 
     [HttpGet("{userId}", Name = "GetOrderByUser")]
-    [ServiceFilter(typeof(AuthorizeResource))]
+    [Authorize]
     public ActionResult<List<OrderResponse>> Get(string userId)
     {
         var orderList = orderService.Get(userId);
 
-        if (orderList == null || orderList.Count == 0) return NotFound();
+        if (orderList == null || orderList.Count == 0)
+        {
+            return NotFound();
+        }
 
         return orderList;
+    }
+
+    [Authorize]
+    [HttpGet("successful")]
+    public ActionResult<List<OrderResponse>> Successful()
+    {
+        return orderService.GetPaidOrdersAsResponses();
     }
 }

@@ -2,7 +2,7 @@
 
 ## Local Development
 
-To run this locally: 
+To run this locally:
 
 1. Install dependencies
     ```bash

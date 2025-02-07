@@ -1,5 +1,4 @@
-# Cart
-
+# ACME Cart Service
 
 > A cart service, because what is a shop without a cart to put stuff in?
 
@@ -13,7 +12,8 @@ There are different dependencies based on whether you want to run a built contai
 
 * [Python 3.7.2 or higher](https://www.python.org/downloads/)
 * [Pip](https://pip.pypa.io/en/stable/installing/)
-* pyenv 
+* pyenv
+
 ### Run
 
 * [Docker](https://www.docker.com/docker-community)
@@ -49,7 +49,7 @@ docker build -t acme-cart .
 
 The acme-cart image is based on the official Python image.
 
-To run the acme-cart and the redis dependency for local test, use the `docker-compose` file: 
+To run the acme-cart and the redis dependency for local test, use the `docker-compose` file:
 
 ```bash
 # docker-compose.yaml is provided in local-development folder

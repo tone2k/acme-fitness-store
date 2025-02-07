@@ -1,12 +1,10 @@
-# Payment
-
+# ACME Payment Service
 
 > A payment service, used to emulate service to handle the payment flow.
 
-### Run
+## Run
 
 * [Docker](https://www.docker.com/docker-community)
-
 
 ## Local running
 
@@ -15,4 +13,3 @@ To run locally
 ```bash
 ./gradlew bootRun --args="--spring.profiles.active=local"
 ```
-

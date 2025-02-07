@@ -1,10 +1,10 @@
 # ACME Order Service
 
-Requires DotNet version 8.
+Requires .NET 8 SDK.
 
 ## Getting Started
 
-Download donet
+Download dotnet
 https://dotnet.microsoft.com/en-us/
 
 In Visual Studio Code

@@ -60,7 +60,7 @@
           orderBlob['card'] = card;
 
           //Make POST call to order service
-          url: "/order/add/" + user,
+          url: "/order/add",
 
           var orderPost = new XMLHttpRequest();
           orderPost.open("POST", url, true);
@@ -262,7 +262,7 @@
 
         // Send data to order service
         $.ajax({
-          url: "/order/add/" + userid,
+          url: "/order/add",
           type: "POST",
           data: JSON.stringify(orderBlob),
           success: function (data, textStatus, jqXHR) {
