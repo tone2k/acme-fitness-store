@@ -1,8 +1,9 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AcmeOrder.Request;
 
 public class TokenRequest
 {
-    [JsonProperty("access_token")] public string AccessToken { get; set; }
+    [JsonPropertyName("access_token")]
+    public string AccessToken { get; set; }
 }

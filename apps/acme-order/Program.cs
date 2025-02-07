@@ -5,52 +5,53 @@ using AcmeOrder.Db;
 using AcmeOrder.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Npgsql;
-using Steeltoe.Common.Http.Discovery;
-using Steeltoe.Discovery.Client;
+using Steeltoe.Configuration.CloudFoundry;
+using Steeltoe.Configuration.CloudFoundry.ServiceBindings;
+using Steeltoe.Connectors.PostgreSql;
 using Steeltoe.Discovery.Eureka;
-using Steeltoe.Extensions.Configuration.CloudFoundry;
-using Steeltoe.Management.Endpoint;
+using Steeltoe.Discovery.HttpClients;
+using Steeltoe.Management.Endpoint.Actuators.All;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddCloudFoundryConfiguration();
-var services = builder.Services;
-var configuration = builder.Configuration;
-builder.AddAllActuators();
-builder.AddServiceDiscovery(c => c.UseEureka());
+builder.Configuration.AddCloudFoundryServiceBindings();
+builder.Services.AddAllActuators();
+builder.Services.AddEurekaDiscoveryClient();
 
-services.Configure<AcmeServiceSettings>(configuration.GetSection(nameof(AcmeServiceSettings)));
+builder.Services.Configure<AcmeServiceSettings>(builder.Configuration.GetSection(nameof(AcmeServiceSettings)));
+builder.Services.AddSingleton<IAcmeServiceSettings>(sp =>
+    sp.GetRequiredService<IOptions<AcmeServiceSettings>>().Value); 
 
-services.AddSingleton<IAcmeServiceSettings>(sp =>
-    sp.GetRequiredService<IOptions<AcmeServiceSettings>>().Value);
-
-switch (configuration["DatabaseProvider"])
+switch (builder.Configuration["DatabaseProvider"])
 {
     case "Sqlite":
-        services.AddDbContext<OrderContext, SqliteOrderContext>();
+        builder.Services.AddDbContext<OrderContext, SqliteOrderContext>();
         break;
 
     case "Postgres":
         NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
-        services.AddDbContext<OrderContext, PostgresOrderContext>();
+        builder.AddPostgreSql();
+        builder.Services.AddDbContext<OrderContext, PostgresOrderContext>();
         break;
 }
 
-services.AddHttpClient<OrderService>(c => c.BaseAddress = new Uri("https://acme-payment"))
+builder.Services.AddHttpClient<OrderService>(c => c.BaseAddress = new Uri("https://acme-payment"))
     .AddServiceDiscovery();
-services.AddControllers();
-services.AddScoped<AuthorizeResource>();
+builder.Services.AddControllers();
+builder.Services.AddScoped<AuthorizeResource>();
 
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<PostgresOrderContext>();
-    db.Database.Migrate();
-}
+
+await using var scope = app.Services.CreateAsyncScope();
+await using var orderContext = scope.ServiceProvider.GetRequiredService<OrderContext>();
+orderContext.Database.Migrate();
 
 app.UseDeveloperExceptionPage();
 app.UseRouting();
 app.MapControllers();
-await app.RunAsync();
+
+app.Run();

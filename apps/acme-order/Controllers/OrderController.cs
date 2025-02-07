@@ -34,7 +34,10 @@ public class OrderController(OrderService orderService) : ControllerBase
     {
         var orderList = orderService.Get(userId);
 
-        if (orderList == null || orderList.Count == 0) return NotFound();
+        if (orderList == null || orderList.Count == 0)
+        {
+            return NotFound();
+        }
 
         return orderList;
     }
