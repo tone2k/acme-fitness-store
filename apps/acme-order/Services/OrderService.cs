@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -22,12 +22,12 @@ public class OrderService(PostgresOrderContext context, ILogger<OrderService> lo
     private const string PendingTransactionId = "pending";
     private readonly OrderContext _context = context;
 
-    public async Task<OrderCreateResponse> Create(string userid, Order orderIn, string authorization)
+    public async Task<OrderCreateResponse> CreateAsync(ClaimsPrincipal user, Order orderIn, string authorization, CancellationToken cancellationToken)
     {
         var order = new Order
         {
             Paid = "pending",
-            UserId = userid,
+            UserId = user.FindFirst(ClaimTypes.Email)?.Value,
             Firstname = orderIn.Firstname,
             Lastname = orderIn.Lastname,
             Total = orderIn.Total,
@@ -41,7 +41,10 @@ public class OrderService(PostgresOrderContext context, ILogger<OrderService> lo
         var payment = await MakePayment(orderIn.Total, order.Card, authorization, cancellationToken);
         logger.LogDebug("Received payment response transactionId {transactionId}", payment.TransactionId);
 
-        if (string.Equals(PendingTransactionId, payment.TransactionId)) return new OrderCreateResponse();
+        if (string.Equals(PendingTransactionId, payment.TransactionId))
+        {
+            return new OrderCreateResponse();
+        }
 
         order.Paid = payment.TransactionId;
 
@@ -49,7 +52,7 @@ public class OrderService(PostgresOrderContext context, ILogger<OrderService> lo
 
         return new OrderCreateResponse
         {
-            UserId = userid,
+            UserId = user.FindFirst(ClaimTypes.Email)?.Value,
             OrderId = savedOrder.Id.ToString(),
             Payment = payment
         };
@@ -57,7 +60,17 @@ public class OrderService(PostgresOrderContext context, ILogger<OrderService> lo
 
     public List<OrderResponse> Get()
     {
-        return FromOrderToOrderResponse(_context.Orders.ToList());
+        return FromOrderToOrderResponse([.. _context.Orders]);
+    }
+
+    public List<OrderResponse> GetPaidOrdersAsResponses()
+    {
+        // This might not be the best way to check, but:
+        // - Orders are initialized with paid="pending"
+        // - Orders with failed payment have negative numbers
+        // - Orders with completed payment have guids
+        var paidOrders = _context.Orders.Where(order => order.Paid.Length > 7);
+        return FromOrderToOrderResponse([.. paidOrders]);
     }
 
     public List<OrderResponse> Get(string userId)
@@ -74,7 +87,7 @@ public class OrderService(PostgresOrderContext context, ILogger<OrderService> lo
         return saved;
     }
 
-    private async Task<Payment> MakePayment(string total, Card card, string authorization)
+    private async Task<Payment> MakePayment(string total, Card card, string authorization, CancellationToken cancellationToken)
     {
         var paymentRequest = new PaymentRequest
         {
@@ -97,7 +110,7 @@ public class OrderService(PostgresOrderContext context, ILogger<OrderService> lo
         {
             Content = data
         };
-        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        request.Headers.Authorization = AuthenticationHeaderValue.Parse($"bearer {authorization}");
         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         var response = await httpClient.SendAsync(request, cancellationToken);

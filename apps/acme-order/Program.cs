@@ -1,13 +1,12 @@
 using System;
-using AcmeOrder.Auth;
-using AcmeOrder.Configuration;
 using AcmeOrder.Db;
 using AcmeOrder.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 using Steeltoe.Configuration.CloudFoundry;
 using Steeltoe.Configuration.CloudFoundry.ServiceBindings;
@@ -21,10 +20,6 @@ builder.AddCloudFoundryConfiguration();
 builder.Configuration.AddCloudFoundryServiceBindings();
 builder.Services.AddAllActuators();
 builder.Services.AddEurekaDiscoveryClient();
-
-builder.Services.Configure<AcmeServiceSettings>(builder.Configuration.GetSection(nameof(AcmeServiceSettings)));
-builder.Services.AddSingleton<IAcmeServiceSettings>(sp =>
-    sp.GetRequiredService<IOptions<AcmeServiceSettings>>().Value); 
 
 switch (builder.Configuration["DatabaseProvider"])
 {
@@ -42,7 +37,25 @@ switch (builder.Configuration["DatabaseProvider"])
 builder.Services.AddHttpClient<OrderService>(c => c.BaseAddress = new Uri("https://acme-payment"))
     .AddServiceDiscovery();
 builder.Services.AddControllers();
-builder.Services.AddScoped<AuthorizeResource>();
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        if (builder.Configuration["DisableTokenValidation"] == "true")
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                SignatureValidator = delegate (string token, TokenValidationParameters _)
+                {
+                    var jwt = new JsonWebToken(token);
+                    return jwt;
+                }
+            };
+        }
+    });
 
 var app = builder.Build();
 
@@ -52,6 +65,7 @@ orderContext.Database.Migrate();
 
 app.UseDeveloperExceptionPage();
 app.UseRouting();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

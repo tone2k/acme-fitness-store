@@ -4,7 +4,7 @@
     "title": "Create an order.",
     "description": "Creates an order for the user.",
     "predicates": [
-      "Path=/order/add/{userId}",
+      "Path=/order/add",
       "Method=POST"
     ],
     "filters": [
